@@ -36,20 +36,53 @@ class Search extends React.Component {
 
         this.state = {
             searchText: "",
+            queryTags: [],
+            queryReactions: [],
             results: [],
             searchButtonState: BUTTON_DISABLED
         };
 
         this.runSearch = this.runSearch.bind(this);
+        this.runSearchTags = this.runSearchTags.bind(this);
         this.updateSearch = this.updateSearch.bind(this);
         this.searchInputKeyPress = this.searchInputKeyPress.bind(this);
         this.getSearchButton = this.getSearchButton.bind(this);
     }
 
-    runSearch() {
-        if (this.state.searchText.length <= 0)
-            return; //Cannot search with an empty query
+    runSearchTags() {
+        this.setState({
+            searchButtonState: BUTTON_PROCESSING
+        });
 
+        //search(this.state.queryTags, this.state.queryReactions)
+        search(['brisbane'],[])
+        .done(response => {
+            let works = response.response.zone[0].records.work || [];
+
+            //Filter out results that don't have a thumbnail
+            let out = works.filter(l => {
+                l.identifier.forEach(id => {
+                    if (id.linktype === "thumbnail") {
+                        //Add a simpler to access reference to the thumbnail url
+                        l.thumb = id.value;
+                        return false;
+                    }
+                });
+
+                return true;
+            });
+
+            this.setState({
+                results: out
+            });
+        })
+        .always(() => this.setState({
+            searchButtonState: BUTTON_IDLE
+        }));
+    }
+
+    /* This is still searching using the old query method, replace with runSearchTags */
+    runSearch() {
         //Query has to be set to something, or you will get a 400 error
         let query = this.state.searchText ? this.state.searchText : 'brisbane';
         let params = [
@@ -147,6 +180,10 @@ class Search extends React.Component {
                                 {this.getSearchButton()}
                             </span>
                         </div>
+
+                        <button className="btn btn-primary btn-block m-t-1" onClick={this.runSearchTags}>
+                            Search by Tag
+                        </button>
 
                         {/* Search Results - only appears if there are results */}
                         { this.state.results.length > 0 ?

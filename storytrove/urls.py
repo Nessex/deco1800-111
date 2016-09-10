@@ -20,6 +20,7 @@ from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api/search', views.api.search),
     url(r'^scratch/', views.test.scratch),
     url(r'^', views.home.current_datetime),
 ]

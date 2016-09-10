@@ -1,0 +1,122 @@
+#%RAML 1.0
+title: StoryTrove
+version: v1
+baseUri: http://deco1800-111.uqcloud.net/api/
+/user:
+    /login:
+    /logout:
+    /check:
+        /edit:
+/search:
+    get:
+        queryParameters:
+            tags:
+              description: comma separated list of tags to search on
+              type: string
+            reactions:
+              description: comma separated list of reactions to search on
+              type: string
+            offset:
+              description: Offset by result number, for pagination
+              type: integer
+            sort:
+              description: Sorting method
+              type: string
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "success": true,
+                                "data": {
+                                    "results": "SbBGk",
+                                },
+                                "status": 200
+                            }
+/voteup:
+    /{resource_id}:
+        get:
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "success": true
+                                }
+/votedown:
+    /{resource_id}:
+        get:
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "success": true
+                                }
+/react:
+    /{resource_id}:
+        get:
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "success": true
+                                }
+/comment:
+    /{resource_id}:
+        get:
+            queryParameters:
+                message:
+                  description: Full unformatted message text
+                  type: string
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "success": true
+                                }
+/prompt:
+    /{prompt_id}:
+        get:
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "success": true,
+                                    "prompt": {
+                                        "works": []
+                                    }
+                                }
+
+/story:
+    /{resource_id}:
+        get:
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "success": true,
+                                    "story": {
+                                        "resource_id": "1Q32udk2OE",
+                                        "url": "https://deco1800-111.uqcloud.net/story/1Q32udk2OE",
+                                        "prompt_id": "23423442342",
+                                        "title": "Hello, storytrove!",
+                                        "body": "Once upon a trove...",
+                                        "votes": 9,
+                                        "reactions": [
+                                            ":smile:": 3,
+                                            ":heart:": 1
+                                        ]
+                                    }
+                                }
