@@ -20,5 +20,6 @@ from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', views.current_datetime),
+    url(r'^scratch/', views.test.scratch),
+    url(r'^', views.home.current_datetime),
 ]
