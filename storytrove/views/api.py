@@ -21,8 +21,8 @@ def getTagString(tags):
     return " AND ".join(tags)
 
 def search(request):
-    tags = request.GET.get('tags')
-    reactions = request.GET.get('reactions')
+    tags = request.GET.get('tags').split(',')
+    reactions = request.GET.get('reactions').split(',')
 
     if len(tags) == 0:
         return JsonResponse({

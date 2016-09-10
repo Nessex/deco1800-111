@@ -57,7 +57,7 @@ class Search extends React.Component {
         //search(this.state.queryTags, this.state.queryReactions)
         search(['brisbane'],[])
         .done(response => {
-            let works = response.response.zone[0].records.work || [];
+            let works = response.response.response.zone[0].records.work || [];
 
             //Filter out results that don't have a thumbnail
             let out = works.filter(l => {
