@@ -6,16 +6,19 @@ baseUri: http://deco1800-111.uqcloud.net/api/
     /login:
     /logout:
     /check:
-        /edit:
+    /edit:
 /prompts:
+    description: Get a list of prompts with associated details. Defaults to a selection of prompts from multiple tags.
     get:
         queryParameters:
             tags:
               description: comma separated list of tags to search on
               type: string
+              required: false
             reactions:
               description: comma separated list of reactions to search on
               type: string
+              required: false
         responses:
             200:
                 body:
@@ -28,6 +31,9 @@ baseUri: http://deco1800-111.uqcloud.net/api/
                                 }
                             }
 /stories:
+    description: |
+        Get a list of stories sorted by newest first.
+        Optionally filter results with query parameters.
     get:
         queryParameters:
             tags:
@@ -52,6 +58,7 @@ baseUri: http://deco1800-111.uqcloud.net/api/
                             }
 /comments:
     /{resource_id}:
+        description: Get a list of comments with associated metadata for the given resource id
         get:
             responses:
                 200:
@@ -66,6 +73,7 @@ baseUri: http://deco1800-111.uqcloud.net/api/
                                 }
 /voteup:
     /{resource_id}:
+        description: Add an upvote to the given resource
         get:
             responses:
                 200:
@@ -77,6 +85,7 @@ baseUri: http://deco1800-111.uqcloud.net/api/
                                 }
 /votedown:
     /{resource_id}:
+        description: Add a downvote to the given resource
         get:
             responses:
                 200:
@@ -88,7 +97,12 @@ baseUri: http://deco1800-111.uqcloud.net/api/
                                 }
 /react:
     /{resource_id}:
+        description: Add a reaction to the given resource
         get:
+            queryParameters:
+                reaction:
+                    description: Reaction name to add
+                    type: string
             responses:
                 200:
                     body:
@@ -99,6 +113,7 @@ baseUri: http://deco1800-111.uqcloud.net/api/
                                 }
 /comment:
     /{resource_id}:
+        description: Add a comment to the given resource
         get:
             queryParameters:
                 message:
@@ -113,7 +128,10 @@ baseUri: http://deco1800-111.uqcloud.net/api/
                                     "success": true
                                 }
 /prompt:
-    /{prompt_id}:
+    /{resource_id}:
+        description: |
+            Get details of a particular prompt including image urls,
+            story metadata, reactions etc.
         get:
             responses:
                 200:
@@ -129,6 +147,9 @@ baseUri: http://deco1800-111.uqcloud.net/api/
 
 /story:
     /{resource_id}:
+        description: |
+            Get details of a particular story, including the story text, author,
+            votes, reactions and comment metadata.
         get:
             responses:
                 200:
