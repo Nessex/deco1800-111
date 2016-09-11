@@ -7,7 +7,7 @@ baseUri: http://deco1800-111.uqcloud.net/api/
     /logout:
     /check:
         /edit:
-/search:
+/prompts:
     get:
         queryParameters:
             tags:
@@ -15,12 +15,6 @@ baseUri: http://deco1800-111.uqcloud.net/api/
               type: string
             reactions:
               description: comma separated list of reactions to search on
-              type: string
-            offset:
-              description: Offset by result number, for pagination
-              type: integer
-            sort:
-              description: Sorting method
               type: string
         responses:
             200:
@@ -30,10 +24,46 @@ baseUri: http://deco1800-111.uqcloud.net/api/
                             {
                                 "success": true,
                                 "data": {
-                                    "results": "SbBGk",
-                                },
-                                "status": 200
+                                    "results": [],
+                                }
                             }
+/stories:
+    get:
+        queryParameters:
+            tags:
+              description: comma separated list of tags to filter by
+              type: string
+            reactions:
+              description: comma separated list of reactions to filter by
+              type: string
+            author:
+              description: author username to filter results
+              type: string
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "success": true,
+                                "data": {
+                                    "results": [],
+                                }
+                            }
+/comments:
+    /{resource_id}:
+        get:
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "success": true,
+                                    "data": {
+                                        "results": [],
+                                    }
+                                }
 /voteup:
     /{resource_id}:
         get:

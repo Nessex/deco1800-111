@@ -87,17 +87,9 @@ This is intended to be used to get a list of stories for the reading section
 Optional filters:
 tag
 reaction
+author
 '''
-def recently_written(request):
-    return JsonResponse({
-        'failure': True
-    })
-
-'''
-Get a list of the most recent stories written by a particular user
-Requires a username
-'''
-def recent_by_author(request):
+def stories(request):
     return JsonResponse({
         'failure': True
     })
@@ -130,17 +122,33 @@ def comments(request):
     })
 
 '''
-Add a reaction (by id) to a given story id
+Add a reaction to a given resource
 '''
-def add_story_reaction(request):
+def react(request):
     return JsonResponse({
         'failure': True
     })
 
 '''
-Add a reaction (by id) to a given comment id
+Add an upvote to a given resource
 '''
-def add_comment_reaction(request):
+def voteup(request):
+    return JsonResponse({
+        'failure': True
+    })
+
+'''
+Add a downvote to a given resource
+'''
+def votedown(request):
+    return JsonResponse({
+        'failure': True
+    })
+
+'''
+Add a comment to a given resource
+'''
+def comment(request):
     return JsonResponse({
         'failure': True
     })
