@@ -1,0 +1,205 @@
+<!DOCTYPE HTML><html><head><title>StoryTrove API documentation</title><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="generator" content="https://github.com/raml2html/raml2html 3.0.0"><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css"><script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script><script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script><script type="text/javascript">
+      $(document).ready(function() {
+        $('.page-header pre code, .top-resource-description pre code, .modal-body pre code').each(function(i, block) {
+          hljs.highlightBlock(block);
+        });
+
+        $('[data-toggle]').click(function() {
+          var selector = $(this).data('target') + ' pre code';
+          $(selector).each(function(i, block) {
+            hljs.highlightBlock(block);
+          });
+        });
+
+        // open modal on hashes like #_action_get
+        $(window).bind('hashchange', function(e) {
+          var anchor_id = document.location.hash.substr(1); //strip #
+          var element = $('#' + anchor_id);
+
+          // do we have such element + is it a modal?  --> show it
+          if (element.length && element.hasClass('modal')) {
+            element.modal('show');
+          }
+        });
+
+        // execute hashchange on first page load
+        $(window).trigger('hashchange');
+
+        // remove url fragment on modal hide
+        $('.modal').on('hidden.bs.modal', function() {
+          try {
+            if (history && history.replaceState) {
+                history.replaceState({}, '', '#');
+            }
+          } catch(e) {}
+        });
+      });
+    </script><style>
+      .hljs {
+        background: transparent;
+      }
+      .parent {
+        color: #999;
+      }
+      .list-group-item > .badge {
+        float: none;
+        margin-right: 6px;
+      }
+      .panel-title > .methods {
+        float: right;
+      }
+      .badge {
+        border-radius: 0;
+        text-transform: uppercase;
+        width: 70px;
+        font-weight: normal;
+        color: #f3f3f6;
+        line-height: normal;
+      }
+      .badge_get {
+        background-color: #63a8e2;
+      }
+      .badge_post {
+        background-color: #6cbd7d;
+      }
+      .badge_put {
+        background-color: #22bac4;
+      }
+      .badge_delete {
+        background-color: #d26460;
+      }
+      .badge_patch {
+        background-color: #ccc444;
+      }
+      .list-group, .panel-group {
+        margin-bottom: 0;
+      }
+      .panel-group .panel+.panel-white {
+        margin-top: 0;
+      }
+      .panel-group .panel-white {
+        border-bottom: 1px solid #F5F5F5;
+        border-radius: 0;
+      }
+      .panel-white:last-child {
+        border-bottom-color: white;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+      }
+      .panel-white .panel-heading {
+        background: white;
+      }
+      .tab-pane ul {
+        padding-left: 2em;
+      }
+      .tab-pane h1 {
+        font-size: 1.3em;
+      }
+      .tab-pane h2 {
+        font-size: 1.2em;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #ddd;
+      }
+      .tab-pane h3 {
+        font-size: 1.1em;
+      }
+      .tab-content {
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+      }
+      #sidebar {
+        margin-top: 30px;
+        padding-right: 5px;
+        overflow: auto;
+        height: 90%;
+      }
+      .top-resource-description {
+        border-bottom: 1px solid #ddd;
+        background: #fcfcfc;
+        padding: 15px 15px 0 15px;
+        margin: -15px -15px 10px -15px;
+      }
+      .resource-description {
+        border-bottom: 1px solid #fcfcfc;
+        background: #fcfcfc;
+        padding: 15px 15px 0 15px;
+        margin: -15px -15px 10px -15px;
+      }
+      .resource-description p:last-child {
+        margin: 0;
+      }
+      .list-group .badge {
+        float: left;
+      }
+      .method_description {
+        margin-left: 85px;
+      }
+      .method_description p:last-child {
+        margin: 0;
+      }
+      .list-group-item {
+        cursor: pointer;
+      }
+      .list-group-item:hover {
+        background-color: #f5f5f5;
+      }
+
+      pre code {
+        overflow: auto;
+        word-wrap: normal;
+        white-space: pre;
+      }
+    </style></head><body data-spy="scroll" data-target="#sidebar"><div class="container"><div class="row"><div class="col-md-9" role="main"><div class="page-header"><h1>StoryTrove API documentation <small>version v1</small></h1><p>http://deco1800-111.uqcloud.net/api/</p></div><div class="panel panel-default"><div class="panel-heading"><h3 id="user" class="panel-title">/user</h3></div><div class="panel-body"><div class="panel-group"></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="prompts" class="panel-title">/prompts</h3></div><div class="panel-body"><div class="top-resource-description"><p>Get a list of prompts with associated details. Defaults to a selection of prompts from multiple tags.</p></div><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_prompts"><span class="parent"></span>/prompts</a> <span class="methods"><a href="#prompts_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_prompts" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#prompts_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="prompts_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/prompts</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#prompts_get_request" data-toggle="tab">Request</a></li><li><a href="#prompts_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="prompts_get_request"><h3>Query Parameters</h3><ul><li><strong>tags</strong>: <em>(string)</em><p>comma separated list of tags to search on</p></li><li><strong>reactions</strong>: <em>(string)</em><p>comma separated list of reactions to search on</p></li></ul></div><div class="tab-pane" id="prompts_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+    "success": true,
+    "data": {
+        "results": [],
+    }
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="stories" class="panel-title">/stories</h3></div><div class="panel-body"><div class="top-resource-description"><p>Get a list of stories sorted by newest first. Optionally filter results with query parameters.</p></div><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_stories"><span class="parent"></span>/stories</a> <span class="methods"><a href="#stories_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_stories" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#stories_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="stories_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/stories</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#stories_get_request" data-toggle="tab">Request</a></li><li><a href="#stories_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="stories_get_request"><h3>Query Parameters</h3><ul><li><strong>tags</strong>: <em>(string)</em><p>comma separated list of tags to filter by</p></li><li><strong>reactions</strong>: <em>(string)</em><p>comma separated list of reactions to filter by</p></li><li><strong>author</strong>: <em>(string)</em><p>author username to filter results</p></li></ul></div><div class="tab-pane" id="stories_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+    "success": true,
+    "data": {
+        "results": [],
+    }
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="comments" class="panel-title">/comments</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_comments__resource_id_"><span class="parent">/comments</span>/{resource_id}</a> <span class="methods"><a href="#comments__resource_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_comments__resource_id_" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Get a list of comments with associated metadata for the given resource id</p></div><div class="list-group"><div onclick="window.location.href = '#comments__resource_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="comments__resource_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/comments</span>/{resource_id}</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#comments__resource_id__get_request" data-toggle="tab">Request</a></li><li><a href="#comments__resource_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="comments__resource_id__get_request"><h3>URI Parameters</h3><ul><li><strong>resource_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="comments__resource_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+    "success": true,
+    "data": {
+        "results": [],
+    }
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="voteup" class="panel-title">/voteup</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_voteup__resource_id_"><span class="parent">/voteup</span>/{resource_id}</a> <span class="methods"><a href="#voteup__resource_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_voteup__resource_id_" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Add an upvote to the given resource</p></div><div class="list-group"><div onclick="window.location.href = '#voteup__resource_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="voteup__resource_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/voteup</span>/{resource_id}</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#voteup__resource_id__get_request" data-toggle="tab">Request</a></li><li><a href="#voteup__resource_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="voteup__resource_id__get_request"><h3>URI Parameters</h3><ul><li><strong>resource_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="voteup__resource_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+    "success": true
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="votedown" class="panel-title">/votedown</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_votedown__resource_id_"><span class="parent">/votedown</span>/{resource_id}</a> <span class="methods"><a href="#votedown__resource_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_votedown__resource_id_" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Add a downvote to the given resource</p></div><div class="list-group"><div onclick="window.location.href = '#votedown__resource_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="votedown__resource_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/votedown</span>/{resource_id}</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#votedown__resource_id__get_request" data-toggle="tab">Request</a></li><li><a href="#votedown__resource_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="votedown__resource_id__get_request"><h3>URI Parameters</h3><ul><li><strong>resource_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="votedown__resource_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+    "success": true
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="react" class="panel-title">/react</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_react__resource_id_"><span class="parent">/react</span>/{resource_id}</a> <span class="methods"><a href="#react__resource_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_react__resource_id_" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Add a reaction to the given resource</p></div><div class="list-group"><div onclick="window.location.href = '#react__resource_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="react__resource_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/react</span>/{resource_id}</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#react__resource_id__get_request" data-toggle="tab">Request</a></li><li><a href="#react__resource_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="react__resource_id__get_request"><h3>URI Parameters</h3><ul><li><strong>resource_id</strong>: <em>required (string)</em></li></ul><h3>Query Parameters</h3><ul><li><strong>reaction</strong>: <em>(string)</em><p>Reaction name to add</p></li></ul></div><div class="tab-pane" id="react__resource_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+    "success": true
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="comment" class="panel-title">/comment</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_comment__resource_id_"><span class="parent">/comment</span>/{resource_id}</a> <span class="methods"><a href="#comment__resource_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_comment__resource_id_" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Add a comment to the given resource</p></div><div class="list-group"><div onclick="window.location.href = '#comment__resource_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="comment__resource_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/comment</span>/{resource_id}</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#comment__resource_id__get_request" data-toggle="tab">Request</a></li><li><a href="#comment__resource_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="comment__resource_id__get_request"><h3>URI Parameters</h3><ul><li><strong>resource_id</strong>: <em>required (string)</em></li></ul><h3>Query Parameters</h3><ul><li><strong>message</strong>: <em>(string)</em><p>Full unformatted message text</p></li></ul></div><div class="tab-pane" id="comment__resource_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+    "success": true
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="prompt" class="panel-title">/prompt</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_prompt__resource_id_"><span class="parent">/prompt</span>/{resource_id}</a> <span class="methods"><a href="#prompt__resource_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_prompt__resource_id_" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Get details of a particular prompt including image urls, story metadata, reactions etc.</p></div><div class="list-group"><div onclick="window.location.href = '#prompt__resource_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="prompt__resource_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/prompt</span>/{resource_id}</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#prompt__resource_id__get_request" data-toggle="tab">Request</a></li><li><a href="#prompt__resource_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="prompt__resource_id__get_request"><h3>URI Parameters</h3><ul><li><strong>resource_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="prompt__resource_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+    "success": true,
+    "prompt": {
+        "works": []
+    }
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="story" class="panel-title">/story</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_story__resource_id_"><span class="parent">/story</span>/{resource_id}</a> <span class="methods"><a href="#story__resource_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_story__resource_id_" class="panel-collapse collapse"><div class="panel-body"><div class="resource-description"><p>Get details of a particular story, including the story text, author, votes, reactions and comment metadata.</p></div><div class="list-group"><div onclick="window.location.href = '#story__resource_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="story__resource_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/story</span>/{resource_id}</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#story__resource_id__get_request" data-toggle="tab">Request</a></li><li><a href="#story__resource_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="story__resource_id__get_request"><h3>URI Parameters</h3><ul><li><strong>resource_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="story__resource_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+    "success": true,
+    "story": {
+        "resource_id": "1Q32udk2OE",
+        "url": "https://deco1800-111.uqcloud.net/story/1Q32udk2OE",
+        "prompt_id": "23423442342",
+        "title": "Hello, storytrove!",
+        "body": "Once upon a trove...",
+        "votes": 9,
+        "reactions": [
+            ":smile:": 3,
+            ":heart:": 1
+        ]
+    }
+}
+</code></pre></div></div></div></div></div></div></div></div></div></div></div><div class="col-md-3"><div id="sidebar" class="hidden-print affix" role="complementary"><ul class="nav nav-pills nav-stacked"><li><a href="#user">/user</a></li><li><a href="#prompts">/prompts</a></li><li><a href="#stories">/stories</a></li><li><a href="#comments">/comments</a></li><li><a href="#voteup">/voteup</a></li><li><a href="#votedown">/votedown</a></li><li><a href="#react">/react</a></li><li><a href="#comment">/comment</a></li><li><a href="#prompt">/prompt</a></li><li><a href="#story">/story</a></li></ul></div></div></div></div></body></html>
