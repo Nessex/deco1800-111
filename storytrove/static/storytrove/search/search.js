@@ -55,7 +55,7 @@ class Search extends React.Component {
         });
 
         //search(this.state.queryTags, this.state.queryReactions)
-        search(['brisbane'],[])
+        search(['world war 2'],[])
         .done(response => {
             let works = response.response.response.zone[0].records.work || [];
 
