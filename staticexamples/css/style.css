@@ -1,0 +1,85 @@
+
+body {
+	background-color: #eaf1fb;
+}
+
+h3 {
+	margin-top: 50px;
+}
+
+nav {
+	text-align: center;
+}
+
+img {
+	background-color: #eaf1fb;
+}
+
+nav ul {
+	margin-top: 50px;
+	margin-bottom: 50px;
+	list-style-type: none;
+	text-align: center;
+	padding: 0px;
+}
+
+nav ul li {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: 3em;
+}
+
+main {
+	text-align: center;
+}
+
+main a.mainDecision {
+	margin-top: 150px;
+	margin-right: 150px;
+	font-size: 50px;
+}
+
+img#logo {
+	width: 250px;
+	margin-top: 10px;
+	margin-bottom: 30px;
+}
+
+div.topMenu, div#pageWrapper {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+div.topMenu, nav {
+	background-color: #a3a8af;
+}
+
+nav, main {
+	height: 1000px;
+}
+
+main {
+	border-left: 5px solid black;
+	border-top: 5px solid black;
+}
+
+/* Read/Write Page Specific CSS */
+
+a.changeMind {
+	margin-top: 114px;
+}
+
+main .gridResult {
+	margin-top: 75px;
+}
+
+main #forwardBack {
+	margin-top: 50px;
+	margin-bottom: 100px;
+}
+
+nav .navOptions {
+	width: 250px;
+}
+
+
