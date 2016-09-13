@@ -6,10 +6,8 @@ def search(request):
     return 1
 
 def scratch(request):
-    now = [datetime.datetime.now()]
-    html = "<html><body>It is nowoo %s.</body></html>" % now
-    template = loader.get_template('scratch/scratch.html')
+    template = loader.get_template('page.html')
     context = {
-        'latest_question_list': now,
+        'reactscript': 'storytrove/search/search.js',
     }
     return HttpResponse(template.render(context, request))
