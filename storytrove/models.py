@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 
 class UserAccountManager(models.Manager):
@@ -37,72 +38,72 @@ class EmojiResponseOnCommentManager(models.Manager):
 		
 class AchievementManager(models.Manager):
 	def create_achievement(self, name, rank, description):
-        achievement = self.create(name=name,rank=rank,description=description)
-        return achievement
+        	achievement = self.create(name=name,rank=rank,description=description)
+        	return achievement
 	
 class UserAccount(models.Model):
-    username = models.CharField(max_length = 15)
-    password = models.CharField(max_length = 15)
-    image = models.CharField(max_length = 255)
-    email_address = models.CharField(max_length = 50)
-    last_login = models.DateField(default = datetime.now)
-    create_date = models.DateField(default = datetime.now)
+	username = models.CharField(max_length = 15)
+	password = models.CharField(max_length = 15)
+	image = models.CharField(max_length = 255)
+	email_address = models.CharField(max_length = 50)
+	last_login = models.DateField(default = datetime.now)
+	create_date = models.DateField(default = datetime.now)
 	
 	objects = UserAccountManager()
 	
 class TroveObject(models.Model):
-    trove_id = models.CharField(max_length = 20) # this could actually be an int field
-    description = models.TextField()
+	trove_id = models.CharField(max_length = 20) # this could actually be an int field
+	description = models.TextField()
 	
 	objects = TroveObjectManager()
 		
 class Prompt(models.Model):
-    trove_objects = models.ManyToManyField(TroveObject)  #this is the list of trove ids used as stimuli
-    tags = models.CharField(max_length = 50)
+	trove_objects = models.ManyToManyField(TroveObject)  #this is the list of trove ids used as stimuli
+	tags = models.CharField(max_length = 50)
 	
 	objects = PromptManager()
 	
 class Response(models.Model):
-    user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
-    prompt = models.ForeignKey(Prompt, on_delete = models.CASCADE)
-    title = models.CharField(max_length = 100)
-    date = models.DateField()
-    text = models.TextField() #attempted no maximum length
-    is_private = models.BooleanField()
-    is_draft = models.BooleanField()
+	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
+	prompt = models.ForeignKey(Prompt, on_delete = models.CASCADE)
+	title = models.CharField(max_length = 100)
+	date = models.DateField()
+	text = models.TextField() #attempted no maximum length
+	is_private = models.BooleanField()
+	is_draft = models.BooleanField()
 	
 	objects = ResponseManager()
 	
 class Comment(models.Model):
-    user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
-    response = models.ForeignKey(Response, on_delete = models.CASCADE)
-    date = models.DateField()
-    text = models.TextField() #attempted no maximum length
+	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
+	response = models.ForeignKey(Response, on_delete = models.CASCADE)
+	date = models.DateField()
+	text = models.TextField() #attempted no maximum length
 	
 	objects = CommentManager()
 	
 class EmojiResponseOnResponse(models.Model):
-    user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
-    response = models.ForeignKey(Response, on_delete = models.CASCADE)
+	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
+	response = models.ForeignKey(Response, on_delete = models.CASCADE)
 
-    EMOJI_RESPONSES = (
-        ('+', ':thumbsup:'),
+	EMOJI_RESPONSES = (
+	('+', ':thumbsup:'),
         ('-', ':thumbsdown:'),
         ('1', ':grinning:'),
         ('2', ':cry:'),
         ('3', ':laughing:'),
         ('4', ':scream:'),
         ('5', ':thinking:')
-    )
-    emoji = models.CharField(max_length = 1, choices = EMOJI_RESPONSES)
+	)
+	emoji = models.CharField(max_length = 1, choices = EMOJI_RESPONSES)
 	
 	objects = EmojiResponseOnResponseManager()
 
 class EmojiResponseOnComment(models.Model):
-    user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
-    comment = models.ForeignKey(Comment, on_delete = models.CASCADE)
+	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
+	comment = models.ForeignKey(Comment, on_delete = models.CASCADE)
 
-    EMOJI_RESPONSES = (
+	EMOJI_RESPONSES = (
         ('+', ':thumbsup:'),
         ('-', ':thumbsdown:'),
         ('1', ':grinning:'),
@@ -110,8 +111,8 @@ class EmojiResponseOnComment(models.Model):
         ('3', ':laughing:'),
         ('4', ':scream:'),
         ('5', ':thinking:')
-    )
-    emoji = models.CharField(max_length = 1, choices = EMOJI_RESPONSES)
+	)
+	emoji = models.CharField(max_length = 1, choices = EMOJI_RESPONSES)
 	
 	objects = EmojiResponseOnCommentManager()
 	
