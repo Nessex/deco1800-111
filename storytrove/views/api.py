@@ -20,8 +20,12 @@ def queryTrove(inputParams):
 
     paramString = urllib.parse.urlencode(params)
     url = "http://api.trove.nla.gov.au/result?" + paramString
-    r = urllib.request.urlopen(url).read().decode('utf8')
-    return json.loads(r)
+
+    try:
+        r = urllib.request.urlopen(url).read().decode('utf8')
+        return json.loads(r)
+    except urllib.error.HTTPError:
+        return None;
 
 #TODO: Move to model
 def getTagString(tags):
@@ -65,6 +69,11 @@ def search(request):
         'l-availability': 'y',
         'include': 'links'
     })
+
+    if res == None:
+        return JsonResponse({
+            'failure': True
+        })
 
     return JsonResponse({
         'success': True,

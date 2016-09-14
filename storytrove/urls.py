@@ -22,5 +22,9 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/search', views.api.search),
     url(r'^scratch/', views.test.scratch),
+    url(r'^read/', views.home.read),
+    url(r'^write/', views.home.write),
+    url(r'^account/', views.home.account),
+    url(r'^browse/', views.home.browse),
     url(r'^', views.home.index),
 ]
