@@ -92,7 +92,7 @@ class Browse extends React.Component {
         let disablePrev = this.state.resultOffset === 0;
 
         return (
-            <div className="container homepage">
+            <div className="container">
                 { !this.state.loaded ?
                 <div className="row">
                     <div className="col-xs-12 text-xs-center">
