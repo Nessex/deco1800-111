@@ -2,9 +2,11 @@ class Prompt extends React.Component {
     render() {
         return (
             <div className="col-xs-6 col-sm-4 col-md-3 m-t-1 search-result">
-                <div className="search-result-inner" style={{backgroundImage: `url(${this.props.thumb})`}}>
-                    <a href={this.props.troveUrl}>{this.props.title}</a>
-                </div>
+                <a href={this.props.troveUrl}>
+                    <div className="search-result-inner" style={{backgroundImage: `url(${this.props.thumb})`}}>
+                        &nbsp;
+                    </div>
+                </a>
             </div>
         );
     }
@@ -107,6 +109,7 @@ class Browse extends React.Component {
                             { paginatedResults.map(r => <Prompt key={r.id} {...r} /> ) }
                         </section>
                     </div>
+
                     <div className="col-xs-12">
                         <div className="row m-t-1">
                             <div className="col-xs-6 text-xs-center">

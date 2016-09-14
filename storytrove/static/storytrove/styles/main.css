@@ -1,7 +1,23 @@
 .search-result-inner {
     width: 100%;
-    height: 120px; /* Probably not fixed, instead either set in JS or precalculate */
+    height: 240px; /* Probably not fixed, instead either set in JS or precalculate */
     background-size: cover;
     border-radius: 3px;
     padding: 4px;
+}
+
+.search-result a,
+.search-result a:hover,
+.search-result a:focus,
+.search-result a:active
+{
+    text-decoration: none;
+}
+
+.search-result-inner:hover,
+.search-result-inner:focus,
+.search-result-inner:active
+{
+    box-shadow: 0 0 1px #AAA;
+    cursor: pointer;
 }
