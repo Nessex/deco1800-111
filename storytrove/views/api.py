@@ -47,16 +47,11 @@ set of functions, primarily prompts()
 
 This will still be used internally to build up new sets of prompts from trove.
 '''
-def search(request):
-    tags = request.GET.get('tags').split(',')
-    reactions = request.GET.get('reactions').split(',')
-
+def search(tags, reactions, offset):
     tag_string = getTagString(tags)
 
     if len(tag_string) == 0:
-        return JsonResponse({
-            'failure': True
-        })
+        return None
 
     res = queryTrove({
         #'q': 'publictag:(' + getTagString(tags) + ')', # These proper tags suck, use tags as keywords...
@@ -65,10 +60,25 @@ def search(request):
         'zone': 'picture',
         'sortby': 'relevance',
         'n': '16',
+        's': offset,
         'reclevel': 'full',
         'l-availability': 'y',
         'include': 'links'
     })
+
+    return res
+
+'''
+Get the current set of prompts
+By default this should return a set of featured prompts for each of a few tags
+Results can also be filtered by providing an array of tags or reactions
+'''
+def prompts(request):
+    tags = request.GET.get('tags').split(',')
+    reactions = request.GET.get('reactions').split(',')
+    offset = request.GET.get('offset')
+
+    res = search(tags, reactions, offset)
 
     if res == None:
         return JsonResponse({
@@ -78,16 +88,6 @@ def search(request):
     return JsonResponse({
         'success': True,
         'response': res
-    })
-
-'''
-Get the current set of prompts
-By default this should return a set of featured prompts for each of a few tags
-Results can also be filtered by providing an array of tags or reactions
-'''
-def prompts(request):
-    return JsonResponse({
-        'failure': True
     })
 
 '''

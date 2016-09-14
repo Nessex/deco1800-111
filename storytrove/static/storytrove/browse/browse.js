@@ -32,7 +32,7 @@ class Browse extends React.Component {
     }
 
     runSearchTags() {
-        search(this.state.queryTags, this.state.queryReactions)
+        search(this.state.queryTags, this.state.queryReactions, this.state.results.length)
         .done(response => {
             if (response.failure) {
                 //Maybe do something

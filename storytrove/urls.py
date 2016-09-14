@@ -20,7 +20,7 @@ from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/search', views.api.search),
+    url(r'^api/prompts', views.api.prompts),
     url(r'^scratch/', views.test.scratch),
     url(r'^read/', views.home.read),
     url(r'^write/', views.home.write),

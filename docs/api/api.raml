@@ -14,11 +14,15 @@ baseUri: http://deco1800-111.uqcloud.net/api/
             tags:
               description: comma separated list of tags to search on
               type: string
-              required: false
+              required: true
             reactions:
               description: comma separated list of reactions to search on
               type: string
-              required: false
+              required: true
+            offset:
+              description: offset for search results
+              type: integer
+              required: true
         responses:
             200:
                 body:
