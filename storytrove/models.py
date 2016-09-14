@@ -60,3 +60,9 @@ class EmojiResponseOnComment(models.Model):
         ('5', ':thinking:')
     )
     emoji = models.CharField(max_length = 1, choices = EMOJI_RESPONSES)
+	
+class Achievement(models.Model):
+	user = models.ForeignKey(UserAccount, on = models.CASCADE)
+	name = models.CharField(max_length = 50)
+	rank = models.IntegerField() #bronze, silver, gold
+	description = models.TextField()
