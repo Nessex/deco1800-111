@@ -18,7 +18,7 @@ class Browse extends React.Component {
             loaded: false,
             results: [],
             resultOffset: 0,
-            resultCount: 6,
+            resultCount: 8,
             queryTags: ['world war 2'],
             queryReactions: []
         };
@@ -32,9 +32,8 @@ class Browse extends React.Component {
     runSearchTags() {
         search(this.state.queryTags, this.state.queryReactions)
         .done(response => {
-
             if (response.failure) {
-
+                //Maybe do something
             } else if (response.success) {
                 let works = response.response.response.zone[0].records.work || [];
 
@@ -87,7 +86,7 @@ class Browse extends React.Component {
 
     render() {
         let paginatedResults = this.state.results.slice(this.state.resultOffset, this.state.resultOffset + this.state.resultCount);
-        let disableNext = this.state.resultOffset + this.state.resultCount > this.state.results.length;
+        let disableNext = this.state.resultOffset + this.state.resultCount >= this.state.results.length;
         let disablePrev = this.state.resultOffset === 0;
 
         return (

@@ -64,7 +64,7 @@ def search(request):
         'encoding': 'json',
         'zone': 'picture',
         'sortby': 'relevance',
-        'n': '10',
+        'n': '16',
         'reclevel': 'full',
         'l-availability': 'y',
         'include': 'links'
