@@ -90,4 +90,4 @@ ENV/
 
 #StoryTrove Specific
 db.sqlite3
-
+node_modules
