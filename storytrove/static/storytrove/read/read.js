@@ -4,7 +4,7 @@ class EmojiText extends React.Component {
             __html: emojione.shortnameToImage(this.props.value)
         };
 
-        return (<span dangerouslySetInnerHTML={innerHTML} />);
+        return (<span onClick={this.props.onClick} className={this.props.className}><span dangerouslySetInnerHTML={innerHTML} /></span>);
     }
 }
 
@@ -17,10 +17,35 @@ class Read extends React.Component {
         super(props);
 
         this.state = {
-            loaded: true, //TODO default to false
+            loaded: true, //TODO default to false once content loaded asynchronously
             storyIds: [],
-            stories: {}
+            stories: {},
+            filterReactions: []
         };
+
+        this.toggleReaction = this.toggleReaction.bind(this);
+        this.getReactionClass = this.getReactionClass.bind(this);
+    }
+
+    toggleReaction(reaction) {
+        let reactions = this.state.filterReactions;
+        const idx = reactions.indexOf(reaction);
+
+        if (idx >= 0) {
+            //Remove existing reaction from set
+            reactions.splice(idx, 1);
+        } else {
+            //Add reaction to set
+            reactions.push(reaction);
+        }
+
+        this.setState({
+            filterReactions: reactions
+        });
+    }
+
+    getReactionClass(reaction) {
+        return this.state.filterReactions.indexOf(reaction) >= 0 ? "reaction-active" : "reaction-inactive";
     }
 
     render() {
@@ -40,14 +65,14 @@ class Read extends React.Component {
 
                         <div className="row">
                             <div className="col-xs-8 offset-xs-2 emoji-row">
-                                <EmojiText value=":thumbsup:" />
-                                <EmojiText value=":thumbsdown:" />
-                                <EmojiText value=":grinning:" />
-                                <EmojiText value=":joy:" />
-                                <EmojiText value=":cry:" />
-                                <EmojiText value=":laughing:" />
-                                <EmojiText value=":scream:" />
-                                <EmojiText value=":thinking:" />
+                                <EmojiText className={this.getReactionClass('thumbsup')} onClick={() => this.toggleReaction('thumbsup')} value=":thumbsup:" />
+                                <EmojiText className={this.getReactionClass('thumbsdown')} onClick={() => this.toggleReaction('thumbsdown')} value=":thumbsdown:" />
+                                <EmojiText className={this.getReactionClass('grinning')} onClick={() => this.toggleReaction('grinning')} value=":grinning:" />
+                                <EmojiText className={this.getReactionClass('joy')} onClick={() => this.toggleReaction('joy')} value=":joy:" />
+                                <EmojiText className={this.getReactionClass('cry')} onClick={() => this.toggleReaction('cry')} value=":cry:" />
+                                <EmojiText className={this.getReactionClass('laughing')} onClick={() => this.toggleReaction('laughing')} value=":laughing:" />
+                                <EmojiText className={this.getReactionClass('scream')} onClick={() => this.toggleReaction('scream')} value=":scream:" />
+                                <EmojiText className={this.getReactionClass('thinking')} onClick={() => this.toggleReaction('thinking')} value=":thinking:" />
                             </div>
                         </div>
 
