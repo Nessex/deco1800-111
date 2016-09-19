@@ -10,7 +10,7 @@ class Homepage extends React.Component {
     render() {
         return (
             <div className="container homepage">
-                <div className="row">
+                <div className="row m-t-3 m-b-3">
                     <div className="col-xs-6 text-xs-center">
                         <p><i className="fa fa-pencil-square-o fa-4x" aria-hidden="true" /></p>
                         <a href="/browse/" className="btn btn-primary">I want to write!</a>
