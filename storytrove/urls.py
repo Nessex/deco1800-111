@@ -29,5 +29,8 @@ urlpatterns = [
     url(r'^account/stories/?', views.home.account_stories),
     url(r'^account/?', views.home.account),
     url(r'^browse/?', views.home.browse),
+    url(r'^prompt/example/?', views.home.prompt_example),
+    url(r'^story/example/?', views.home.story_example),
+    url(r'^login/?', views.home.login),
     url(r'^', views.home.index),
 ]

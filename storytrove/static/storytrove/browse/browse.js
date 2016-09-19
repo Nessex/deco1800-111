@@ -2,7 +2,7 @@ class Prompt extends React.Component {
     render() {
         return (
             <div className="col-xs-6 col-sm-4 col-md-3 m-t-1 search-result">
-                <a href={this.props.troveUrl}>
+                <a href="/prompt/example">
                     <div className="search-result-inner" style={{backgroundImage: `url(${this.props.thumb})`}}>
                         &nbsp;
                     </div>

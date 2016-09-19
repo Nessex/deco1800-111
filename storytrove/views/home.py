@@ -30,5 +30,14 @@ def achievements(request):
 def edit(request):
     return std_page(request, 'storytrove/account/edit.js')
 
+def login(request):
+    return std_page(request, 'storytrove/account/login.js')
+
 def account_stories(request):
     return std_page(request, 'storytrove/account/account_stories.js')
+
+def prompt_example(request):
+    return std_page(request, 'storytrove/read/prompt.js')
+
+def story_example(request):
+    return std_page(request, 'storytrove/read/story.js')
