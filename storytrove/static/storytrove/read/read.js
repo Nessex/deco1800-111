@@ -25,10 +25,11 @@ class StoryBlock extends React.Component {
                         {/* Downvotes intentionally not shown */}
                         <button type="button" className="btn btn-secondary">
                             <EmojiText value=":thumbsup:" />
-                            <EmojiText value=":thumbsdown:" />
                             <EmojiText value=":grinning:" />
+                            <EmojiText value=":joy:" />
                             <span> 5</span>
                         </button>
+                        <button type="button" className="btn btn-secondary">User_1234</button>
                     </div>
                 </div>
             </article>

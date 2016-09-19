@@ -23,3 +23,12 @@ def account(request):
 
 def browse(request):
     return std_page(request, 'storytrove/browse/browse.js')
+
+def achievements(request):
+    return std_page(request, 'storytrove/account/achievements.js')
+
+def edit(request):
+    return std_page(request, 'storytrove/account/edit.js')
+
+def account_stories(request):
+    return std_page(request, 'storytrove/account/account_stories.js')

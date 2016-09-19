@@ -19,12 +19,15 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^api/prompts', views.api.prompts),
-    url(r'^scratch/', views.test.scratch),
-    url(r'^read/', views.home.read),
-    url(r'^write/', views.home.write),
-    url(r'^account/', views.home.account),
-    url(r'^browse/', views.home.browse),
+    url(r'^admin/?', admin.site.urls),
+    url(r'^api/prompts/?', views.api.prompts),
+    url(r'^scratch/?', views.test.scratch),
+    url(r'^read/?', views.home.read),
+    url(r'^write/?', views.home.write),
+    url(r'^account/achievements/?', views.home.achievements),
+    url(r'^account/edit/?', views.home.edit),
+    url(r'^account/stories/?', views.home.account_stories),
+    url(r'^account/?', views.home.account),
+    url(r'^browse/?', views.home.browse),
     url(r'^', views.home.index),
 ]
