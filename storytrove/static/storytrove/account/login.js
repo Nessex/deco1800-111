@@ -13,7 +13,9 @@ class Login extends React.Component {
                 <div className="row">
                     <div className="col-xs-6">
                         <h2>Login</h2>
-
+                        <form method="post" action="/login">
+                            
+                        </form>
                     </div>
                     <div className="col-xs-6">
                         <h2>Register</h2>

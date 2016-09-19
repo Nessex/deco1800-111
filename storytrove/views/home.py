@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
+from django.contrib.auth.decorators import login_required
 import datetime
 
 def std_page(request, script_path):
@@ -18,26 +19,30 @@ def read(request):
 def write(request):
     return std_page(request, 'storytrove/write/write.js')
 
-def account(request):
-    return std_page(request, 'storytrove/account/account.js')
-
 def browse(request):
     return std_page(request, 'storytrove/browse/browse.js')
 
-def achievements(request):
-    return std_page(request, 'storytrove/account/achievements.js')
-
-def edit(request):
-    return std_page(request, 'storytrove/account/edit.js')
-
 def login(request):
     return std_page(request, 'storytrove/account/login.js')
-
-def account_stories(request):
-    return std_page(request, 'storytrove/account/account_stories.js')
 
 def prompt_example(request):
     return std_page(request, 'storytrove/read/prompt.js')
 
 def story_example(request):
     return std_page(request, 'storytrove/read/story.js')
+
+@login_required
+def account(request):
+    return std_page(request, 'storytrove/account/account.js')
+
+@login_required
+def account_stories(request):
+    return std_page(request, 'storytrove/account/account_stories.js')
+
+@login_required
+def achievements(request):
+    return std_page(request, 'storytrove/account/achievements.js')
+
+@login_required
+def edit(request):
+    return std_page(request, 'storytrove/account/edit.js')

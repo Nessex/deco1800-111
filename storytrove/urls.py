@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-
+from django.contrib.auth.views import login
 from . import views
 
 urlpatterns = [
@@ -31,6 +31,6 @@ urlpatterns = [
     url(r'^browse/?', views.home.browse),
     url(r'^prompt/example/?', views.home.prompt_example),
     url(r'^story/example/?', views.home.story_example),
-    url(r'^login/?', views.home.login),
+    url(r'^login/$', login, name='login'),
     url(r'^', views.home.index),
 ]
