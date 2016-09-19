@@ -1,3 +1,17 @@
+class EmojiText extends React.Component {
+    render() {
+        const innerHTML = {
+            __html: emojione.shortnameToImage(this.props.value)
+        };
+
+        return (<span dangerouslySetInnerHTML={innerHTML} />);
+    }
+}
+
+EmojiText.PropTypes = {
+    value: React.PropTypes.string
+};
+
 class Read extends React.Component {
     constructor(props) {
         super(props);
@@ -23,6 +37,19 @@ class Read extends React.Component {
                 <div className="row">
                     <div className="col-xs-12">
                         <h2>Read</h2>
+
+                        <div className="row">
+                            <div className="col-xs-8 offset-xs-2 emoji-row">
+                                <EmojiText value=":thumbsup:" />
+                                <EmojiText value=":thumbsdown:" />
+                                <EmojiText value=":grinning:" />
+                                <EmojiText value=":joy:" />
+                                <EmojiText value=":cry:" />
+                                <EmojiText value=":laughing:" />
+                                <EmojiText value=":scream:" />
+                                <EmojiText value=":thinking:" />
+                            </div>
+                        </div>
 
                         <section className="row">
                             [Stories Here]
