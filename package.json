@@ -1,0 +1,22 @@
+{
+  "name": "deco1800-111",
+  "version": "0.0.1",
+  "description": "",
+  "main": "",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nessex/deco1800-111.git"
+  },
+  "author": "",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/Nessex/deco1800-111/issues"
+  },
+  "homepage": "https://github.com/Nessex/deco1800-111#readme"
+}
