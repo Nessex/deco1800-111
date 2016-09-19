@@ -57,10 +57,6 @@
                 </div>
             </div>
         </footer>
-        <script>
-            $(".autoemoji").each(function() {
-                $(this).html(emojione.shortnameToImage($(this).html()));
-            });
-        </script>
+        <script src="{% static "storytrove/general.js" %}"></script>
     </body>
 </html>
