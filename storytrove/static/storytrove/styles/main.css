@@ -51,3 +51,14 @@
 .reaction-active span {
     font-size: 28px;
 }
+
+.story-block-controls button
+{
+    font-size: 20px;
+}
+
+.story-block-controls .emojione
+{
+    /* This will trigger min-height of 20px to match (mostly) the other icons */
+    font-size: 10px;
+}
