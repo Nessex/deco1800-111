@@ -17,27 +17,64 @@ class StoryBlock extends React.Component {
         super(props);
 
         this.state = {
-            votes: 11
+			read: 4,
+            votes: 11,
+			currentUser: {
+				read: false,
+				votes: false
+			}
         };
 
-        this.addVote = this.addVote.bind(this);
+		this.toggleRead = this.toggleRead.bind(this);
+        this.toggleVote = this.toggleVote.bind(this);
     }
 
-    addVote() {
-        this.setState({
-            votes: this.state.votes + 1
-        });
+	toggleRead() {
+		if(this.state.currentUser.read == false) {
+			currentUserNew = this.state.currentUser.clone();
+			currentUserNew.read = true;
+			this.setState({
+				thumbsUp: this.state.read + 1
+				currentUser: currentUserNew
+			});
+		} else {
+			currentUserNew = this.state.currentUser.clone();
+			currentUserNew.read = false;
+			this.setState({
+				currentUser: currentUserNew
+			}
+		}
+	}
+	
+    toggleVote() {
+		if(this.state.currentUser.votes == false) {
+			currentUserNew = this.state.currentUser.clone();
+			currentUserNew.votes = true;
+			this.setState({
+				thumbsUp: this.state.votes + 1
+				currentUser: currentUserNew
+			});
+		} else {
+			currentUserNew = this.state.currentUser.clone();
+			currentUserNew.votes = false;
+			this.setState({
+				currentUser: currentUserNew
+			}
+		}
     }
+
 
     render() {
+		const btnToggleOnRead = this.state.read ? "btn-toggle-on btn btn-secondary" : "btn btn-secondary";
+		const btnToggleOnVote = this.state.votes ? "btn-toggle-on btn btn-secondary" : "btn btn-secondary";
         return (
             <article className="story-block m-b-2">
                 <a href="/story/example"><h2>My Story</h2></a>
                 <p>Snippet. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laboru&hellip;</p>
                 <div className="story-block-footer">
                     <div className="btn-group button-row-controls" role="group" aria-label="story controls">
-                        <button type="button" className="btn btn-secondary"><i className="fa fa-book" /> 4</button>
-                        <button type="button" className="btn btn-secondary" onClick={this.addVote}><i className="fa fa-arrow-up" /> {this.state.votes}</button>
+                        <button type="button" className={btnToggleOnRead} onClick={this.toggleRead}><i className="fa fa-book" /> {this.state.read}</button>
+                        <button type="button" className={btnToggleOnVote} onClick={this.toggleVote}><i className="fa fa-arrow-up" /> {this.state.votes}</button>
                         {/* Downvotes intentionally not shown */}
                         <button type="button" className="btn btn-secondary">
                             <EmojiText value=":thumbsup:" />
