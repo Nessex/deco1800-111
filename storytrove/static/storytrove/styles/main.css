@@ -117,3 +117,8 @@
     width: 100px;
     height: 100px;
 }
+
+button[type="button"].btn.btn-secondary.btn-toggle-on {
+	background-color: #e6e6e6;
+	border-color: #adadad;
+}
