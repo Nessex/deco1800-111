@@ -42,7 +42,7 @@ class StoryBlock extends React.Component {
 			currentUserNew.read = false;
 			this.setState({
 				currentUser: currentUserNew
-			}
+			});
 		}
 	}
 	
@@ -59,7 +59,7 @@ class StoryBlock extends React.Component {
 			currentUserNew.votes = false;
 			this.setState({
 				currentUser: currentUserNew
-			}
+			});
 		}
     }
 
