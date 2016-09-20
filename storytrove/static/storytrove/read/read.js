@@ -31,14 +31,14 @@ class StoryBlock extends React.Component {
 
 	toggleRead() {
 		if(this.state.currentUser.read == false) {
-			var currentUserNew = jQuery.extend(true, {this.state.currentUser}, oldObject);
+			var currentUserNew = jQuery.extend(true, {}, this.state.currentUser);
 			currentUserNew.read = true;
 			this.setState({
 				thumbsUp: this.state.read + 1,
 				currentUser: currentUserNew
 			});
 		} else {
-			var currentUserNew = jQuery.extend(true, {this.state.currentUser}, oldObject);
+			var currentUserNew = jQuery.extend(true, {}, this.state.currentUser);
 			currentUserNew.read = false;
 			this.setState({
 				currentUser: currentUserNew
@@ -48,14 +48,14 @@ class StoryBlock extends React.Component {
 	
     toggleVote() {
 		if(this.state.currentUser.votes == false) {
-			var currentUserNew = jQuery.extend(true, {this.state.currentUser}, oldObject);
+			var currentUserNew = jQuery.extend(true, {}, this.state.currentUser);
 			currentUserNew.votes = true;
 			this.setState({
 				thumbsUp: this.state.votes + 1,
 				currentUser: currentUserNew
 			});
 		} else {
-			var currentUserNew = jQuery.extend(true, {this.state.currentUser}, oldObject);
+			var currentUserNew = jQuery.extend(true, {}, this.state.currentUser);
 			currentUserNew.votes = false;
 			this.setState({
 				currentUser: currentUserNew
