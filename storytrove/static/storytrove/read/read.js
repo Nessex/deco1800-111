@@ -34,7 +34,7 @@ class StoryBlock extends React.Component {
 			currentUserNew = this.state.currentUser.clone();
 			currentUserNew.read = true;
 			this.setState({
-				thumbsUp: this.state.read + 1
+				thumbsUp: this.state.read + 1,
 				currentUser: currentUserNew
 			});
 		} else {
@@ -51,7 +51,7 @@ class StoryBlock extends React.Component {
 			currentUserNew = this.state.currentUser.clone();
 			currentUserNew.votes = true;
 			this.setState({
-				thumbsUp: this.state.votes + 1
+				thumbsUp: this.state.votes + 1,
 				currentUser: currentUserNew
 			});
 		} else {
