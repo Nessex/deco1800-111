@@ -31,13 +31,15 @@ def prompt_example(request):
 def story_example(request):
     return std_page(request, 'storytrove/read/story.js')
 
-@login_required
 def account(request):
     return std_page(request, 'storytrove/account/account.js')
 
 @login_required
 def account_stories(request):
     return std_page(request, 'storytrove/account/account_stories.js')
+
+def account_comments(request):
+    return std_page(request, 'storytrove/account/account_comments.js')
 
 @login_required
 def achievements(request):

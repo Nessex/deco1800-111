@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/Nessex/deco1800-111/issues"
   },
-  "homepage": "https://github.com/Nessex/deco1800-111#readme"
+  "homepage": "https://github.com/Nessex/deco1800-111#readme",
+  "dependencies": {
+    "emojione": "^2.2.6"
+  }
 }

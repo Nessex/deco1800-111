@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^account/achievements/?', views.home.achievements),
     url(r'^account/edit/?', views.home.edit),
     url(r'^account/stories/?', views.home.account_stories),
+    url(r'^account/comments/?', views.home.account_comments),
     url(r'^account/?', views.home.account),
     url(r'^browse/?', views.home.browse),
     url(r'^prompt/example/?', views.home.prompt_example),
