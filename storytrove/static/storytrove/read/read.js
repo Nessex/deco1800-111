@@ -65,10 +65,9 @@ class StoryBlock extends React.Component {
 		}
     }
 
-
     render() {
-		const btnToggleOnRead = this.state.read ? "btn-toggle-on btn btn-secondary" : "btn btn-secondary";
-		const btnToggleOnVote = this.state.votes ? "btn-toggle-on btn btn-secondary" : "btn btn-secondary";
+		const btnToggleOnRead = this.state.currentUser.read ? "btn-toggle-on btn btn-secondary" : "btn btn-secondary";
+		const btnToggleOnVote = this.state.currentUser.votes ? "btn-toggle-on btn btn-secondary" : "btn btn-secondary";
         return (
             <article className="story-block m-b-2">
                 <a href="/story/example"><h2>My Story</h2></a>
