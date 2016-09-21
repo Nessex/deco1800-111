@@ -15,8 +15,8 @@ EmojiText.PropTypes = {
 class Comment extends React.Component {
     render() {
         return (
-            <div>
-                <div>
+            <div className="row">
+                <div className="col-xs-12">
                     <div className="">
                         <div className="pull-xs-left">
                             <div className="btn-group-vertical comment-vote-controls">
