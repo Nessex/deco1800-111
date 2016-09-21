@@ -44,8 +44,33 @@ class Story extends React.Component {
         super(props);
 
         this.state = {
-
+            commentText: "",
+            comments: []
         };
+
+        this.addComment = this.addComment.bind(this);
+        this.updateCommentText = this.updateCommentText.bind(this);
+    }
+
+    updateCommentText(event) {
+        this.setState({
+            commentText: event.target.value
+        });
+    }
+
+    addComment(event) {
+        let comment = {
+            name: "Nathan",
+            comment: this.state.commentText
+        };
+
+        let comments = this.state.comments;
+        comments.push(comment);
+
+        this.setState({
+            comments: comments,
+            commentText: ""
+        });
     }
 
     render() {
@@ -92,14 +117,15 @@ class Story extends React.Component {
                         <section className="row m-t-1">
                             <div className="col-xs-12">
                                 <Comment name="Jonathon" comment="Overall a solid enough story. The tension is evident all through, and the dialogue is more than passable. Some better pacing wouldn't go amiss - more paragraphs and less standalone lines, and perhaps more clarity in the ending. The author also seems unaware that Van Diemen's Land is Tasmania, not New Zealand." />
+                                { this.state.comments.map(c => <Comment name={c.name} comment={c.comment} />) }
                             </div>
                         </section>
 
                         <section className="row m-t-1">
                             <div className="col-xs-12">
                                 <form method="post" action="">
-                                    <textarea className="form-control story-comment"></textarea>
-                                    <button type="button" className="btn btn-primary btn-block m-t-1">Submit</button>
+                                    <textarea className="form-control story-comment" onChange={this.updateCommentText} value={this.state.commentText}></textarea>
+                                    <button type="button" className="btn btn-primary btn-block m-t-1" onClick={this.addComment}>Submit</button>
                                 </form>
                             </div>
                         </section>
