@@ -18,7 +18,6 @@ class Account extends React.Component {
                             <li><a href="/account/achievements/">Achievements</a></li>
                             <li><a href="/account/stories/">Stories</a></li>
                             <li><a href="/account/comments/">Comments</a></li>
-                            <li><a href="/login/">[Login/Registration]</a></li>
                         </ul>
                     </div>
                 </div>
