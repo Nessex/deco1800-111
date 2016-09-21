@@ -41,10 +41,8 @@ def account_stories(request):
 def account_comments(request):
     return std_page(request, 'storytrove/account/account_comments.js')
 
-@login_required
 def achievements(request):
     return std_page(request, 'storytrove/account/achievements.js')
 
-@login_required
 def edit(request):
     return std_page(request, 'storytrove/account/edit.js')
