@@ -129,7 +129,9 @@ button[type="button"].btn.btn-secondary.btn-toggle-on
 	border-color: #adadad;
 }
 
-.story-item + .story-item
+.story-item + .story-item,
+.account-story + .account-story,
+.account-comment + .account-comment
 {
     margin-top: 12px;
 }

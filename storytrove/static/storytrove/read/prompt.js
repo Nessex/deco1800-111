@@ -3,8 +3,8 @@ class StoryItem extends React.Component {
         return (
             <div className="row story-item">
                 <div className="col-xs-12">
-                    <span><strong>{this.props.title}</strong></span>
-                    <p>{this.props.preview}</p>
+                    <span><strong>{ this.props.title }</strong></span>
+                    <p>{ this.props.preview }</p>
                     <a href="">Continue Reading</a>
                 </div>
             </div>

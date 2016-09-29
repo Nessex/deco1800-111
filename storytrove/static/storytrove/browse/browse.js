@@ -105,6 +105,34 @@ class Browse extends React.Component {
                     <div className="col-xs-12">
                         <h2>Browse</h2>
 
+                        <div className="row m-t-1">
+                            <div className="col-xs-12 text-xs-center">
+                                <div className="btn-group">
+                                    <button type="button" className="btn btn-secondary">
+                                        <i className="fa fa-fighter-jet" /> War
+                                    </button>
+                                    <button type="button" className="btn btn-secondary">
+                                        <i className="fa fa-ge" /> Death
+                                    </button>
+                                    <button type="button" className="btn btn-secondary">
+                                        <i className="fa fa-history" /> History
+                                    </button>
+                                    <button type="button" className="btn btn-secondary">
+                                        <i className="fa fa-hand-lizard-o" /> Something
+                                    </button>
+                                    <button type="button" className="btn btn-secondary">
+                                        <i className="fa fa-ge" /> Death
+                                    </button>
+                                    <button type="button" className="btn btn-secondary">
+                                        <i className="fa fa-ge" /> Death
+                                    </button>
+                                    <button type="button" className="btn btn-secondary">
+                                        <i className="fa fa-ge" /> Death
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         <section className="row">
                             { paginatedResults.map(r => <Prompt key={r.id} {...r} /> ) }
                         </section>
