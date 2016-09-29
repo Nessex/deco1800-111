@@ -41,7 +41,7 @@ class Account extends React.Component {
                                 </div>
                             </section>
                         </div>
-                        <div className="list-group">
+                        <div className="list-group m-t-1">
                             <a className="list-group-item list-group-item-action" href="/account/edit/">Edit Details</a>
                             <a className="list-group-item list-group-item-action" href="/account/achievements/">Achievements</a>
                             <a className="list-group-item list-group-item-action" href="/account/stories/">Stories</a>

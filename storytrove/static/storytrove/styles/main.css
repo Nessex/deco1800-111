@@ -123,7 +123,13 @@
     padding-right: 20px;
 }
 
-button[type="button"].btn.btn-secondary.btn-toggle-on {
+button[type="button"].btn.btn-secondary.btn-toggle-on 
+{
 	background-color: #e6e6e6;
 	border-color: #adadad;
+}
+
+.story-item + .story-item
+{
+    margin-top: 12px;
 }

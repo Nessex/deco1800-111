@@ -1,7 +1,7 @@
 class StoryItem extends React.Component {
     render() {
         return (
-            <div className="row">
+            <div className="row story-item">
                 <div className="col-xs-12">
                     <span><strong>{this.props.title}</strong></span>
                     <p>{this.props.preview}</p>
@@ -61,7 +61,8 @@ class Prompt extends React.Component {
     }
 
     getStoryItemProps(storyId) {
-        return this.state.stories[storyId];
+        let props = { key: storyId };
+        return Object.assign(props, this.state.stories[storyId]);
     }
 
     render() {
