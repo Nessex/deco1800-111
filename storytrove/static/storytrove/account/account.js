@@ -41,12 +41,12 @@ class Account extends React.Component {
                                 </div>
                             </section>
                         </div>
-                        <ul>
-                            <li><a href="/account/edit/">Edit Details</a></li>
-                            <li><a href="/account/achievements/">Achievements</a></li>
-                            <li><a href="/account/stories/">Stories</a></li>
-                            <li><a href="/account/comments/">Comments</a></li>
-                        </ul>
+                        <div className="list-group">
+                            <a className="list-group-item list-group-item-action" href="/account/edit/">Edit Details</a>
+                            <a className="list-group-item list-group-item-action" href="/account/achievements/">Achievements</a>
+                            <a className="list-group-item list-group-item-action" href="/account/stories/">Stories</a>
+                            <a className="list-group-item list-group-item-action" href="/account/comments/">Comments</a>
+                        </div>
                     </div>
                 </div>
             </div>
