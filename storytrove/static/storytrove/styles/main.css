@@ -118,8 +118,9 @@
 
 .edit-account-profile-picture
 {
-    width: 100px;
+    width: 120px;
     height: 100px;
+    padding-right: 20px;
 }
 
 button[type="button"].btn.btn-secondary.btn-toggle-on {
