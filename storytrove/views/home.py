@@ -34,7 +34,6 @@ def story_example(request):
 def account(request):
     return std_page(request, 'storytrove/account/account.js')
 
-@login_required
 def account_stories(request):
     return std_page(request, 'storytrove/account/account_stories.js')
 
