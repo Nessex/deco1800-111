@@ -131,6 +131,15 @@ def comments(request):
     })
 
 '''
+Respond to a prompt with a piece of writing
+Requires the piece of writing and the prompt id
+'''
+def respond(request):
+    return JsonResponse({
+        'failure': True
+    })
+
+'''
 Add a reaction to a given resource
 '''
 def react(request):
