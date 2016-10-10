@@ -3,6 +3,9 @@ import datetime
 import urllib.request, urllib.parse, urllib.error
 import json
 
+from storytrove.models import *
+from django.db.models import Count
+
 API_KEY = '' #TODO: How to move this somewhere better, like settings or environment variables
 
 if API_KEY == '':
@@ -99,8 +102,37 @@ reaction
 author
 '''
 def stories(request):
+    tag = request.GET.get('tag')
+    reaction = request.GET.get('reaction')
+    author = request.GET.get('author')
+
+    # start with all recent stories (past week)
+    endDate = date.today()
+    startDate = endDate - timedelta(days=6)
+    responses = Response.objects.filter(date__range=[startdate,enddate])
+    
+    # then initially filter by the broadest option - the tag
+    if(tag != ""):
+        responses= responses.filter(prompt=Prompt.objects.filter(tags__contains=tag))
+    
+    # further filter by reaction and author if necessary
+    if(reaction != ""):
+        responses = responses.annotate(
+            num_emojis = Count('EmojiResponseOnResponse')).filter(
+            emojiResponseOnResponse__emoji = reaction).order_by('num_emojis')
+
+    if(author != ""):
+        responses = responses.filter(user=UserAccount.objects.filter(username__exact=author))
+        
+        
+    if responses == None:
+        return JsonResponse({
+            'failure': True
+        })
+
     return JsonResponse({
-        'failure': True
+        'success': True,
+        'response': json.dumps(responses)
     })
 
 '''
@@ -108,9 +140,35 @@ Get details for a prompt including image links, metadata, stories, votes and rea
 Requires a prompt id
 '''
 def prompt(request):
-    return JsonResponse({
-        'failure': True
-    })
+
+    id= request.GET.get('id')
+    
+    # TODO: limit the size of the try catch block for converting the int
+    try:
+        id = int(id)
+        prompt = Prompt.objects.get(pk=id)
+        
+        troveObjects =  prompt.trove_objects
+        stories = Response.objects.filter(prompt = prompt)
+        reactions =  EmojiResponseOnResponse.objects.filter(response __in= stories)
+        
+        return JsonResponse({
+            'success' : True,
+            'response' : json.dumps({
+                'trove_objects' : json.dumps(troveObjects),
+                'tags' : promptDetails.tags,
+                'stories' : json.dumps(stories),
+                'reactions' : json.dumps(reactions),
+            })
+        
+        })
+        break
+    
+    except:
+        return JsonResponse({
+            'failure': True
+        })
+   
 
 '''
 Get details required to display a story including the story text, author details,
@@ -118,9 +176,41 @@ prompt details, and comment metadata.
 Requires a story id
 '''
 def story(request):
-    return JsonResponse({
-        'failure': True
-    })
+
+    id= request.GET.get('id')
+    
+    response = ""
+    
+    try:
+        id = int(id)
+        response = Response.objects.get(pk=id)
+    except:
+        return JsonResponse({
+            'failure': True
+        })
+
+    if(response != ""):
+     
+        text = response.text
+        author = json.dumps(response.user)
+        prompt = json.dumps(response.prompt)
+        # or do we only want IDs here for comments etc
+        comments = json.dumps(Comment.objects.filter(response = response))
+     
+        return JsonResponse({
+            'success' : True,
+            'response' : json.dumps({
+                'author' : author,
+                'prompt' : prompt,
+                'text' : text,
+                'comments' : comments
+            }
+        })
+     
+    else:
+        return JsonResponse({
+            'failure': True
+        })
 
 '''
 Get an array of comments for a given story id
