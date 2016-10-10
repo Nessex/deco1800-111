@@ -16,6 +16,7 @@ if API_KEY != '':
 
 #TODO: Move to model
 def queryTrove(inputParams):
+    
     params = {
         'key': API_KEY,
         **inputParams #merge inputParams into this dict
@@ -32,6 +33,7 @@ def queryTrove(inputParams):
 
 #TODO: Move to model
 def getTagString(tags):
+    
     #TODO: Filter/Whitelist tags here
     whitelist = [
         'brisbane',
@@ -51,6 +53,7 @@ set of functions, primarily prompts()
 This will still be used internally to build up new sets of prompts from trove.
 '''
 def search(tags, reactions, offset):
+    
     tag_string = getTagString(tags)
 
     if len(tag_string) == 0:
@@ -77,6 +80,7 @@ By default this should return a set of featured prompts for each of a few tags
 Results can also be filtered by providing an array of tags or reactions
 '''
 def prompts(request):
+    
     tags = request.GET.get('tags').split(',')
     reactions = request.GET.get('reactions').split(',')
     offset = request.GET.get('offset')
@@ -102,6 +106,7 @@ reaction
 author
 '''
 def stories(request):
+    
     tag = request.GET.get('tag')
     reaction = request.GET.get('reaction')
     author = request.GET.get('author')
@@ -141,7 +146,7 @@ Requires a prompt id
 '''
 def prompt(request):
 
-    id= request.GET.get('id')
+    id = request.GET.get('id')
     
     # TODO: limit the size of the try catch block for converting the int
     try:
@@ -177,13 +182,14 @@ Requires a story id
 '''
 def story(request):
 
-    id= request.GET.get('id')
+    id = request.GET.get('id')
     
     response = ""
     
     try:
         id = int(id)
         response = Response.objects.get(pk=id)
+        break
     except:
         return JsonResponse({
             'failure': True
@@ -216,47 +222,158 @@ def story(request):
 Get an array of comments for a given story id
 '''
 def comments(request):
-    return JsonResponse({
-        'failure': True
-    })
+    
+    id = request.GET.get('id')
+    
+    comments = ""
+    
+    try:
+        id = int(id)
+        comments = Comment.objects.filter(response__in = Response.objects.filter(prompt = Prompt.objects.get(pk=id)))
+        break
+    except:
+        return JsonResponse({
+            'failure': True
+        })
+
+    if(comments != ""):
+    
+        return JsonResponse({
+                'success' : True,
+                'response' : json.dumps({
+                    'comments' : comments
+                }
+            })
+         
+    else:
+        return JsonResponse({
+            'failure': True
+        })
 
 '''
 Respond to a prompt with a piece of writing
-Requires the piece of writing and the prompt id
+Requires the prompt id, the user id, the title, the text,
+and whether it is a private post or a draft copy
 '''
 def respond(request):
+
+    userId = request.GET.get('user_id')
+    promptId = request.GET.get('prompt_id')
+    title = request.GET.get('title')
+    text = request.GET.get('text')
+    is_draft = request.GET.get('is_draft')
+    # For now, is_private will just be false
+    is_private = False
+    
+    # TODO add in if user id is empty to use the current user?
+    
+    userIdInt = -1
+    promptIdInt = -1
+    
+    try:
+        userIdInt = int(userId)
+        promptIdInt = int(promptId)
+        break
+    except:
+        return JsonResponse({
+            'failure': True
+        })
+    
+    response = Response(
+        user = UserAccount.objects.get(pk = userIdInt),
+        prompt = Prompt.objects.get(pk = promptIdInt),
+        title = title,
+        date = datetime.now(), # datetime for date field ok?
+        text = text,
+        is_private = is_private, 
+        is_draft =  is_draft)
+        
+    response.save()
+
     return JsonResponse({
-        'failure': True
+        'success': True
     })
 
 '''
-Add a reaction to a given resource
+Add a reaction to a given resource,
+needs to specify if the resource is a comment or a story,
+the user id, the id of the resource and the emoji used as 
+a reaction in its char format
 '''
 def react(request):
+    
+    userId = request.GET.get('user_id')
+    resourceType = request.GET.get('resource_type')
+    resourceId = request.GET.get('resource_id')
+    emojiChar = request.GET.get('emoji')
+    
+            
+    # TODO add in if user id is empty to use the current user?
+    
+    userIdInt = -1
+    promptIdInt = -1
+    
+    try:
+        userIdInt = int(userId)
+        resourceIdInt = int(resourceId)
+        break
+    except:
+        return JsonResponse({
+            'failure': True
+        })
+    
+    if(resourceType == "response"):
+        reaction = EmojiResponseOnResponse(
+            user = UserAccount.objects.get(pk = userIdInt),
+            response = Response.objects.get(pk = resourceIdInt),
+            emoji = emojiChar)
+            
+        reaction.save()
+    
+    elif(resourceType == "comment"):
+        reaction = EmojiResponseOnResponse(
+            user = UserAccount.objects.get(pk = userIdInt),
+            response = Response.objects.get(pk = resourceIdInt),
+            emoji = emojiChar)
+    
+        reaction.save()
+    
     return JsonResponse({
-        'failure': True
+        'success': True
     })
 
-'''
-Add an upvote to a given resource
-'''
-def voteup(request):
-    return JsonResponse({
-        'failure': True
-    })
-
-'''
-Add a downvote to a given resource
-'''
-def votedown(request):
-    return JsonResponse({
-        'failure': True
-    })
-
+    
 '''
 Add a comment to a given resource
 '''
 def comment(request):
+
+    userId = request.GET.get('user_id')
+    responseId = request.GET.get('response_id')
+    text = request.GET.get('text')
+    
+    # TODO add in if user id is empty to use the current user?
+    
+    userIdInt = -1
+    responseIdInt = -1
+    
+    try:
+        userIdInt = int(userId)
+        responseIdInt = int(responseId)
+        break
+    except:
+        return JsonResponse({
+            'failure': True
+        })
+    
+    comment = Comment(
+        user = UserAccount.objects.get(pk = userIdInt),
+        response = Response.objects.get(pk = responseIdInt),
+        date = datetime.now(), # datetime for date field ok?
+        text = text)
+    
+    comment.save()
+
     return JsonResponse({
-        'failure': True
+        'success': True
     })
