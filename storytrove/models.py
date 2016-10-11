@@ -1,11 +1,7 @@
 from datetime import datetime
 from django.db import models
+from django.contrib.auth.models import User
 
-class UserAccountManager(models.Manager):
-	def create_user_account(self, username, password, image, email_address):
-		user = self.create(username=username,password=password,image=image,email_address=email_address)
-		return user
-		
 class TroveObjectManager(models.Manager):
 	def create_trove_object(self, trove_id, description):
 		trove_object = self.create(trove_id=trove_id,description=description)
@@ -40,17 +36,7 @@ class AchievementManager(models.Manager):
 	def create_achievement(self, name, rank, description):
         	achievement = self.create(name=name,rank=rank,description=description)
         	return achievement
-	
-class UserAccount(models.Model):
-	username = models.CharField(max_length = 15)
-	password = models.CharField(max_length = 15)
-	image = models.CharField(max_length = 255)
-	email_address = models.CharField(max_length = 50)
-	last_login = models.DateField(default = datetime.now)
-	create_date = models.DateField(default = datetime.now)
-	
-	objects = UserAccountManager()
-	
+		
 class TroveObject(models.Model):
 	trove_id = models.CharField(max_length = 20) # this could actually be an int field
 	description = models.TextField()
@@ -64,7 +50,7 @@ class Prompt(models.Model):
 	objects = PromptManager()
 	
 class Response(models.Model):
-	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL)
 	prompt = models.ForeignKey(Prompt, on_delete = models.CASCADE)
 	title = models.CharField(max_length = 100)
 	date = models.DateField()
@@ -75,7 +61,7 @@ class Response(models.Model):
 	objects = ResponseManager()
 	
 class Comment(models.Model):
-	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL)
 	response = models.ForeignKey(Response, on_delete = models.CASCADE)
 	date = models.DateField()
 	text = models.TextField() #attempted no maximum length
@@ -83,7 +69,7 @@ class Comment(models.Model):
 	objects = CommentManager()
 	
 class EmojiResponseOnResponse(models.Model):
-	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL)
 	response = models.ForeignKey(Response, on_delete = models.CASCADE)
 
 	EMOJI_RESPONSES = (
@@ -100,7 +86,7 @@ class EmojiResponseOnResponse(models.Model):
 	objects = EmojiResponseOnResponseManager()
 
 class EmojiResponseOnComment(models.Model):
-	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL)
 	comment = models.ForeignKey(Comment, on_delete = models.CASCADE)
 
 	EMOJI_RESPONSES = (
@@ -117,7 +103,7 @@ class EmojiResponseOnComment(models.Model):
 	objects = EmojiResponseOnCommentManager()
 	
 class Achievement(models.Model):
-	user = models.ManyToManyField(UserAccount, blank = True)
+	user = models.ManyToManyField(settings.AUTH_USER_MODEL)
 	name = models.CharField(max_length = 50)
 	rank = models.IntegerField() #bronze, silver, gold
 	description = models.TextField()
