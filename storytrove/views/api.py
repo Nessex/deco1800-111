@@ -1,14 +1,12 @@
-import datetime
 import json
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import timedelta
+from datetime import *
 
 from django.db.models import Count
 from django.http import HttpResponse
 from django.http import JsonResponse
-from django.core import serializers
 
 from storytrove.models import *
 
@@ -21,7 +19,6 @@ if API_KEY != '':
     print("\033[95m\033[93m\033[1m\033[4m--> Remove API key before commit (/views/api.py) <--\033[0m")
 
 
-# TODO: Move to model
 def queryTrove(inputParams):
     params = {
         'key': API_KEY,
@@ -35,10 +32,9 @@ def queryTrove(inputParams):
         r = urllib.request.urlopen(url).read().decode('utf8')
         return json.loads(r)
     except urllib.error.HTTPError:
-        return None;
+        return None
 
 
-# TODO: Move to model
 def getTagString(tags):
     # TODO: Filter/Whitelist tags here
     whitelist = [
@@ -97,7 +93,7 @@ def prompts(request):
 
     res = search(tags, reactions, offset)
 
-    if res == None:
+    if res is None:
         return JsonResponse({
             'failure': True
         })
@@ -119,7 +115,6 @@ author
 
 
 def stories(request):
-
     tag = request.GET.get('tag')
     reaction = request.GET.get('reaction')
     author = request.GET.get('author')
@@ -185,7 +180,7 @@ def prompt(request):
             'success': True,
             'response': json.dumps({
                 'trove_objects': json.dumps(troveObjects),
-                'tags': promptDetails.tags,
+                'tags': prompt.tags,
                 'stories': json.dumps(stories),
                 'reactions': json.dumps(reactions),
             })
@@ -218,7 +213,7 @@ def story(request):
             'failure': True
         })
 
-    if (response != ""):
+    if response != "":
 
         text = response.text
         author = json.dumps(response.user)
@@ -260,7 +255,7 @@ def comments(request):
             'failure': True
         })
 
-    if (comments != ""):
+    if comments != "":
 
         return JsonResponse({
             'success': True,
@@ -347,7 +342,7 @@ def react(request):
             'failure': True
         })
 
-    if (resourceType == "response"):
+    if resourceType == "response":
         reaction = EmojiResponseOnResponse(
             user=UserAccount.objects.get(pk=userIdInt),
             response=Response.objects.get(pk=resourceIdInt),
@@ -355,7 +350,7 @@ def react(request):
 
         reaction.save()
 
-    elif (resourceType == "comment"):
+    elif resourceType == "comment":
         reaction = EmojiResponseOnResponse(
             user=UserAccount.objects.get(pk=userIdInt),
             response=Response.objects.get(pk=resourceIdInt),
