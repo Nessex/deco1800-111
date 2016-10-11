@@ -19,7 +19,7 @@ if API_KEY != '':
     print("\033[95m\033[93m\033[1m\033[4m--> Remove API key before commit (/views/api.py) <--\033[0m")
 
 
-def prepare_story_object(s):
+def prepare_story_object(s, truncated=False):
     # Start with values we want as-is
     out = {k: getattr(s, k) for k in ('id', 'title', 'is_draft', 'is_private', 'user_id', 'prompt_id')}
 
@@ -27,7 +27,7 @@ def prepare_story_object(s):
     out['date'] = s.date.isoformat()
 
     # Truncate text to 300 characters
-    out['truncated_text'] = s.text[:300] if (len(s.text) > 300) else s.text
+    out['text'] = s.text[:300] if (len(s.text) > 300 and truncated) else s.text
     return out
 
 
@@ -182,7 +182,7 @@ def stories(request):
         })
 
     stories = [r for r in responses.values()]
-    stories = list(map(prepare_story_object, stories))
+    stories = list(map(lambda s: prepare_story_object(s, True), stories))
 
     return HttpResponse(json.dumps({
         'success': True,
@@ -251,7 +251,11 @@ def story(request):
         prompt = prepare_prompt_object(response.prompt)
         comments = [c for c in Comment.objects.filter(response=response)]
         comments = list(map(prepare_comment_object, comments))
+        comment_ids = [c['id'] for c in comments]
         comment_author_ids = list(set([c['user_id'] for c in comments])) # unique user ids
+
+        # Change comments into an associative array, with comment id as the key
+        comments = {c['id']: c for c in comments}
 
         # Get user objects for each comment author id
         comment_authors = [prepare_user_object(User.objects.get(pk=uid)) for uid in comment_author_ids]
@@ -262,6 +266,7 @@ def story(request):
             'story': story,
             'author': author,
             'prompt': prompt,
+            'comment_ids': comment_ids,
             'comments': comments,
             'comment_authors': comment_authors
         }), content_type='application/json')
