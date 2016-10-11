@@ -5,12 +5,12 @@ class UserAccountManager(models.Manager):
 	def create_user_account(self, username, password, image, email_address):
 		user = self.create(username=username,password=password,image=image,email_address=email_address)
 		return user
-		
+
 class TroveObjectManager(models.Manager):
 	def create_trove_object(self, trove_id, description):
 		trove_object = self.create(trove_id=trove_id,description=description)
 		return trove_object
-		
+
 class PromptManager(models.Manager):
 	def create_prompt(self, trove_objects, tags):
 		prompt = self.create(trove_objects=trove_objects,tags=tags)
@@ -30,17 +30,17 @@ class EmojiResponseOnResponseManager(models.Manager):
 	def create_emoji_on_response(self, user, response, emoji):
 		emojiResponse = self.create(user=user,response=response,emoji=emoji)
 		return emojiResponse
-		
+
 class EmojiResponseOnCommentManager(models.Manager):
 	def create_emoji_on_comment(self, user, comment, emoji):
 		emojiComment = self.create(user=user,comment=comment,emoji=emoji)
 		return emojiComment
-		
+
 class AchievementManager(models.Manager):
 	def create_achievement(self, name, rank, description):
         	achievement = self.create(name=name,rank=rank,description=description)
         	return achievement
-	
+
 class UserAccount(models.Model):
 	username = models.CharField(max_length = 15)
 	password = models.CharField(max_length = 15)
@@ -48,21 +48,21 @@ class UserAccount(models.Model):
 	email_address = models.CharField(max_length = 50)
 	last_login = models.DateField(default = datetime.now)
 	create_date = models.DateField(default = datetime.now)
-	
+
 	objects = UserAccountManager()
-	
+
 class TroveObject(models.Model):
 	trove_id = models.CharField(max_length = 20) # this could actually be an int field
 	description = models.TextField()
-	
+
 	objects = TroveObjectManager()
-		
+
 class Prompt(models.Model):
 	trove_objects = models.ManyToManyField(TroveObject)  #this is the list of trove ids used as stimuli
 	tags = models.CharField(max_length = 50)
-	
+
 	objects = PromptManager()
-	
+
 class Response(models.Model):
 	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
 	prompt = models.ForeignKey(Prompt, on_delete = models.CASCADE)
@@ -71,17 +71,17 @@ class Response(models.Model):
 	text = models.TextField() #attempted no maximum length
 	is_private = models.BooleanField()
 	is_draft = models.BooleanField()
-	
+
 	objects = ResponseManager()
-	
+
 class Comment(models.Model):
 	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
 	response = models.ForeignKey(Response, on_delete = models.CASCADE)
 	date = models.DateField()
 	text = models.TextField() #attempted no maximum length
-	
+
 	objects = CommentManager()
-	
+
 class EmojiResponseOnResponse(models.Model):
 	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
 	response = models.ForeignKey(Response, on_delete = models.CASCADE)
@@ -96,7 +96,7 @@ class EmojiResponseOnResponse(models.Model):
         ('5', ':thinking:')
 	)
 	emoji = models.CharField(max_length = 1, choices = EMOJI_RESPONSES)
-	
+
 	objects = EmojiResponseOnResponseManager()
 
 class EmojiResponseOnComment(models.Model):
@@ -113,13 +113,13 @@ class EmojiResponseOnComment(models.Model):
         ('5', ':thinking:')
 	)
 	emoji = models.CharField(max_length = 1, choices = EMOJI_RESPONSES)
-	
+
 	objects = EmojiResponseOnCommentManager()
-	
+
 class Achievement(models.Model):
 	user = models.ManyToManyField(UserAccount, blank = True)
 	name = models.CharField(max_length = 50)
 	rank = models.IntegerField() #bronze, silver, gold
 	description = models.TextField()
-	
+
 	objects = AchievementManager()

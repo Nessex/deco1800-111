@@ -40,5 +40,6 @@ urlpatterns = [
     url(r'^prompt/example/?', views.home.prompt_example),
     url(r'^story/example/?', views.home.story_example),
     url(r'^login/$', login, name='login'),
+    url(r'^test/setup/$', views.test.set_up_sample_data),
     url(r'^', views.home.index),
 ]
