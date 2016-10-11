@@ -123,6 +123,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
+    os.path.join('...', 'node_modules', 'emojione')
 )
 
 LOGIN_REDIRECT_URL = '/'
