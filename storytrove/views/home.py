@@ -6,7 +6,7 @@ import datetime
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 
 def std_page(request, script_path):
     template = loader.get_template('page.html')
@@ -21,6 +21,7 @@ def index(request):
 def read(request):
     return std_page(request, 'storytrove/read/read.js')
 
+@login_required
 def write(request):
     return std_page(request, 'storytrove/write/write.js')
 
@@ -36,18 +37,23 @@ def prompt_example(request):
 def story_example(request):
     return std_page(request, 'storytrove/read/story.js')
 
+@login_required
 def account(request):
     return std_page(request, 'storytrove/account/account.js')
 
+@login_required
 def account_stories(request):
     return std_page(request, 'storytrove/account/account_stories.js')
 
+@login_required
 def account_comments(request):
     return std_page(request, 'storytrove/account/account_comments.js')
 
+@login_required
 def achievements(request):
     return std_page(request, 'storytrove/account/achievements.js')
 
+@login_required
 def edit(request):
     return std_page(request, 'storytrove/account/edit.js')
 

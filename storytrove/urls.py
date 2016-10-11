@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^scratch/?', views.test.scratch),
     url(r'^read/?', views.home.read),
     url(r'^write/?', views.home.write),
+    url(r'^account/register/?', views.home.register),
     url(r'^account/achievements/?', views.home.achievements),
     url(r'^account/edit/?', views.home.edit),
     url(r'^account/stories/?', views.home.account_stories),
@@ -40,7 +41,7 @@ urlpatterns = [
     url(r'^prompt/example/?', views.home.prompt_example),
     url(r'^story/example/?', views.home.story_example),
     url(r'^login/$', login, name='login'),
-    url(r'^account/register/$', views.home.register),
+    url(r'^register/$', views.home.register),
     url(r'^', views.home.index),
 
 ]
