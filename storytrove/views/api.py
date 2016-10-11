@@ -19,6 +19,45 @@ if API_KEY != '':
     print("\033[95m\033[93m\033[1m\033[4m--> Remove API key before commit (/views/api.py) <--\033[0m")
 
 
+def prepare_story_object(s):
+    # Start with values we want as-is
+    out = {k: getattr(s, k) for k in ('id', 'title', 'is_draft', 'is_private', 'user_id', 'prompt_id')}
+
+    # Add in any values that need to be transformed
+    out['date'] = s.date.isoformat()
+
+    # Truncate text to 300 characters
+    out['truncated_text'] = s.text[:300] if (len(s.text) > 300) else s.text
+    return out
+
+
+def prepare_user_object(u):
+    out = {k: getattr(u, k) for k in ('id', 'username')}
+    return out
+
+
+def prepare_prompt_object(p):
+    out = {
+        'id': p.id,
+        'tags': p.tags.split(',')
+    }
+
+    trove_objects = [t for t in p.trove_objects.values()]
+    trove_objects = list(map(prepare_trove_object, trove_objects))
+    out['trove_objects'] = trove_objects
+    return out
+
+
+def prepare_trove_object(t):
+    out = {k: t.get(k) for k in ('id', 'trove_id', 'description')}
+    return out
+
+
+def prepare_comment_object(c):
+    out = {k: getattr(c, k) for k in ('id', 'text', 'user_id')}
+    return out
+
+
 def queryTrove(inputParams):
     params = {
         'key': API_KEY,
@@ -142,13 +181,6 @@ def stories(request):
             'failure': True
         })
 
-    def prepare_story_object(s):
-        s['date'] = s['date'].isoformat()
-        # Truncate text to 300 characters
-        s['truncated_text'] = s['text'][:300] if (len(s['text']) > 300) else s['text']
-        s.pop('text', None)
-        return s
-
     stories = [r for r in responses.values()]
     stories = list(map(prepare_story_object, stories))
 
@@ -214,22 +246,25 @@ def story(request):
         })
 
     if response != "":
+        story = prepare_story_object(response)
+        author = prepare_user_object(response.user)
+        prompt = prepare_prompt_object(response.prompt)
+        comments = [c for c in Comment.objects.filter(response=response)]
+        comments = list(map(prepare_comment_object, comments))
+        comment_author_ids = list(set([c['user_id'] for c in comments])) # unique user ids
 
-        text = response.text
-        author = json.dumps(response.user)
-        prompt = json.dumps(response.prompt)
-        # or do we only want IDs here for comments etc
-        comments = json.dumps(Comment.objects.filter(response=response))
+        # Get user objects for each comment author id
+        comment_authors = [prepare_user_object(User.objects.get(pk=uid)) for uid in comment_author_ids]
+        comment_authors = {ca['id']: ca for ca in comment_authors}
 
-        return JsonResponse({
+        return HttpResponse(json.dumps({
             'success': True,
-            'response': json.dumps({
-                'author': author,
-                'prompt': prompt,
-                'text': text,
-                'comments': comments
-            })
-        })
+            'story': story,
+            'author': author,
+            'prompt': prompt,
+            'comments': comments,
+            'comment_authors': comment_authors
+        }), content_type='application/json')
 
     else:
         return JsonResponse({

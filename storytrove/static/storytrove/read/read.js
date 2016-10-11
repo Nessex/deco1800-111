@@ -130,7 +130,6 @@ class Read extends React.Component {
     }
 
     loadStoriesSuccess(response) {
-        console.log("New stories loaded");
         let storyIds = [];
         let stories = {};
 
@@ -143,7 +142,7 @@ class Read extends React.Component {
             loaded: true,
             storyIds: storyIds,
             stories: stories
-        })
+        });
     }
 
     loadStoriesFailure(response) {

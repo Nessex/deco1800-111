@@ -50,6 +50,42 @@ class Story extends React.Component {
 
         this.addComment = this.addComment.bind(this);
         this.updateCommentText = this.updateCommentText.bind(this);
+        this.loadStory = this.loadStory.bind(this);
+        this.storyRequestSuccess = this.storyRequestSuccess.bind(this);
+        this.storyRequestFailure = this.storyRequestFailure.bind(this);
+    }
+
+    storyRequestSuccess(response) {
+        const newState = Object.assign({ loaded: true }, response.story);
+
+        this.setState(newState);
+    }
+
+    storyRequestFailure(response) {
+        //TODO(nathan): Show error message or retry with exponential falloff
+        console.log("Loading story failed");
+        console.table(response);
+    }
+
+    loadStory() {
+        const data = { id: this.props.storyId };
+        this.storyRequest = $.get('/api/story', data)
+            .done((response) => {
+                if (response.success)
+                    this.storyRequestSuccess(response);
+                else
+                    this.storyRequestFailure(response);
+            })
+            .fail(this.storyRequestFailure)
+    }
+
+    componentDidMount() {
+        this.loadStory();
+    }
+
+    componentWillUnmount() {
+        if (this.storyRequest)
+            this.storyRequest.abort();
     }
 
     updateCommentText(event) {
@@ -136,4 +172,14 @@ class Story extends React.Component {
     }
 }
 
-ReactDOM.render(<Story />, document.getElementById("react-page"));
+var el = document.getElementById("react-page");
+
+if (el) {
+    try {
+        let props = JSON.parse(el.getAttribute("data-react-props"));
+
+        ReactDOM.render(<Story { ...props } />, el);
+    } catch (e) {
+        console.log(e);
+    }
+}

@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
@@ -7,10 +9,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.template.context_processors import csrf
 
 
-def std_page(request, script_path):
+def std_page(request, script_path, props={}):
     template = loader.get_template('page.html')
     context = {
         'reactscript': script_path,
+        'reactprops': json.dumps(props)
     }
     return HttpResponse(template.render(context, request))
 
@@ -42,6 +45,14 @@ def prompt_example(request):
 
 def story_example(request):
     return std_page(request, 'storytrove/read/story.js')
+
+
+def story(request, story_id):
+    props = {
+        "storyId": story_id
+    }
+
+    return std_page(request, 'storytrove/read/story.js', props)
 
 
 @login_required

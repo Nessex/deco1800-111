@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^browse/?', views.home.browse),
     url(r'^prompt/example/?', views.home.prompt_example),
     url(r'^story/example/?', views.home.story_example),
+    url(r'^story/(?P<story_id>[0-9]{1,11})/?', views.home.story),
     url(r'^login/$', login, name='login'),
     url(r'^', views.home.index),
 
