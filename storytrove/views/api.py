@@ -133,12 +133,12 @@ def stories(request):
         responses = responses.filter(prompt=Prompt.objects.filter(tags__contains=tag))
 
     # further filter by reaction and author if necessary
-    if reaction != "":
+    if reaction is not None and reaction != "":
         responses = responses.annotate(
             num_emojis=Count('emojiresponseonresponse')).filter(
             emojiresponseonresponse__emoji=reaction).order_by('num_emojis')
 
-    if author != "":
+    if author is not None and author != "":
         responses = responses.filter(user=UserAccount.objects.filter(username__exact=author))
 
     if responses is None:
