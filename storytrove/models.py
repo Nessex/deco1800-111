@@ -46,8 +46,8 @@ class UserAccount(models.Model):
 	password = models.CharField(max_length = 15)
 	image = models.CharField(max_length = 255)
 	email_address = models.CharField(max_length = 50)
-	last_login = models.DateField(default = datetime.now)
-	create_date = models.DateField(default = datetime.now)
+	last_login = models.DateTimeField(default = datetime.now)
+	create_date = models.DateTimeField(default = datetime.now)
 	
 	objects = UserAccountManager()
 	
@@ -67,7 +67,7 @@ class Response(models.Model):
 	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
 	prompt = models.ForeignKey(Prompt, on_delete = models.CASCADE)
 	title = models.CharField(max_length = 100)
-	date = models.DateField()
+	date = models.DateTimeField()
 	text = models.TextField() #attempted no maximum length
 	is_private = models.BooleanField()
 	is_draft = models.BooleanField()
@@ -77,7 +77,7 @@ class Response(models.Model):
 class Comment(models.Model):
 	user = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
 	response = models.ForeignKey(Response, on_delete = models.CASCADE)
-	date = models.DateField()
+	date = models.DateTimeField()
 	text = models.TextField() #attempted no maximum length
 	
 	objects = CommentManager()
@@ -120,6 +120,7 @@ class Achievement(models.Model):
 	user = models.ManyToManyField(UserAccount, blank = True)
 	name = models.CharField(max_length = 50)
 	rank = models.IntegerField() #bronze, silver, gold
-	description = models.TextField()
+	date = models.DateTimeField()
+         description = models.TextField()
 	
 	objects = AchievementManager()
