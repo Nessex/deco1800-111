@@ -1,3 +1,6 @@
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+
 class EmojiText extends React.Component {
     render() {
         const innerHTML = {
@@ -96,14 +99,67 @@ class Read extends React.Component {
         super(props);
 
         this.state = {
-            loaded: true, //TODO default to false once content loaded asynchronously
-            storyIds: [],
-            stories: {},
+            loaded: false,
+            storyIds: [/* "123" */],
+            stories: {
+                /*
+                 * "123": {
+                 *     votedUp: false,
+                 *     votedDown: false,
+                 *     reactions: [],
+                 *     title: "",
+                 *     votes: 0,
+                 *     author: "",
+                 *     truncatedStory: ""
+                 * }
+                 */
+            },
             filterReactions: []
         };
 
         this.toggleReaction = this.toggleReaction.bind(this);
         this.getReactionClass = this.getReactionClass.bind(this);
+        this.getStoryBlock = this.getStoryBlock.bind(this);
+        this.addReaction = this.addReaction.bind(this);
+        this.removeReaction = this.removeReaction.bind(this);
+        this.voteUp = this.voteUp.bind(this);
+        this.voteDown = this.voteDown.bind(this);
+        this.loadStories = this.loadStories.bind(this);
+        this.loadStoriesSuccess = this.loadStoriesSuccess.bind(this);
+        this.loadStoriesFailure = this.loadStoriesFailure.bind(this);
+    }
+
+    loadStoriesSuccess(response) {
+        console.log("New stories loaded");
+        this.setState({
+            loaded: true,
+            stories: response.stories
+        })
+    }
+
+    loadStoriesFailure(response) {
+        //TODO(nathan): Show error message or retry with exponential falloff
+        console.log("Loading stories failed");
+        console.table(response);
+    }
+
+    loadStories() {
+        const data = {
+            reaction: this.state.filterReactions.length > 0 ? this.state.filterReactions[0] : undefined
+        };
+
+        this.loadStoriesRequest = $.get('/api/stories', data)
+            .done(this.loadStoriesSuccess)
+            .fail(this.loadStoriesFailure);
+    }
+
+    componentDidMount() {
+        this.loadStories();
+    }
+
+    componentWillUnmount() {
+        if (this.loadStoriesRequest)
+            this.loadStoriesRequest.abort();
     }
 
     toggleReaction(reaction) {
@@ -125,6 +181,76 @@ class Read extends React.Component {
 
     getReactionClass(reaction) {
         return this.state.filterReactions.indexOf(reaction) >= 0 ? "reaction-active" : "reaction-inactive";
+    }
+
+    getStoryBlock(storyId) {
+        const props = {
+            storyId: storyId,
+            story: this.state.stories[storyId],
+            addReaction: this.addReaction,
+            removeReaction: this.removeReaction,
+            voteUp: this.voteUp,
+            voteDown: this.voteDown
+        };
+
+        return <StoryBlock { ...props } />
+    }
+
+    addReaction(storyId, reaction) {
+        if (this.state.stories[storyId].reactions.indexOf(reaction) >= 0)
+            return; //Already added
+
+        let newState = React.addons.update(this.state, {
+            stories: {
+                [storyId]: {
+                    reactions: { $push: [reaction] }
+                }
+            }
+        });
+
+        this.setState(newState);
+    }
+
+    removeReaction(storyId, reaction) {
+        let reactions = this.state.stories[storyId].reactions;
+        const idx = reactions.indexOf(reaction);
+        reactions.splice(idx, 1);
+
+        let newState = React.addons.update(this.state, {
+            stories: {
+                [storyId]: {
+                    reactions: reactions
+                }
+            }
+        });
+
+        this.setState(newState);
+    }
+
+    voteUp(storyId) {
+        let newState = React.addons.update(this.state, {
+            stories: {
+                [storyId]: {
+                    votedDown: false,
+                    votedUp: true
+                }
+            }
+        });
+
+        this.setState(newState);
+    }
+
+    voteDown(storyId) {
+        let newState = React.addons.update(this.state, {
+            stories: {
+                [storyId]: {
+                    votedDown: true,
+                    votedUp: false
+                }
+            }
+        });
+
+        this.setState(newState);
     }
 
     render() {
@@ -157,11 +283,7 @@ class Read extends React.Component {
 
                         <section className="row">
                             <div className="col-xs-12">
-                                <StoryBlock />
-                                <StoryBlock />
-                                <StoryBlock />
-                                <StoryBlock />
-                                <StoryBlock />
+                                { this.state.storyIds.map(id => this.getStoryBlock(id)) }
                             </div>
                         </section>
                     </div>

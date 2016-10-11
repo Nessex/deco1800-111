@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/Nessex/deco1800-111#readme",
   "dependencies": {
-    "emojione": "^2.2.6"
+    "emojione": "^2.2.6",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
   }
 }
