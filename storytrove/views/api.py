@@ -6,6 +6,7 @@ import urllib.request
 from datetime import timedelta
 
 from django.db.models import Count
+from django.http import HttpResponse
 from django.http import JsonResponse
 from django.core import serializers
 
@@ -146,10 +147,20 @@ def stories(request):
             'failure': True
         })
 
-    return JsonResponse({
+    def prepare_story_object(s):
+        s['date'] = s['date'].isoformat()
+        # Truncate text to 300 characters
+        s['truncated_text'] = s['text'][:300] if (len(s['text']) > 300) else s['text']
+        s.pop('text', None)
+        return s
+
+    stories = [r for r in responses.values()]
+    stories = list(map(prepare_story_object, stories))
+
+    return HttpResponse(json.dumps({
         'success': True,
-        'response': serializers.serialize('json', responses)
-    })
+        'stories': stories
+    }), content_type='application/json')
 
 
 '''

@@ -73,8 +73,8 @@ class StoryBlock extends React.Component {
 		const btnToggleOnVote = this.state.currentUser.votes ? "btn-toggle-on btn btn-secondary" : "btn btn-secondary";
         return (
             <article className="story-block m-b-2">
-                <a href="/story/example"><h2>My Story</h2></a>
-                <p>Snippet. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laboru&hellip;</p>
+                <a href="/story/example"><h2>{ this.props.story.title }</h2></a>
+                <p>{ this.props.story.truncated_text }&hellip;</p>
                 <div className="story-block-footer">
                     <div className="btn-group button-row-controls" role="group" aria-label="story controls">
                         <button type="button" className={btnToggleOnRead} onClick={this.toggleRead}><i className="fa fa-book" /> {this.state.read}</button>
@@ -110,7 +110,7 @@ class Read extends React.Component {
                  *     title: "",
                  *     votes: 0,
                  *     author: "",
-                 *     truncatedStory: ""
+                 *     truncated_text: ""
                  * }
                  */
             },
@@ -131,9 +131,18 @@ class Read extends React.Component {
 
     loadStoriesSuccess(response) {
         console.log("New stories loaded");
+        let storyIds = [];
+        let stories = {};
+
+        response.stories.forEach(s => {
+            storyIds.push(s.id);
+            stories[s.id] = s;
+        });
+
         this.setState({
             loaded: true,
-            stories: response.stories
+            storyIds: storyIds,
+            stories: stories
         })
     }
 
@@ -149,7 +158,12 @@ class Read extends React.Component {
         };
 
         this.loadStoriesRequest = $.get('/api/stories', data)
-            .done(this.loadStoriesSuccess)
+            .done((response) => {
+                if (response.success)
+                    this.loadStoriesSuccess(response);
+                else
+                    this.loadStoriesFailure(response);
+            })
             .fail(this.loadStoriesFailure);
     }
 
@@ -185,6 +199,7 @@ class Read extends React.Component {
 
     getStoryBlock(storyId) {
         const props = {
+            key: storyId, //Required for react
             storyId: storyId,
             story: this.state.stories[storyId],
             addReaction: this.addReaction,
