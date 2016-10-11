@@ -121,9 +121,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
+STATIC_ROOT = 'static'
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
-    os.path.join('...', 'node_modules', 'emojione')
+    os.path.join(PROJECT_ROOT, '..', 'node_modules')
 )
 
 LOGIN_REDIRECT_URL = '/'
