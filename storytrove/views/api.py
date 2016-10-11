@@ -16,7 +16,7 @@ if API_KEY != '':
 
 #TODO: Move to model
 def queryTrove(inputParams):
-    
+
     params = {
         'key': API_KEY,
         **inputParams #merge inputParams into this dict
@@ -33,7 +33,7 @@ def queryTrove(inputParams):
 
 #TODO: Move to model
 def getTagString(tags):
-    
+
     #TODO: Filter/Whitelist tags here
     whitelist = [
         'brisbane',
@@ -53,7 +53,7 @@ set of functions, primarily prompts()
 This will still be used internally to build up new sets of prompts from trove.
 '''
 def search(tags, reactions, offset):
-    
+
     tag_string = getTagString(tags)
 
     if len(tag_string) == 0:
@@ -80,7 +80,7 @@ By default this should return a set of featured prompts for each of a few tags
 Results can also be filtered by providing an array of tags or reactions
 '''
 def prompts(request):
-    
+
     tags = request.GET.get('tags').split(',')
     reactions = request.GET.get('reactions').split(',')
     offset = request.GET.get('offset')
@@ -106,7 +106,7 @@ reaction
 author
 '''
 def stories(request):
-    
+
     tag = request.GET.get('tag')
     reaction = request.GET.get('reaction')
     author = request.GET.get('author')
@@ -115,11 +115,11 @@ def stories(request):
     endDate = date.today()
     startDate = endDate - timedelta(days=6)
     responses = Response.objects.filter(date__range=[startdate,enddate])
-    
+
     # then initially filter by the broadest option - the tag
     if(tag != ""):
         responses= responses.filter(prompt=Prompt.objects.filter(tags__contains=tag))
-    
+
     # further filter by reaction and author if necessary
     if(reaction != ""):
         responses = responses.annotate(
@@ -128,8 +128,8 @@ def stories(request):
 
     if(author != ""):
         responses = responses.filter(user=UserAccount.objects.filter(username__exact=author))
-        
-        
+
+
     if responses == None:
         return JsonResponse({
             'failure': True
@@ -147,16 +147,16 @@ Requires a prompt id
 def prompt(request):
 
     id = request.GET.get('id')
-    
+
     # TODO: limit the size of the try catch block for converting the int
     try:
         id = int(id)
         prompt = Prompt.objects.get(pk=id)
-        
+
         troveObjects =  prompt.trove_objects
         stories = Response.objects.filter(prompt = prompt)
-        reactions =  EmojiResponseOnResponse.objects.filter(response __in= stories)
-        
+        reactions =  EmojiResponseOnResponse.objects.filter(response__in= stories)
+
         return JsonResponse({
             'success' : True,
             'response' : json.dumps({
@@ -165,15 +165,14 @@ def prompt(request):
                 'stories' : json.dumps(stories),
                 'reactions' : json.dumps(reactions),
             })
-        
+
         })
-        break
-    
+
     except:
         return JsonResponse({
             'failure': True
         })
-   
+
 
 '''
 Get details required to display a story including the story text, author details,
@@ -183,26 +182,25 @@ Requires a story id
 def story(request):
 
     id = request.GET.get('id')
-    
+
     response = ""
-    
+
     try:
         id = int(id)
         response = Response.objects.get(pk=id)
-        break
     except:
         return JsonResponse({
             'failure': True
         })
 
     if(response != ""):
-     
+
         text = response.text
         author = json.dumps(response.user)
         prompt = json.dumps(response.prompt)
         # or do we only want IDs here for comments etc
         comments = json.dumps(Comment.objects.filter(response = response))
-     
+
         return JsonResponse({
             'success' : True,
             'response' : json.dumps({
@@ -210,9 +208,9 @@ def story(request):
                 'prompt' : prompt,
                 'text' : text,
                 'comments' : comments
-            }
+            })
         })
-     
+
     else:
         return JsonResponse({
             'failure': True
@@ -222,29 +220,28 @@ def story(request):
 Get an array of comments for a given story id
 '''
 def comments(request):
-    
+
     id = request.GET.get('id')
-    
+
     comments = ""
-    
+
     try:
         id = int(id)
         comments = Comment.objects.filter(response__in = Response.objects.filter(prompt = Prompt.objects.get(pk=id)))
-        break
     except:
         return JsonResponse({
             'failure': True
         })
 
     if(comments != ""):
-    
+
         return JsonResponse({
                 'success' : True,
                 'response' : json.dumps({
                     'comments' : comments
-                }
+                })
             })
-         
+
     else:
         return JsonResponse({
             'failure': True
@@ -264,30 +261,29 @@ def respond(request):
     is_draft = request.GET.get('is_draft')
     # For now, is_private will just be false
     is_private = False
-    
+
     # TODO add in if user id is empty to use the current user?
-    
+
     userIdInt = -1
     promptIdInt = -1
-    
+
     try:
         userIdInt = int(userId)
         promptIdInt = int(promptId)
-        break
     except:
         return JsonResponse({
             'failure': True
         })
-    
+
     response = Response(
         user = UserAccount.objects.get(pk = userIdInt),
         prompt = Prompt.objects.get(pk = promptIdInt),
         title = title,
         date = datetime.now(), # datetime for date field ok?
         text = text,
-        is_private = is_private, 
+        is_private = is_private,
         is_draft =  is_draft)
-        
+
     response.save()
 
     return JsonResponse({
@@ -297,52 +293,51 @@ def respond(request):
 '''
 Add a reaction to a given resource,
 needs to specify if the resource is a comment or a story,
-the user id, the id of the resource and the emoji used as 
+the user id, the id of the resource and the emoji used as
 a reaction in its char format
 '''
 def react(request):
-    
+
     userId = request.GET.get('user_id')
     resourceType = request.GET.get('resource_type')
     resourceId = request.GET.get('resource_id')
     emojiChar = request.GET.get('emoji')
-    
-            
+
+
     # TODO add in if user id is empty to use the current user?
-    
+
     userIdInt = -1
     promptIdInt = -1
-    
+
     try:
         userIdInt = int(userId)
         resourceIdInt = int(resourceId)
-        break
     except:
         return JsonResponse({
             'failure': True
         })
-    
+
     if(resourceType == "response"):
         reaction = EmojiResponseOnResponse(
             user = UserAccount.objects.get(pk = userIdInt),
             response = Response.objects.get(pk = resourceIdInt),
             emoji = emojiChar)
-            
+
         reaction.save()
-    
+
     elif(resourceType == "comment"):
         reaction = EmojiResponseOnResponse(
             user = UserAccount.objects.get(pk = userIdInt),
             response = Response.objects.get(pk = resourceIdInt),
             emoji = emojiChar)
-    
+
         reaction.save()
-    
+
     return JsonResponse({
         'success': True
     })
 
-    
+
 '''
 Add a comment to a given resource
 '''
@@ -351,27 +346,26 @@ def comment(request):
     userId = request.GET.get('user_id')
     responseId = request.GET.get('response_id')
     text = request.GET.get('text')
-    
+
     # TODO add in if user id is empty to use the current user?
-    
+
     userIdInt = -1
     responseIdInt = -1
-    
+
     try:
         userIdInt = int(userId)
         responseIdInt = int(responseId)
-        break
     except:
         return JsonResponse({
             'failure': True
         })
-    
+
     comment = Comment(
         user = UserAccount.objects.get(pk = userIdInt),
         response = Response.objects.get(pk = responseIdInt),
         date = datetime.now(), # datetime for date field ok?
         text = text)
-    
+
     comment.save()
 
     return JsonResponse({
