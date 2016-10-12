@@ -74,7 +74,7 @@ class StoryBlock extends React.Component {
         return (
             <article className="story-block m-b-2">
                 <a href="/story/example"><h2>{ this.props.story.title }</h2></a>
-                <p>{ this.props.story.truncated_text }&hellip;</p>
+                <p>{ this.props.story.text }&hellip;</p>
                 <div className="story-block-footer">
                     <div className="btn-group button-row-controls" role="group" aria-label="story controls">
                         <button type="button" className={btnToggleOnRead} onClick={this.toggleRead}><i className="fa fa-book" /> {this.state.read}</button>
@@ -110,7 +110,7 @@ class Read extends React.Component {
                  *     title: "",
                  *     votes: 0,
                  *     author: "",
-                 *     truncated_text: ""
+                 *     text: ""
                  * }
                  */
             },

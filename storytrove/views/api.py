@@ -19,6 +19,16 @@ if API_KEY != '':
     print("\033[95m\033[93m\033[1m\033[4m--> Remove API key before commit (/views/api.py) <--\033[0m")
 
 
+def prepare_story_dict_object(s, truncated=False):
+    out = {k: s.get(k) for k in ('id', 'title', 'is_draft', 'is_private', 'user_id', 'prompt_id')}
+
+    # Add in any values that need to be transformed
+    out['date'] = s['date'].isoformat()
+
+    # Truncate text to 300 characters
+    out['text'] = s['text'][:300] if (len(s['text']) > 300 and truncated) else s['text']
+    return out
+
 def prepare_story_object(s, truncated=False):
     # Start with values we want as-is
     out = {k: getattr(s, k) for k in ('id', 'title', 'is_draft', 'is_private', 'user_id', 'prompt_id')}
@@ -161,7 +171,7 @@ def stories(request):
     # start with all recent stories (past week)
     end_date = datetime.today()
     start_date = end_date - timedelta(days=6)
-    responses = Response.objects.filter(date__range=[start_date, end_date])
+    responses = Response.objects.all() # filter(date__range=[start_date, end_date])
 
     # then initially filter by the broadest option - the tag
     if tag is not None and tag != "":
@@ -182,7 +192,7 @@ def stories(request):
         })
 
     stories = [r for r in responses.values()]
-    stories = list(map(lambda s: prepare_story_object(s, True), stories))
+    stories = list(map(lambda s: prepare_story_dict_object(s, True), stories))
 
     return HttpResponse(json.dumps({
         'success': True,
