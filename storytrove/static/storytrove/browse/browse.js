@@ -112,22 +112,22 @@ class Browse extends React.Component {
                                         <i className="fa fa-fighter-jet" /> War
                                     </button>
                                     <button type="button" className="btn btn-secondary">
-                                        <i className="fa fa-ge" /> Death
-                                    </button>
-                                    <button type="button" className="btn btn-secondary">
                                         <i className="fa fa-history" /> History
                                     </button>
                                     <button type="button" className="btn btn-secondary">
                                         <i className="fa fa-hand-lizard-o" /> Something
                                     </button>
                                     <button type="button" className="btn btn-secondary">
-                                        <i className="fa fa-ge" /> Death
+                                        <i className="fa fa-ge" /> Sports
                                     </button>
                                     <button type="button" className="btn btn-secondary">
                                         <i className="fa fa-ge" /> Death
                                     </button>
                                     <button type="button" className="btn btn-secondary">
-                                        <i className="fa fa-ge" /> Death
+                                        <i className="fa fa-ge" /> Politics
+                                    </button>
+                                    <button type="button" className="btn btn-secondary">
+                                        <i className="fa fa-ge" /> Explorers
                                     </button>
                                 </div>
                             </div>
