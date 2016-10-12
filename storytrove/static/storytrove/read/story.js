@@ -61,6 +61,16 @@ class Story extends React.Component {
     }
 
     storyRequestSuccess(response) {
+
+        let commentAuthors = response.comment_authors;
+
+        /* Add a record for the current user to comment authors */
+        const currentUserId = 'current'; //TODO(nathan): something real?
+        commentAuthors[currentUserId] = {
+            id: currentUserId,
+            username: 'Current User Here', //TODO(nathan): Get proper information for the current user
+        };
+
         const newState = {
             loaded: true,
             story: response.story,
@@ -68,7 +78,7 @@ class Story extends React.Component {
             prompt: response.prompt,
             commentIds: response.comment_ids,
             comments: response.comments,
-            commentAuthors: response.comment_authors
+            commentAuthors: commentAuthors
         };
 
         this.setState(newState);
@@ -108,17 +118,25 @@ class Story extends React.Component {
     }
 
     addComment(event) {
+        // This just needs to not collide with the proper ids
+        let randCommentId = 'new-' + (Math.random() * 9999999);
+
         let comment = {
-            name: "Nathan",
-            comment: this.state.commentText
+            id: randCommentId,
+            text: this.state.commentText,
+            user_id: 'current' //TODO(nathan): Set the current user id
         };
 
         let comments = this.state.comments;
-        comments.push(comment);
+        comments[randCommentId] = comment;
+
+        let commentIds = this.state.commentIds;
+        commentIds.push(randCommentId);
 
         this.setState({
             comments: comments,
-            commentText: ""
+            commentIds: commentIds,
+            commentText: '' //Clear input
         });
     }
 
