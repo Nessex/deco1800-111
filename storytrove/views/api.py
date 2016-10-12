@@ -10,7 +10,7 @@ from django.http import JsonResponse
 
 from storytrove.models import *
 
-API_KEY = ''  # TODO: How to move this somewhere better, like settings or environment variables
+API_KEY = '6p0j6dnioho60il0'  # TODO: How to move this somewhere better, like settings or environment variables
 
 if API_KEY == '':
     print("\033[95m\033[91m\033[1m\033[4m--> You're forgetting the API key (/views/api.py) <--\033[0m")
