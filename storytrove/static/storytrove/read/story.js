@@ -199,7 +199,7 @@ class Story extends React.Component {
                         <section className="row m-t-1">
                             <div className="col-xs-12">
                                 <form method="post" action="">
-                                    <textarea className="form-control story-comment" onChange={this.updateCommentText} value={this.state.commentText}></textarea>
+                                    <textarea className="form-control story-comment" onChange={this.updateCommentText} value={this.state.commentText} />
                                     <button type="button" className="btn btn-primary btn-block m-t-1" onClick={this.addComment}>Submit</button>
                                 </form>
                             </div>
