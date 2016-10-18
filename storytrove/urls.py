@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^api/prompts/?', views.api.prompts),
     url(r'^api/stories/?', views.api.stories),
     url(r'^api/comments/?', views.api.comments),
+    url(r'^api/achievements/?', views.api.achievements),
     url(r'^api/prompt/?', views.api.prompt),
     url(r'^api/story/?', views.api.story),
     url(r'^api/comment/?', views.api.comment),

@@ -286,6 +286,7 @@ def story(request):
 '''
 Get an array of comments for a given story id
 '''
+# TODO(nathan): this should be changed to get comments for a given user id (for the account_coments page)
 
 
 def comments(request):
@@ -310,6 +311,25 @@ def comments(request):
 
     else:
         return standard_failure()
+
+
+'''
+Get an array of achievements for the given user id
+'''
+
+
+def achievements(request):
+    try:
+        user_achievements = Achievement.objects.get(user=request.user)
+        achievements = Achievement.objects.all()
+    except:
+        return standard_failure()
+
+    return JsonResponse({
+        'success': True,
+        'achievements': achievements,
+        'user_achievements': user_achievements
+    })
 
 
 '''
