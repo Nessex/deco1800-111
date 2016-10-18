@@ -3,8 +3,94 @@ class Write extends React.Component {
         super(props);
 
         this.state = {
-
+            loaded: false,
+            prompt: null,
+            promptId: null,
+            writingStartTime: null,
+            storyText: ""
         };
+
+        this.loadPrompt = this.loadPrompt.bind(this);
+        this.loadPromptSuccess = this.loadPromptSuccess.bind(this);
+        this.loadPromptFailure = this.loadPromptFailure.bind(this);
+        this.getWPM = this.getWPM.bind(this);
+        this.getWordCount = this.getWordCount.bind(this);
+        this.updateStoryText = this.updateStoryText.bind(this);
+    }
+
+    updateStoryText(event) {
+        let state = {
+            storyText: event.target.value
+        };
+
+        /* Start the timer for tracking WPM */
+        if (this.state.writingStartTime === null)
+            state.writingStartTime = Date.now();
+
+        /* Reset the WPM if the textarea is emptied */
+        if (event.target.value === "")
+            state.writingStartTime = null;
+
+        this.setState(state);
+    }
+
+    loadPromptSuccess(response) {
+        this.setState({
+            loaded: true,
+            prompt: response.prompt
+        });
+    }
+
+    loadPromptFailure(response) {
+        //TODO(nathan): Show error message or retry with exponential falloff
+        console.log("Loading prompt failed");
+        console.table(response);
+    }
+
+    loadPrompt(promptId) {
+        const data = {
+            prompt_id: promptId
+        };
+
+        this.loadPromptRequest = $.get('/api/prompt', data)
+            .done((response) => {
+                if (response.success)
+                    this.loadPromptSuccess(response);
+                else
+                    this.loadPromptFailure(response);
+            })
+            .fail(this.loadPromptFailure);
+    }
+
+    componentDidMount() {
+        this.loadPrompt();
+    }
+
+    componentWillUnmount() {
+        if (this.loadPromptRequest)
+            this.loadPromptRequest.abort();
+    }
+
+    getWPM() {
+        if (this.state.writingStartTime === null)
+            return 0;
+
+        const msecPerMin = 60000;
+        const wordCount = this.getWordCount();
+        const minutesSinceStart = (Date.now() - this.state.writingStartTime) / msecPerMin;
+
+        if (minutesSinceStart === 0)
+            return wordCount;
+
+        return Math.floor(wordCount / minutesSinceStart);
+    }
+
+    getWordCount() {
+        if (this.state.storyText.length === 0)
+            return 0;
+
+        //TODO(nathan): This could probably be more scientific
+        return this.state.storyText.split(" ").length;
     }
 
     render() {
@@ -41,13 +127,13 @@ class Write extends React.Component {
                                 <div className="form-group">
                                     <div className="row">
                                         <div className="col-xs-6">
-                                            <span className="m-l-1">WPM: 91</span>
+                                            <span className="m-l-1">WPM: { this.getWPM() }</span>
                                         </div>
                                         <div className="col-xs-6 text-xs-right">
-                                            <span className="m-r-1">Words: 443</span>
+                                            <span className="m-r-1">Words: { this.getWordCount() }</span>
                                         </div>
                                     </div>
-                                    <textarea className="form-control m-t-1" placeholder="Start typing your story here..." />
+                                    <textarea className="form-control m-t-1" placeholder="Start typing your story here..." onChange={this.updateStoryText} />
                                     <div className="row m-t-1">
                                         <div className="col-xs-6 text-xs-center">
                                             <div className="form-check-inline">
