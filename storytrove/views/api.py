@@ -29,6 +29,7 @@ def prepare_story_dict_object(s, truncated=False):
     out['text'] = s['text'][:300] if (len(s['text']) > 300 and truncated) else s['text']
     return out
 
+
 def prepare_story_object(s, truncated=False):
     # Start with values we want as-is
     out = {k: getattr(s, k) for k in ('id', 'title', 'is_draft', 'is_private', 'user_id', 'prompt_id')}
@@ -68,7 +69,11 @@ def prepare_comment_object(c):
     return out
 
 
-def queryTrove(inputParams):
+def prepare_reaction_object(r):
+    return r.get('id')
+
+
+def query_trove(inputParams):
     params = {
         'key': API_KEY,
         **inputParams  # merge inputParams into this dict
@@ -84,7 +89,7 @@ def queryTrove(inputParams):
         return None
 
 
-def getTagString(tags):
+def get_tag_string(tags):
     # TODO: Filter/Whitelist tags here
     whitelist = [
         'brisbane',
@@ -107,13 +112,13 @@ This will still be used internally to build up new sets of prompts from trove.
 
 
 def search(tags, reactions, offset):
-    tag_string = getTagString(tags)
+    tag_string = get_tag_string(tags)
 
     if len(tag_string) == 0:
         return None
 
-    res = queryTrove({
-        # 'q': 'publictag:(' + getTagString(tags) + ')', # These proper tags suck, use tags as keywords...
+    res = query_trove({
+        # 'q': 'publictag:(' + get_tag_string(tags) + ')', # These proper tags suck, use tags as keywords...
         'q': tag_string,
         'encoding': 'json',
         'zone': 'picture',
@@ -171,7 +176,7 @@ def stories(request):
     # start with all recent stories (past week)
     end_date = datetime.today()
     start_date = end_date - timedelta(days=6)
-    responses = Response.objects.all() # filter(date__range=[start_date, end_date])
+    responses = Response.objects.all()  # filter(date__range=[start_date, end_date])
 
     # then initially filter by the broadest option - the tag
     if tag is not None and tag != "":
@@ -214,19 +219,11 @@ def prompt(request):
         id = int(id)
         prompt = Prompt.objects.get(pk=id)
 
-        troveObjects = prompt.trove_objects
-        stories = Response.objects.filter(prompt=prompt)
-        reactions = EmojiResponseOnResponse.objects.filter(response__in=stories)
+        prompt = prepare_prompt_object(prompt)
 
         return JsonResponse({
             'success': True,
-            'response': json.dumps({
-                'trove_objects': json.dumps(troveObjects),
-                'tags': prompt.tags,
-                'stories': json.dumps(stories),
-                'reactions': json.dumps(reactions),
-            })
-
+            'prompt': prompt
         })
 
     except:
@@ -262,7 +259,7 @@ def story(request):
         comments = [c for c in Comment.objects.filter(response=response)]
         comments = list(map(prepare_comment_object, comments))
         comment_ids = [c['id'] for c in comments]
-        comment_author_ids = list(set([c['user_id'] for c in comments])) # unique user ids
+        comment_author_ids = list(set([c['user_id'] for c in comments]))  # unique user ids
 
         # Change comments into an associative array, with comment id as the key
         comments = {c['id']: c for c in comments}
