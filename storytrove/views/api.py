@@ -178,8 +178,8 @@ def stories(request):
     author = request.GET.get('author')
 
     # start with all recent stories (past week)
-    end_date = datetime.today()
-    start_date = end_date - timedelta(days=6)
+    # end_date = datetime.today()
+    # start_date = end_date - timedelta(days=6)
     responses = Response.objects.all()  # filter(date__range=[start_date, end_date])
 
     # then initially filter by the broadest option - the tag
@@ -193,7 +193,10 @@ def stories(request):
             emojiresponseonresponse__emoji=reaction).order_by('num_emojis')
 
     if author is not None and author != "":
-        responses = responses.filter(user=UserAccount.objects.filter(username__exact=author))
+        if author == 'current':
+            responses = responses.filter(user=request.user)
+        else:
+            responses = responses.filter(user=UserAccount.objects.filter(username__exact=author))
 
     if responses is None:
         return standard_failure()
