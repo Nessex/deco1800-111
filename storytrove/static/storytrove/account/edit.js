@@ -23,20 +23,20 @@ class EditAccount extends React.Component {
     }
 
     render() {
-        const userImage = this.props.user_image ? this.props.user_image : '/static/images/empty_user.png';
+        const userImage = this.props.user.image ? this.props.user.image : '/static/images/empty_user.png';
 
         return (
             <div className="container">
                 <div className="row">
                     <div className="col-xs-12">
                         <h2>Edit Account</h2>
-                        <div className="row">
+                        <div className="row m-t-1">
                             <section className="col-xs-12 account-overview">
                                 <div className="pull-xs-left">
                                     <img src={userImage} className="edit-account-profile-picture" />
                                 </div>
                                 <div>
-                                    <h3>Harambe</h3>
+                                    <h3>{ this.props.user.username }</h3>
                                     Total Votes: 234<br />
                                     <span><EmojiText value=":thumbsup:" /> 9 </span>
                                     <span><EmojiText value=":joy:" /> 8 </span>
@@ -44,7 +44,7 @@ class EditAccount extends React.Component {
                                 </div>
                             </section>
                         </div>
-                        <div className="form-group">
+                        <div className="form-group m-t-1">
                             <label htmlFor="password">Change password</label>
                             <input type="password" className="form-control" id="password" placeholder="Type your new password" />
 
