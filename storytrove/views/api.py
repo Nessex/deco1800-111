@@ -19,6 +19,12 @@ if API_KEY != '':
     print("\033[95m\033[93m\033[1m\033[4m--> Remove API key before commit (/views/api.py) <--\033[0m")
 
 
+def standard_failure():
+    return JsonResponse({
+        'failure': True
+    })
+
+
 def prepare_story_dict_object(s, truncated=False):
     out = {k: s.get(k) for k in ('id', 'title', 'is_draft', 'is_private', 'user_id', 'prompt_id')}
 
@@ -148,9 +154,7 @@ def prompts(request):
     res = search(tags, reactions, offset)
 
     if res is None:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     return JsonResponse({
         'success': True,
@@ -192,9 +196,7 @@ def stories(request):
         responses = responses.filter(user=UserAccount.objects.filter(username__exact=author))
 
     if responses is None:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     stories = [r for r in responses.values()]
     stories = list(map(lambda s: prepare_story_dict_object(s, True), stories))
@@ -227,9 +229,7 @@ def prompt(request):
         })
 
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
 
 '''
@@ -248,9 +248,7 @@ def story(request):
         id = int(id)
         response = Response.objects.get(pk=id)
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     if response != "":
         story = prepare_story_object(response)
@@ -279,9 +277,7 @@ def story(request):
         }), content_type='application/json')
 
     else:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
 
 '''
@@ -298,9 +294,7 @@ def comments(request):
         id = int(id)
         comments = Comment.objects.filter(response__in=Response.objects.filter(prompt=Prompt.objects.get(pk=id)))
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     if comments != "":
 
@@ -312,9 +306,7 @@ def comments(request):
         })
 
     else:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
 
 '''
@@ -325,30 +317,44 @@ and whether it is a private post or a draft copy
 
 
 def respond(request):
-    userId = request.GET.get('user_id')
-    promptId = request.GET.get('prompt_id')
+    if not request.user.is_authenticated:
+        return standard_failure()
+
+    prompt_id = request.GET.get('prompt_id')
     title = request.GET.get('title')
     text = request.GET.get('text')
     is_draft = request.GET.get('is_draft')
-    # For now, is_private will just be false
-    is_private = False
+    is_private = request.GET.get('is_private')
 
-    # TODO add in if user id is empty to use the current user?
-
-    userIdInt = -1
-    promptIdInt = -1
+    has_existing = False
 
     try:
-        userIdInt = int(userId)
-        promptIdInt = int(promptId)
+        story_id = request.GET.get('story_id')
+        story_id = int(story_id)
+        has_existing = True
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        pass
+
+    if not has_existing:
+        story_id = None
+
+    try:
+        prompt_id_int = int(prompt_id)
+        is_draft = is_draft == 'true'
+        is_private = is_private == 'true'
+    except:
+        return standard_failure()
+
+    if has_existing:
+        # Check this is on the correct prompt, and owned by this user
+        existing = Response.objects.get(id=story_id)
+        if existing.user.id != request.user.id or existing.prompt.id != prompt_id_int:
+            return standard_failure()
 
     response = Response(
-        user=UserAccount.objects.get(pk=userIdInt),
-        prompt=Prompt.objects.get(pk=promptIdInt),
+        id=story_id,
+        user=request.user,
+        prompt=Prompt.objects.get(pk=prompt_id_int),
         title=title,
         date=datetime.now(),  # datetime for date field ok?
         text=text,
@@ -358,7 +364,8 @@ def respond(request):
     response.save()
 
     return JsonResponse({
-        'success': True
+        'success': True,
+        'story_id': response.id
     })
 
 
@@ -385,9 +392,7 @@ def react(request):
         userIdInt = int(userId)
         resourceIdInt = int(resourceId)
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     if resourceType == "response":
         reaction = EmojiResponseOnResponse(
@@ -429,9 +434,7 @@ def comment(request):
         userIdInt = int(userId)
         responseIdInt = int(responseId)
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     comment = Comment(
         user=UserAccount.objects.get(pk=userIdInt),
