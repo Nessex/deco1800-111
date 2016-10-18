@@ -27,8 +27,12 @@ def read(request):
 
 
 @login_required
-def write(request):
-    return std_page(request, 'storytrove/write/write.js')
+def write(request, prompt_id):
+    props = {
+        "promptId": prompt_id
+    }
+
+    return std_page(request, 'storytrove/write/write.js', props)
 
 
 def browse(request):

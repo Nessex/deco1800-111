@@ -49,7 +49,7 @@ class Write extends React.Component {
 
     loadPrompt(promptId) {
         const data = {
-            prompt_id: promptId
+            id: promptId
         };
 
         this.loadPromptRequest = $.get('/api/prompt', data)
@@ -63,7 +63,7 @@ class Write extends React.Component {
     }
 
     componentDidMount() {
-        this.loadPrompt();
+        this.loadPrompt(this.props.promptId);
     }
 
     componentWillUnmount() {
@@ -163,4 +163,14 @@ class Write extends React.Component {
     }
 }
 
-ReactDOM.render(<Write />, document.getElementById("react-page"));
+var el = document.getElementById("react-page");
+
+if (el) {
+    try {
+        let props = JSON.parse(el.getAttribute("data-react-props"));
+
+        ReactDOM.render(<Write { ...props } />, el);
+    } catch (e) {
+        console.log(e);
+    }
+}
