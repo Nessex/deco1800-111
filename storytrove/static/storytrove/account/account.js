@@ -22,6 +22,8 @@ class Account extends React.Component {
     }
 
     render() {
+        const userImage = this.props.user_image ? this.props.user_image : '/static/images/empty_user.png';
+
         return (
             <div className="container">
                 <div className="row">
@@ -30,7 +32,7 @@ class Account extends React.Component {
                         <div className="row">
                             <section className="col-xs-12 account-overview">
                                 <div className="pull-xs-left">
-                                    <img src="https://i.redd.it/yy2iqou5xjkx.jpg" className="edit-account-profile-picture" />
+                                    <img src={userImage} className="edit-account-profile-picture" />
                                 </div>
                                 <div>
                                     <h3>Harambe</h3>
@@ -54,4 +56,14 @@ class Account extends React.Component {
     }
 }
 
-ReactDOM.render(<Account />, document.getElementById("react-page"));
+var el = document.getElementById("react-page");
+
+if (el) {
+    try {
+        let props = JSON.parse(el.getAttribute("data-react-props"));
+
+        ReactDOM.render(<Account { ...props } />, el);
+    } catch (e) {
+        console.log(e);
+    }
+}

@@ -8,6 +8,17 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.forms import UserCreationForm
 from django.template.context_processors import csrf
 
+from hashlib import md5
+
+
+def get_current_user(request):
+    return request.user.id
+
+
+def get_current_user_image(request):
+    email_hash = md5(request.user.email.encode('utf-8')).hexdigest()
+    return "https://gravatar.com/avatar/{0}".format(email_hash)
+
 
 def std_page(request, script_path, props={}):
     template = loader.get_template('page.html')
@@ -61,7 +72,12 @@ def story(request, story_id):
 
 @login_required
 def account(request):
-    return std_page(request, 'storytrove/account/account.js')
+    props = {
+        "user": get_current_user(request),
+        "user_image": get_current_user_image(request)
+    }
+
+    return std_page(request, 'storytrove/account/account.js', props)
 
 
 @login_required
@@ -81,7 +97,12 @@ def achievements(request):
 
 @login_required
 def edit(request):
-    return std_page(request, 'storytrove/account/edit.js')
+    props = {
+        "user": get_current_user(request),
+        "user_image": get_current_user_image(request)
+    }
+
+    return std_page(request, 'storytrove/account/edit.js', props)
 
 
 def register(request):
