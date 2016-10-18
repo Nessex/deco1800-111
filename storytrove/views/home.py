@@ -7,25 +7,40 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.contrib.auth.forms import UserCreationForm
 from django.template.context_processors import csrf
+from django.template.defaulttags import register
 
 from hashlib import md5
 
 
+# Source: http://stackoverflow.com/a/8000091
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+
 def get_current_user(request):
-    return request.user.id
+    out = {k: getattr(request.user, k) for k in ('id', 'username', 'email')}
+    out["image"] = get_user_image(request.user)
+    return out
 
 
-def get_current_user_image(request):
-    email_hash = md5(request.user.email.encode('utf-8')).hexdigest()
+def get_user_image(user):
+    email_hash = md5(user.email.encode('utf-8')).hexdigest()
     return "https://gravatar.com/avatar/{0}".format(email_hash)
 
 
 def std_page(request, script_path, props={}):
     template = loader.get_template('page.html')
+
     context = {
         'reactscript': script_path,
-        'reactprops': json.dumps(props)
+        'reactprops': json.dumps(props),
+        'logged_in': request.user.is_authenticated,
     }
+
+    if request.user.is_authenticated:
+        context['user'] = get_current_user(request)
+
     return HttpResponse(template.render(context, request))
 
 
@@ -73,8 +88,7 @@ def story(request, story_id):
 @login_required
 def account(request):
     props = {
-        "user": get_current_user(request),
-        "user_image": get_current_user_image(request)
+        "user": get_current_user(request)
     }
 
     return std_page(request, 'storytrove/account/account.js', props)
@@ -98,8 +112,7 @@ def achievements(request):
 @login_required
 def edit(request):
     props = {
-        "user": get_current_user(request),
-        "user_image": get_current_user_image(request)
+        "user": get_current_user(request)
     }
 
     return std_page(request, 'storytrove/account/edit.js', props)

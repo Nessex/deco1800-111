@@ -48,7 +48,13 @@
                         </a>
                     </div>
                     <div class="col-xs-12 col-md-1 hidden-xs">
-                        <a href="/account/"><img class=img-fluid src="https://i.redd.it/yy2iqou5xjkx.jpg"></a>
+                        <a href="/account/">
+                            {% if logged_in %}
+                                <img class=img-fluid src="{{ user|get_item:'image' }}">
+                            {% else %}
+                                <span>Sign In</span>
+                            {% endif %}
+                        </a>
                     </div>
                 </div>
             </div>
