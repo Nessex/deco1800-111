@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^api/react/?', views.api.react),
     url(r'^scratch/?', views.test.scratch),
     url(r'^read/?', views.home.read),
-    url(r'^write/?', views.home.write),
+    url(r'^write/(?P<prompt_id>[0-9]{1,11})/?', views.home.write),
     url(r'^account/register/?', views.home.register),
     url(r'^account/achievements/?', views.home.achievements),
     url(r'^account/edit/?', views.home.edit),
