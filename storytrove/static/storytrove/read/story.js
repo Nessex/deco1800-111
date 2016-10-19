@@ -73,14 +73,13 @@ class Story extends React.Component {
     }
 
     storyRequestSuccess(response) {
-
-        let commentAuthors = response.comment_authors;
+        let commentAuthors = response.comment_authors || [];
 
         /* Add a record for the current user to comment authors */
         const currentUserId = 'current'; //TODO(nathan): something real?
         commentAuthors[currentUserId] = {
             id: currentUserId,
-            username: 'Current User Here', //TODO(nathan): Get proper information for the current user
+            username: this.props.user.username, //TODO(nathan): Get proper information for the current user
         };
 
         const newState = {

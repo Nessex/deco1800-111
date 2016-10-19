@@ -87,7 +87,8 @@ def story_example(request):
 
 def story(request, story_id):
     props = {
-        "storyId": story_id
+        "storyId": story_id,
+        "user": get_current_user(request)
     }
 
     return std_page(request, 'storytrove/read/story.js', props)
