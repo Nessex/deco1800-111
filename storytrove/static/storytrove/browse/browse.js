@@ -89,10 +89,9 @@ class Browse extends React.Component {
     }
 
     toggleTag(tag) {
-        const idx = this.state.queryTags.indexOf(tag);
         let tags = []; //Default to removing the tag
 
-        if (idx < 0) {
+        if (this.state.queryTags.indexOf(tag) < 0) {
             //Add the tag
             tags.push(tag);
         }

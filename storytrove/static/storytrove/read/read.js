@@ -178,14 +178,14 @@ class Read extends React.Component {
     toggleReaction(reaction) {
         let reactions = []; //Default to removing reactions
 
-        if (reactions.indexOf(reaction) < 0) {
+        if (this.state.filterReactions.indexOf(reaction) < 0) {
             //Add reaction to set
             reactions = [reaction];
         }
 
         this.setState({
             filterReactions: reactions
-        }, () => this.loadStories);
+        }, () => this.loadStories());
     }
 
     getReactionClass(reaction) {
