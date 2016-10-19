@@ -54,7 +54,8 @@ class Story extends React.Component {
             prompt: {},
             commentIds: [],
             comments: {},
-            commentAuthors: {}
+            commentAuthors: {},
+            commentButtonState: BUTTON_IDLE
         };
 
         this.addComment = this.addComment.bind(this);
