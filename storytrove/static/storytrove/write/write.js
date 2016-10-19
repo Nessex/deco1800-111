@@ -225,6 +225,9 @@ class Write extends React.Component {
             };
         }
 
+        const draftChecked = !!this.state.is_draft ? { checked: 'checked' } : { checked: false };
+        const publicChecked = !this.state.is_private ? { checked: 'checked' } : { checked: false };
+
         return (
             <div className="container">
                 <div className="row">
@@ -270,7 +273,7 @@ class Write extends React.Component {
                                         <div className="col-xs-6 text-xs-center">
                                             <div className="form-check-inline">
                                                 <label className="form-check-label">
-                                                    <input className="form-check-input" type="checkbox" checked />
+                                                    <input className="form-check-input" type="checkbox" readOnly { ...publicChecked } onClick={() => this.setState({ is_private: !this.state.is_private })} />
                                                     <span>Public</span>
                                                 </label>
                                             </div>
@@ -278,7 +281,7 @@ class Write extends React.Component {
                                         <div className="col-xs-6 text-xs-center">
                                             <div className="form-check-inline">
                                                 <label className="form-check-label">
-                                                    <input className="form-check-input" type="checkbox" />
+                                                    <input className="form-check-input" type="checkbox" readOnly { ...draftChecked } onClick={() => this.setState({ is_draft: !this.state.is_draft })}/>
                                                     <span>Draft</span>
                                                 </label>
                                             </div>
