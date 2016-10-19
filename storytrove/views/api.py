@@ -444,23 +444,18 @@ Add a comment to a given resource
 
 
 def comment(request):
-    userId = request.GET.get('user_id')
     responseId = request.GET.get('response_id')
     text = request.GET.get('text')
 
-    # TODO add in if user id is empty to use the current user?
-
-    userIdInt = -1
     responseIdInt = -1
 
     try:
-        userIdInt = int(userId)
         responseIdInt = int(responseId)
     except:
         return standard_failure()
 
     comment = Comment(
-        user=UserAccount.objects.get(pk=userIdInt),
+        user=request.user,
         response=Response.objects.get(pk=responseIdInt),
         date=datetime.now(),  # datetime for date field ok?
         text=text)

@@ -1,3 +1,8 @@
+const BUTTON_IDLE = 0;
+const BUTTON_PROCESSING = 1;
+const BUTTON_SUCCESS = 2;
+const BUTTON_FAILURE = 3;
+
 class EmojiText extends React.Component {
     render() {
         const innerHTML = {
@@ -58,6 +63,12 @@ class Story extends React.Component {
         this.storyRequestSuccess = this.storyRequestSuccess.bind(this);
         this.storyRequestFailure = this.storyRequestFailure.bind(this);
         this.getComment = this.getComment.bind(this);
+        this.getCommentSubmitButton = this.getCommentSubmitButton.bind(this);
+        this.submitComment = this.submitComment.bind(this);
+        this.submitCommentFailure = this.submitCommentFailure.bind(this);
+        this.submitCommentSuccess = this.submitCommentSuccess.bind(this);
+        this.setUpCommentSubmitButtonReset = this.setUpCommentSubmitButtonReset.bind(this);
+        this.resetCommentSubmitButton = this.resetCommentSubmitButton.bind(this);
     }
 
     storyRequestSuccess(response) {
@@ -78,7 +89,8 @@ class Story extends React.Component {
             prompt: response.prompt,
             commentIds: response.comment_ids,
             comments: response.comments,
-            commentAuthors: commentAuthors
+            commentAuthors: commentAuthors,
+            commentButtonState: BUTTON_IDLE
         };
 
         this.setState(newState);
@@ -109,6 +121,9 @@ class Story extends React.Component {
     componentWillUnmount() {
         if (this.storyRequest)
             this.storyRequest.abort();
+
+        if (this.submitCommentRequest)
+            this.submitCommentRequest.abort();
     }
 
     updateCommentText(event) {
@@ -118,6 +133,10 @@ class Story extends React.Component {
     }
 
     addComment(event) {
+        // Submit the new comment to the server
+        this.submitComment();
+
+        // Mock comment on the page, and reset comment form
         // This just needs to not collide with the proper ids
         let randCommentId = 'new-' + (Math.random() * 9999999);
 
@@ -148,9 +167,80 @@ class Story extends React.Component {
             key: c.id,
             name: ca.username,
             comment: c.text
-        }
+        };
 
         return <Comment { ...props } />;
+    }
+
+    resetCommentSubmitButton() {
+        this.setState({ commentButtonState: BUTTON_IDLE });
+    }
+
+    getCommentSubmitButton() {
+        switch (this.state.commentButtonState) {
+            case BUTTON_IDLE:
+                return <button type="button" className="btn btn-primary btn-block m-t-1" onClick={this.addComment}>Submit</button>;
+            case BUTTON_PROCESSING:
+                return (
+                    <button type="button" className="btn btn-primary btn-block m-t-1" readOnly>
+                        <i className="fa fa-circle-o-notch fa-spin" /> Submitting&hellip;
+                    </button>
+                );
+            case BUTTON_SUCCESS:
+                return (
+                    <button type="button" className="btn btn-success btn-block m-t-1" onClick={this.resetCommentSubmitButton}>
+                        <i className="fa fa-check" /> Success.
+                    </button>
+                );
+            default:
+            case BUTTON_FAILURE:
+                return (
+                    <button type="button" className="btn btn-danger btn-block m-t-1" onClick={this.resetCommentSubmitButton}>
+                        <i className="fa fa-times" /> Something went wrong, please try again.
+                    </button>
+                );
+        }
+    }
+
+    setUpCommentSubmitButtonReset() {
+        //Set up a timeout for resetting the comment submit button
+        if (this.commentButtonResetTimeout)
+            clearTimeout(this.commentButtonResetTimeout);
+
+        // 2 second timeout
+        this.commentButtonResetTimeout = setTimeout(this.resetCommentSubmitButton, 2000);
+    }
+
+    submitCommentSuccess(response) {
+        //Comment already mocked, just set button state
+
+        this.setState({
+            commentButtonState: BUTTON_SUCCESS
+        }, this.setUpCommentSubmitButtonReset);
+    }
+
+    submitCommentFailure(response) {
+        this.setState({
+            commentButtonState: BUTTON_FAILURE
+        }, this.setUpCommentSubmitButtonReset);
+    }
+
+    submitComment() {
+        const data = {
+            response_id: this.props.storyId,
+            text: this.state.commentText
+        };
+
+        this.submitCommentRequest = $.get('/api/comment', data)
+            .done((response) => {
+                if (response.success)
+                    this.submitCommentSuccess(response);
+                else
+                    this.submitCommentFailure(response);
+            })
+            .fail(this.submitCommentFailure);
+
+        this.setState({ commentButtonState: BUTTON_PROCESSING });
     }
 
     render() {
@@ -200,7 +290,7 @@ class Story extends React.Component {
                             <div className="col-xs-12">
                                 <form method="post" action="">
                                     <textarea className="form-control story-comment" onChange={this.updateCommentText} value={this.state.commentText} />
-                                    <button type="button" className="btn btn-primary btn-block m-t-1" onClick={this.addComment}>Submit</button>
+                                    { this.getCommentSubmitButton() }
                                 </form>
                             </div>
                         </section>
