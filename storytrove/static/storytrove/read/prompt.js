@@ -1,11 +1,14 @@
 class StoryItem extends React.Component {
     render() {
         return (
-            <div className="row story-item">
+            <div className="row story-item m-b-2">
                 <div className="col-xs-12">
                     <span><strong>{ this.props.title }</strong></span>
-                    <p>{ this.props.preview }</p>
-                    <a href="">Continue Reading</a>
+                    <p>{ this.props.text }</p>
+                    <a href={`/story/${ this.props.id }`}>
+                        <span>Continue Reading</span>
+                        <i className="fa fa-chevron-right" />
+                    </a>
                 </div>
             </div>
         );
@@ -14,7 +17,7 @@ class StoryItem extends React.Component {
 
 StoryItem.PropTypes = {
     title: React.PropTypes.string,
-    preview: React.PropTypes.string, /* ellipsed string */
+    text: React.PropTypes.string,
     url: React.PropTypes.string
 }
 
@@ -28,36 +31,64 @@ class Prompt extends React.Component {
                 /* e.g.
                  * id: "1234",
                  * title: "My New Story",
-                 * preview: "Lorem ipsum dolor sit amet. This is the first few sentences of the story.",
+                 * text: "Lorem ipsum dolor sit amet. This is the first few sentences of the story.",
                  * url: "/story/1234"
                  */
             }
         };
 
         this.getStoryItemProps = this.getStoryItemProps.bind(this);
+        this.loadStories = this.loadStories.bind(this);
+        this.storiesRequestSuccess = this.storiesRequestSuccess.bind(this);
+        this.storiesRequestFailure = this.storiesRequestFailure.bind(this);
+    }
+
+    componentWillUnmount() {
+        if (this.storiesRequest)
+            this.storiesRequest.abort();
     }
 
     componentDidMount() {
         /* Load in stories and details from the server */
-        
-        //Example data
-        this.setState({
-            storyIds: ["1234", "5678"],
-            stories: {
-                "1234": {
-                    id: "1234",
-                    title: "My New Story",
-                    preview: "Lorem ipsum dolor sit amet. This is the first few sentences of the story.",
-                    url: "/story/1234"
-                },
-                "5678": {
-                    id: "5678",
-                    title: "My Second New Story",
-                    preview: "Lorem ipsum Dolore dolore dolor consectetur labore qui labore laboris veniam magna labore reprehenderit.",
-                    url: "/story/5678"
-                }
-            }
+        this.loadStories();
+    }
+
+    storiesRequestSuccess(response) {
+        let stories = {};
+        let storyIds = [];
+
+        response.stories.forEach(s => {
+            stories[s.id] = s;
+            storyIds.push(s.id);
         });
+
+        const newState = {
+            loaded: true,
+            stories: stories,
+            storyIds: storyIds
+        };
+
+        this.setState(newState);
+    }
+
+    storiesRequestFailure(response) {
+        //TODO(nathan): Show error message or retry with exponential falloff
+        console.log("Loading stories failed");
+        console.table(response);
+    }
+
+    loadStories() {
+        this.setState({ loaded: false });
+
+        const data = { id: this.props.promptId };
+        this.storiesRequest = $.get('/api/stories', data)
+            .done((response) => {
+                if (response.success)
+                    this.storiesRequestSuccess(response);
+                else
+                    this.storiesRequestFailure(response);
+            })
+            .fail(this.storiesRequestFailure);
     }
 
     getStoryItemProps(storyId) {
