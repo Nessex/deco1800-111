@@ -70,7 +70,15 @@ class Prompt extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-xs-12">
-                        <h2>Prompt</h2>
+                        <div className="row m-t-1 m-b-1">
+                            <div className="col-xs-12">
+                                <a href={`/browse/`}>
+                                    <i className="fa fa-chevron-left" /> Browse Prompts
+                                </a>
+                            </div>
+                        </div>
+
+                        <h2>Prompt <span className="text-muted">(#{ this.props.promptId })</span></h2>
                         <div className="row">
                             <div className="col-xs-4">
                                 <img className="img-fluid" src="/static/storytrove/images/mockup/f.jpg" />

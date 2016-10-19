@@ -249,7 +249,13 @@ class Story extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-xs-12">
-                        <h2>Story</h2>
+                        <div className="row m-t-1 m-b-1">
+                            <div className="col-xs-12">
+                                <a href={`/prompt/${this.state.prompt.id}`}>
+                                    <i className="fa fa-chevron-left" /> Prompt
+                                </a>
+                            </div>
+                        </div>
 
                         <div className="row">
                             <div className="col-xs-4">

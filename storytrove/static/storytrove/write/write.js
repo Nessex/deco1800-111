@@ -232,10 +232,15 @@ class Write extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-xs-12">
+                        <div className="row m-t-1 m-b-1">
+                            <div className="col-xs-12">
+                                <a href={`/prompt/${this.state.promptId}`}>
+                                    <i className="fa fa-chevron-left" /> Prompt
+                                </a>
+                            </div>
+                        </div>
+
                         <h2>Writing</h2>
-                        <a href={`/prompt/${this.state.promptId}`} type="button" className="btn btn-primary">
-                            <i className="fa fa-chevron-left" /> Back to Prompt
-                        </a>
                         <div className="row m-t-1">
                             <div className="col-xs-4">
                                 <img className="img-fluid" src="/static/storytrove/images/mockup/i.jpg" />
