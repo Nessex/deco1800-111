@@ -1,9 +1,10 @@
 class AccountStory extends React.Component {
     render() {
         return (
-            <article className="account-story">
+            <article className="account-story m-t-2">
                 <h4>{ this.props.title }</h4>
                 <p>{ this.props.text }</p>
+                <a href={`/story/${ this.props.id }`}>Read More <i className="fa fa-chevron-right fa-fw" /></a>
             </article>
         );
     }
