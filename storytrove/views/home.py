@@ -1,4 +1,5 @@
 import json
+from hashlib import md5
 
 from django.http import HttpResponse
 from django.template import loader
@@ -9,7 +10,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.template.context_processors import csrf
 from django.template.defaulttags import register
 
-from hashlib import md5
+from storytrove.models import Achievement
 
 
 # Source: http://stackoverflow.com/a/8000091
@@ -27,6 +28,27 @@ def get_current_user(request):
 def get_user_image(user):
     email_hash = md5(user.email.encode('utf-8')).hexdigest()
     return "https://gravatar.com/avatar/{0}".format(email_hash)
+
+
+def get_achievement_object(a):
+    out = {k: a.get(k) for k in ('id', 'name', 'rank', 'description', 'date')}
+    return out
+
+
+def get_user_annotated_achievements_list(user):
+    achievements = [a for a in Achievement.objects.all().values()]
+    achievements = list(map(lambda a: get_achievement_object(a), achievements))
+    # Convert into dictionary, with id as key
+    achievements = {a['id']: a for a in achievements}
+
+    user_achievements = [a for a in user.achievement_set.values()]
+    user_achievements = list(map(lambda a: get_achievement_object(a), user_achievements))
+
+    for ua in user_achievements:
+        a_id = ua['id']
+        achievements[a_id]['earned'] = True # TODO(nathan): Change to date of user achievement
+
+    return achievements
 
 
 def std_page(request, script_path, props={}):
@@ -115,7 +137,11 @@ def account_comments(request):
 
 @login_required
 def achievements(request):
-    return std_page(request, 'storytrove/account/achievements.js')
+    props = {
+        "achievements": get_user_annotated_achievements_list(request.user)
+    }
+
+    return std_page(request, 'storytrove/account/achievements.js', props)
 
 
 @login_required

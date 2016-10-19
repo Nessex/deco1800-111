@@ -1,13 +1,31 @@
+const RANK_BRONZE = 0;
+const RANK_SILVER = 1;
+const RANK_GOLD = 2;
+
 class Achievement extends React.Component {
     render() {
         const mainClass = this.props.earned ? "achievement m-t-1 achievement-earned" : "achievement m-t-1";
+        let image = "";
+
+        switch (this.props.rank) {
+            case RANK_BRONZE:
+                image = "/static/storytrove/images/achievements/bronze.png";
+                break;
+            case RANK_SILVER:
+                image = "/static/storytrove/images/achievements/silver.png";
+                break;
+            case RANK_GOLD:
+                image = "/static/storytrove/images/achievements/gold.png";
+                break;
+        }
+
         return (
             <div className={mainClass}>
                 <div className="pull-xs-left">
-                    <img className="img-fluid" src={this.props.image} />
+                    <img className="img-fluid" src={image} />
                 </div>
                 <div className="achievement-text">
-                    <span><strong>{this.props.title}</strong></span>&nbsp;
+                    <span><strong>{this.props.name}</strong></span>&nbsp;
                     {this.props.earned ?
                     <i className="fa fa-check" /> : null }
 
@@ -26,17 +44,8 @@ class Achievements extends React.Component {
         super(props);
 
         this.state = {
-            achievementIds: [1, 2, 3, 4, 5, 6, 7, 8],
-            achievements: {
-                1: {id: 1, title: "abc", description: "def", image: "/static/storytrove/images/mockup/a.jpg", earned: "2016-04-05"},
-                2: {id: 2, title: "abc", description: "def", image: "/static/storytrove/images/mockup/b.jpg", earned: false},
-                3: {id: 3, title: "abc", description: "def", image: "/static/storytrove/images/mockup/c.jpg", earned: false},
-                4: {id: 4, title: "abc", description: "def", image: "/static/storytrove/images/mockup/d.jpg", earned: "2016-05-11"},
-                5: {id: 5, title: "abc", description: "def", image: "/static/storytrove/images/mockup/e.jpg", earned: false},
-                6: {id: 6, title: "abc", description: "def", image: "/static/storytrove/images/mockup/f.jpg", earned: false},
-                7: {id: 7, title: "abc", description: "def", image: "/static/storytrove/images/mockup/g.jpg", earned: false},
-                8: {id: 8, title: "abc", description: "def", image: "/static/storytrove/images/mockup/h.jpg", earned: false}
-            }
+            achievementIds: [],
+            achievements: {}
         };
 
         this.getAchievements = this.getAchievements.bind(this);
@@ -46,6 +55,10 @@ class Achievements extends React.Component {
 
     componentDidMount() {
         this.getAchievements();
+
+        this.setState({
+            achievementIds: Object.keys(this.props.achievements)
+        })
     }
 
     getAchievements() {
@@ -100,7 +113,7 @@ class Achievements extends React.Component {
                         </div>
 
                         <h2>Achievements</h2>
-                        { this.state.achievementIds.map(a => <Achievement key={a} {...this.state.achievements[a]} />) }
+                        { this.state.achievementIds.map(a => <Achievement key={a} {...this.props.achievements[a]} />) }
                     </div>
                 </div>
             </div>
