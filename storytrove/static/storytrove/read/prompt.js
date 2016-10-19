@@ -84,7 +84,7 @@ class Prompt extends React.Component {
                         </div>
                         <section className="row m-t-1">
                             <div className="col-xs-12">
-                                <a href="/write/" className="btn btn-primary btn-block">Write a story</a>
+                                <a href={`/write/${this.props.promptId}`} className="btn btn-primary btn-block">Write a story</a>
                                 
                                 <section className="m-t-1">
                                     { this.state.storyIds.map(sid => <StoryItem { ...this.getStoryItemProps(sid) } />)}
@@ -98,4 +98,14 @@ class Prompt extends React.Component {
     }
 }
 
-ReactDOM.render(<Prompt />, document.getElementById("react-page"));
+var el = document.getElementById("react-page");
+
+if (el) {
+    try {
+        let props = JSON.parse(el.getAttribute("data-react-props"));
+
+        ReactDOM.render(<Prompt { ...props } />, el);
+    } catch (e) {
+        console.log(e);
+    }
+}
