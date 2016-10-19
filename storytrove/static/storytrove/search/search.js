@@ -201,5 +201,14 @@ class Search extends React.Component {
     }
 }
 
+var el = document.getElementById("react-page");
 
-ReactDOM.render(<Search />, document.getElementById("react-page"));
+if (el) {
+    try {
+        let props = JSON.parse(el.getAttribute("data-react-props"));
+
+        ReactDOM.render(<Search { ...props } />, el);
+    } catch (e) {
+        console.log(e);
+    }
+}

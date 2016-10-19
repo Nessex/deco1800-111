@@ -126,4 +126,14 @@ class AccountStories extends React.Component {
     }
 }
 
-ReactDOM.render(<AccountStories />, document.getElementById("react-page"));
+var el = document.getElementById("react-page");
+
+if (el) {
+    try {
+        let props = JSON.parse(el.getAttribute("data-react-props"));
+
+        ReactDOM.render(<AccountStories { ...props } />, el);
+    } catch (e) {
+        console.log(e);
+    }
+}

@@ -108,4 +108,14 @@ class Achievements extends React.Component {
     }
 }
 
-ReactDOM.render(<Achievements />, document.getElementById("react-page"));
+var el = document.getElementById("react-page");
+
+if (el) {
+    try {
+        let props = JSON.parse(el.getAttribute("data-react-props"));
+
+        ReactDOM.render(<Achievements { ...props } />, el);
+    } catch (e) {
+        console.log(e);
+    }
+}

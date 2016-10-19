@@ -190,4 +190,14 @@ class Browse extends React.Component {
     }
 }
 
-ReactDOM.render(<Browse />, document.getElementById("react-page"));
+var el = document.getElementById("react-page");
+
+if (el) {
+    try {
+        let props = JSON.parse(el.getAttribute("data-react-props"));
+
+        ReactDOM.render(<Browse { ...props } />, el);
+    } catch (e) {
+        console.log(e);
+    }
+}

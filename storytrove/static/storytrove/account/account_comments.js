@@ -70,4 +70,14 @@ class AccountComments extends React.Component {
     }
 }
 
-ReactDOM.render(<AccountComments />, document.getElementById("react-page"));
+var el = document.getElementById("react-page");
+
+if (el) {
+    try {
+        let props = JSON.parse(el.getAttribute("data-react-props"));
+
+        ReactDOM.render(<AccountComments { ...props } />, el);
+    } catch (e) {
+        console.log(e);
+    }
+}
