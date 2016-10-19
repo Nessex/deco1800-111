@@ -310,8 +310,6 @@ class Read extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-xs-12">
-                        <h2>Read</h2>
-
                         <div className="row m-t-1">
                             <div className="col-xs-8 offset-xs-2 emoji-row">
                                 <EmojiText className={this.getReactionClass('thumbsup')} onClick={() => this.toggleReaction('thumbsup')} value=":thumbsup:" />

@@ -34,6 +34,7 @@ class Browse extends React.Component {
     }
 
     runSearchTags() {
+        this.setState({ loaded: false });
         search(this.state.queryTags, this.state.queryReactions, this.state.results.length)
         .done(response => {
             if (response.failure) {
@@ -55,11 +56,9 @@ class Browse extends React.Component {
                 });
 
                 let state = {
-                    results: out
+                    results: out,
+                    loaded: true
                 };
-
-                if (this.state.loaded === false)
-                    state.loaded = true;
 
                 this.setState(state);
             }
@@ -139,18 +138,8 @@ class Browse extends React.Component {
 
         return (
             <div className="container">
-                { !this.state.loaded ?
-                <div className="row">
-                    <div className="col-xs-12 text-xs-center">
-                        <i className="fa fa-circle-o-notch fa-spin fa-2x" />
-                    </div>
-                </div> : null }
-
-                { this.state.loaded ?
                 <div className="row">
                     <div className="col-xs-12">
-                        <h2>Browse</h2>
-
                         <div className="row m-t-1">
                             <div className="col-xs-12 text-xs-center">
                                 <div className="btn-group">
@@ -162,9 +151,23 @@ class Browse extends React.Component {
                             </div>
                         </div>
 
+                        <div className="row m-t-1">
+                            <div className="col-xs-12 text-xs-center">
+                                <p>Choose an image, and write a story about it.</p>
+                            </div>
+                        </div>
+
+                        { this.state.loaded ?
                         <section className="row">
                             { paginatedResults.map(r => <Prompt key={r.id} {...r} /> ) }
-                        </section>
+                        </section> : null }
+
+                        { !this.state.loaded ?
+                        <div className="row m-t-3 m-b-3">
+                            <div className="col-xs-12 text-xs-center">
+                                <i className="fa fa-circle-o-notch fa-spin fa-3x" />
+                            </div>
+                        </div> : null }
                     </div>
 
                     <div className="col-xs-12">
@@ -181,7 +184,7 @@ class Browse extends React.Component {
                             </div>
                         </div>
                     </div>
-                </div> : null }
+                </div>
             </div>
         );
     }
