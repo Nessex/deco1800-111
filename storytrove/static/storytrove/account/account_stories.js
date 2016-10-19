@@ -106,6 +106,14 @@ class AccountStories extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-xs-12">
+                        <div className="row m-t-1 m-b-1">
+                            <div className="col-xs-12">
+                                <a href="/account/">
+                                    <i className="fa fa-chevron-left" /> Account
+                                </a>
+                            </div>
+                        </div>
+
                         <h2>Your Stories</h2>
                         
                         <section className="m-t-1">

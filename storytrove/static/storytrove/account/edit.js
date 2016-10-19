@@ -29,6 +29,14 @@ class EditAccount extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-xs-12">
+                        <div className="row m-t-1 m-b-1">
+                            <div className="col-xs-12">
+                                <a href="/account/">
+                                    <i className="fa fa-chevron-left" /> Account
+                                </a>
+                            </div>
+                        </div>
+
                         <h2>Edit Account</h2>
                         <div className="row m-t-1">
                             <section className="col-xs-12 account-overview">
