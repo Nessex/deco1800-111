@@ -176,13 +176,9 @@ class Read extends React.Component {
     }
 
     toggleReaction(reaction) {
-        let reactions = this.state.filterReactions;
-        const idx = reactions.indexOf(reaction);
+        let reactions = []; //Default to removing reactions
 
-        if (idx >= 0) {
-            //Remove existing reaction from set
-            reactions = [];
-        } else {
+        if (reactions.indexOf(reaction) < 0) {
             //Add reaction to set
             reactions = [reaction];
         }
