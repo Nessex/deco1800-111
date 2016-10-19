@@ -29,6 +29,8 @@ class Browse extends React.Component {
         this.componentDidMount = this.componentDidMount.bind(this);
         this.nextPage = this.nextPage.bind(this);
         this.prevPage = this.prevPage.bind(this);
+        this.toggleTag = this.toggleTag.bind(this);
+        this.getTagButton = this.getTagButton.bind(this);
     }
 
     runSearchTags() {
@@ -86,6 +88,51 @@ class Browse extends React.Component {
         this.runSearchTags();
     }
 
+    toggleTag(tag) {
+        const idx = this.state.queryTags.indexOf(tag);
+        let tags = []; //Default to removing the tag
+
+        if (idx < 0) {
+            //Add the tag
+            tags.push(tag);
+        }
+
+        this.setState({
+            queryTags: tags
+        }, () => this.runSearchTags());
+    }
+
+    getTagButton(tag) {
+        let label = "";
+        let iconClass = "";
+        let active = this.state.queryTags.indexOf(tag) >= 0 ? 'active' : '';
+
+        switch(tag) {
+            case 'war':
+                label = 'War';
+                iconClass = 'fighter-jet';
+                break;
+            case 'death':
+                label = 'Death';
+                iconClass = 'ge';
+                break;
+            case 'history':
+                label = 'History';
+                iconClass = 'history';
+                break;
+            case 'sports':
+                label = 'Sports';
+                iconClass = 'ge';
+                break;
+        }
+
+        return (
+            <button type="button" className={`btn btn-secondary ${active}`} onClick={ () => this.toggleTag(tag) }>
+                <i className={`fa fa-${iconClass}`} /> {label}
+            </button>
+        );
+    }
+
     render() {
         let paginatedResults = this.state.results.slice(this.state.resultOffset, this.state.resultOffset + this.state.resultCount);
         let disableNext = this.state.resultOffset + this.state.resultCount >= this.state.results.length;
@@ -108,27 +155,10 @@ class Browse extends React.Component {
                         <div className="row m-t-1">
                             <div className="col-xs-12 text-xs-center">
                                 <div className="btn-group">
-                                    <button type="button" className="btn btn-secondary">
-                                        <i className="fa fa-fighter-jet" /> War
-                                    </button>
-                                    <button type="button" className="btn btn-secondary">
-                                        <i className="fa fa-history" /> History
-                                    </button>
-                                    <button type="button" className="btn btn-secondary">
-                                        <i className="fa fa-hand-lizard-o" /> Something
-                                    </button>
-                                    <button type="button" className="btn btn-secondary">
-                                        <i className="fa fa-ge" /> Sports
-                                    </button>
-                                    <button type="button" className="btn btn-secondary">
-                                        <i className="fa fa-ge" /> Death
-                                    </button>
-                                    <button type="button" className="btn btn-secondary">
-                                        <i className="fa fa-ge" /> Politics
-                                    </button>
-                                    <button type="button" className="btn btn-secondary">
-                                        <i className="fa fa-ge" /> Explorers
-                                    </button>
+                                    { this.getTagButton('war') }
+                                    { this.getTagButton('history') }
+                                    { this.getTagButton('sports') }
+                                    { this.getTagButton('death') }
                                 </div>
                             </div>
                         </div>

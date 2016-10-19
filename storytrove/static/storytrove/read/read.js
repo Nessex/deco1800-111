@@ -181,15 +181,15 @@ class Read extends React.Component {
 
         if (idx >= 0) {
             //Remove existing reaction from set
-            reactions.splice(idx, 1);
+            reactions = [];
         } else {
             //Add reaction to set
-            reactions.push(reaction);
+            reactions = [reaction];
         }
 
         this.setState({
             filterReactions: reactions
-        });
+        }, () => this.loadStories);
     }
 
     getReactionClass(reaction) {
