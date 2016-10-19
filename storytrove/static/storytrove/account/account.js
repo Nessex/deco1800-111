@@ -22,18 +22,20 @@ class Account extends React.Component {
     }
 
     render() {
+        const userImage = this.props.user.image ? this.props.user.image : '/static/images/empty_user.png';
+
         return (
             <div className="container">
-                <div className="row">
+                <div className="row m-t-1">
                     <div className="col-xs-12">
                         <h2>Manage Account</h2>
-                        <div className="row">
+                        <div className="row m-t-1">
                             <section className="col-xs-12 account-overview">
                                 <div className="pull-xs-left">
-                                    <img src="https://i.redd.it/yy2iqou5xjkx.jpg" className="edit-account-profile-picture" />
+                                    <img src={userImage} className="edit-account-profile-picture" />
                                 </div>
                                 <div>
-                                    <h3>Harambe</h3>
+                                    <h3>{ this.props.user.username }</h3>
                                     Total Votes: 234<br />
                                     <span><EmojiText value=":thumbsup:" /> 9 </span>
                                     <span><EmojiText value=":joy:" /> 8 </span>
@@ -54,4 +56,14 @@ class Account extends React.Component {
     }
 }
 
-ReactDOM.render(<Account />, document.getElementById("react-page"));
+var el = document.getElementById("react-page");
+
+if (el) {
+    try {
+        let props = JSON.parse(el.getAttribute("data-react-props"));
+
+        ReactDOM.render(<Account { ...props } />, el);
+    } catch (e) {
+        console.log(e);
+    }
+}

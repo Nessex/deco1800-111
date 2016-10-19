@@ -19,6 +19,12 @@ if API_KEY != '':
     print("\033[95m\033[93m\033[1m\033[4m--> Remove API key before commit (/views/api.py) <--\033[0m")
 
 
+def standard_failure():
+    return JsonResponse({
+        'failure': True
+    })
+
+
 def prepare_story_dict_object(s, truncated=False):
     out = {k: s.get(k) for k in ('id', 'title', 'is_draft', 'is_private', 'user_id', 'prompt_id')}
 
@@ -28,6 +34,7 @@ def prepare_story_dict_object(s, truncated=False):
     # Truncate text to 300 characters
     out['text'] = s['text'][:300] if (len(s['text']) > 300 and truncated) else s['text']
     return out
+
 
 def prepare_story_object(s, truncated=False):
     # Start with values we want as-is
@@ -68,7 +75,11 @@ def prepare_comment_object(c):
     return out
 
 
-def queryTrove(inputParams):
+def prepare_reaction_object(r):
+    return r.get('id')
+
+
+def query_trove(inputParams):
     params = {
         'key': API_KEY,
         **inputParams  # merge inputParams into this dict
@@ -84,7 +95,7 @@ def queryTrove(inputParams):
         return None
 
 
-def getTagString(tags):
+def get_tag_string(tags):
     # TODO: Filter/Whitelist tags here
     whitelist = [
         'brisbane',
@@ -107,13 +118,13 @@ This will still be used internally to build up new sets of prompts from trove.
 
 
 def search(tags, reactions, offset):
-    tag_string = getTagString(tags)
+    tag_string = get_tag_string(tags)
 
     if len(tag_string) == 0:
         return None
 
-    res = queryTrove({
-        # 'q': 'publictag:(' + getTagString(tags) + ')', # These proper tags suck, use tags as keywords...
+    res = query_trove({
+        # 'q': 'publictag:(' + get_tag_string(tags) + ')', # These proper tags suck, use tags as keywords...
         'q': tag_string,
         'encoding': 'json',
         'zone': 'picture',
@@ -143,9 +154,7 @@ def prompts(request):
     res = search(tags, reactions, offset)
 
     if res is None:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     return JsonResponse({
         'success': True,
@@ -169,9 +178,9 @@ def stories(request):
     author = request.GET.get('author')
 
     # start with all recent stories (past week)
-    end_date = datetime.today()
-    start_date = end_date - timedelta(days=6)
-    responses = Response.objects.all() # filter(date__range=[start_date, end_date])
+    # end_date = datetime.today()
+    # start_date = end_date - timedelta(days=6)
+    responses = Response.objects.all()  # filter(date__range=[start_date, end_date])
 
     # then initially filter by the broadest option - the tag
     if tag is not None and tag != "":
@@ -184,12 +193,13 @@ def stories(request):
             emojiresponseonresponse__emoji=reaction).order_by('num_emojis')
 
     if author is not None and author != "":
-        responses = responses.filter(user=UserAccount.objects.filter(username__exact=author))
+        if author == 'current':
+            responses = responses.filter(user=request.user)
+        else:
+            responses = responses.filter(user=UserAccount.objects.filter(username__exact=author))
 
     if responses is None:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     stories = [r for r in responses.values()]
     stories = list(map(lambda s: prepare_story_dict_object(s, True), stories))
@@ -214,25 +224,15 @@ def prompt(request):
         id = int(id)
         prompt = Prompt.objects.get(pk=id)
 
-        troveObjects = prompt.trove_objects
-        stories = Response.objects.filter(prompt=prompt)
-        reactions = EmojiResponseOnResponse.objects.filter(response__in=stories)
+        prompt = prepare_prompt_object(prompt)
 
         return JsonResponse({
             'success': True,
-            'response': json.dumps({
-                'trove_objects': json.dumps(troveObjects),
-                'tags': prompt.tags,
-                'stories': json.dumps(stories),
-                'reactions': json.dumps(reactions),
-            })
-
+            'prompt': prompt
         })
 
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
 
 '''
@@ -251,9 +251,7 @@ def story(request):
         id = int(id)
         response = Response.objects.get(pk=id)
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     if response != "":
         story = prepare_story_object(response)
@@ -262,7 +260,7 @@ def story(request):
         comments = [c for c in Comment.objects.filter(response=response)]
         comments = list(map(prepare_comment_object, comments))
         comment_ids = [c['id'] for c in comments]
-        comment_author_ids = list(set([c['user_id'] for c in comments])) # unique user ids
+        comment_author_ids = list(set([c['user_id'] for c in comments]))  # unique user ids
 
         # Change comments into an associative array, with comment id as the key
         comments = {c['id']: c for c in comments}
@@ -282,14 +280,13 @@ def story(request):
         }), content_type='application/json')
 
     else:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
 
 '''
 Get an array of comments for a given story id
 '''
+# TODO(nathan): this should be changed to get comments for a given user id (for the account_coments page)
 
 
 def comments(request):
@@ -301,9 +298,7 @@ def comments(request):
         id = int(id)
         comments = Comment.objects.filter(response__in=Response.objects.filter(prompt=Prompt.objects.get(pk=id)))
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     if comments != "":
 
@@ -315,9 +310,26 @@ def comments(request):
         })
 
     else:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
+
+
+'''
+Get an array of achievements for the given user id
+'''
+
+
+def achievements(request):
+    try:
+        user_achievements = Achievement.objects.get(user=request.user)
+        achievements = Achievement.objects.all()
+    except:
+        return standard_failure()
+
+    return JsonResponse({
+        'success': True,
+        'achievements': achievements,
+        'user_achievements': user_achievements
+    })
 
 
 '''
@@ -328,30 +340,44 @@ and whether it is a private post or a draft copy
 
 
 def respond(request):
-    userId = request.GET.get('user_id')
-    promptId = request.GET.get('prompt_id')
+    if not request.user.is_authenticated:
+        return standard_failure()
+
+    prompt_id = request.GET.get('prompt_id')
     title = request.GET.get('title')
     text = request.GET.get('text')
     is_draft = request.GET.get('is_draft')
-    # For now, is_private will just be false
-    is_private = False
+    is_private = request.GET.get('is_private')
 
-    # TODO add in if user id is empty to use the current user?
-
-    userIdInt = -1
-    promptIdInt = -1
+    has_existing = False
 
     try:
-        userIdInt = int(userId)
-        promptIdInt = int(promptId)
+        story_id = request.GET.get('story_id')
+        story_id = int(story_id)
+        has_existing = True
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        pass
+
+    if not has_existing:
+        story_id = None
+
+    try:
+        prompt_id_int = int(prompt_id)
+        is_draft = is_draft == 'true'
+        is_private = is_private == 'true'
+    except:
+        return standard_failure()
+
+    if has_existing:
+        # Check this is on the correct prompt, and owned by this user
+        existing = Response.objects.get(id=story_id)
+        if existing.user.id != request.user.id or existing.prompt.id != prompt_id_int:
+            return standard_failure()
 
     response = Response(
-        user=UserAccount.objects.get(pk=userIdInt),
-        prompt=Prompt.objects.get(pk=promptIdInt),
+        id=story_id,
+        user=request.user,
+        prompt=Prompt.objects.get(pk=prompt_id_int),
         title=title,
         date=datetime.now(),  # datetime for date field ok?
         text=text,
@@ -361,7 +387,8 @@ def respond(request):
     response.save()
 
     return JsonResponse({
-        'success': True
+        'success': True,
+        'story_id': response.id
     })
 
 
@@ -388,9 +415,7 @@ def react(request):
         userIdInt = int(userId)
         resourceIdInt = int(resourceId)
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     if resourceType == "response":
         reaction = EmojiResponseOnResponse(
@@ -432,9 +457,7 @@ def comment(request):
         userIdInt = int(userId)
         responseIdInt = int(responseId)
     except:
-        return JsonResponse({
-            'failure': True
-        })
+        return standard_failure()
 
     comment = Comment(
         user=UserAccount.objects.get(pk=userIdInt),

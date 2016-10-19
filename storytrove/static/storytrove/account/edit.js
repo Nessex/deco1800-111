@@ -23,18 +23,20 @@ class EditAccount extends React.Component {
     }
 
     render() {
+        const userImage = this.props.user.image ? this.props.user.image : '/static/images/empty_user.png';
+
         return (
             <div className="container">
                 <div className="row">
                     <div className="col-xs-12">
                         <h2>Edit Account</h2>
-                        <div className="row">
+                        <div className="row m-t-1">
                             <section className="col-xs-12 account-overview">
                                 <div className="pull-xs-left">
-                                    <img src="https://i.redd.it/yy2iqou5xjkx.jpg" className="edit-account-profile-picture" />
+                                    <img src={userImage} className="edit-account-profile-picture" />
                                 </div>
                                 <div>
-                                    <h3>Harambe</h3>
+                                    <h3>{ this.props.user.username }</h3>
                                     Total Votes: 234<br />
                                     <span><EmojiText value=":thumbsup:" /> 9 </span>
                                     <span><EmojiText value=":joy:" /> 8 </span>
@@ -42,7 +44,7 @@ class EditAccount extends React.Component {
                                 </div>
                             </section>
                         </div>
-                        <div className="form-group">
+                        <div className="form-group m-t-1">
                             <label htmlFor="password">Change password</label>
                             <input type="password" className="form-control" id="password" placeholder="Type your new password" />
 
@@ -50,7 +52,7 @@ class EditAccount extends React.Component {
                             <input type="password" className="form-control" id="confirm-password" placeholder="Type your new password again" />
 
                             <label className="m-t-1" htmlFor="user-image-picker">Profile Picture</label>
-                            <input type="file" className="form-control" id="user-image-picker" />
+                            <p>Change your profile picture at <a href="https://gravatar.com">Gravatar</a></p>
 
                             <button type="button" className="btn btn-primary m-t-1">
                                 Save
@@ -63,4 +65,14 @@ class EditAccount extends React.Component {
     }
 }
 
-ReactDOM.render(<EditAccount />, document.getElementById("react-page"));
+var el = document.getElementById("react-page");
+
+if (el) {
+    try {
+        let props = JSON.parse(el.getAttribute("data-react-props"));
+
+        ReactDOM.render(<EditAccount { ...props } />, el);
+    } catch (e) {
+        console.log(e);
+    }
+}

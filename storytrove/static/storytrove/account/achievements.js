@@ -38,6 +38,52 @@ class Achievements extends React.Component {
                 8: {id: 8, title: "abc", description: "def", image: "/static/storytrove/images/mockup/h.jpg", earned: false}
             }
         };
+
+        this.getAchievements = this.getAchievements.bind(this);
+        this.getAchievementsSuccess = this.getAchievementsSuccess.bind(this);
+        this.getAchievementsFailure = this.getAchievementsFailure.bind(this);
+    }
+
+    componentDidMount() {
+        this.getAchievements();
+    }
+
+    getAchievements() {
+        this.getAchievementsRequest = $.get('/api/achievements')
+            .done((response) => {
+                if (response.success)
+                    this.getAchievementsSuccess(response);
+                else
+                    this.getAchievementsFailure(response);
+            })
+            .fail(this.getAchievementsFailure);
+    }
+
+    getAchievementsSuccess(response) {
+        let stories = {};
+        let storyIds = [];
+
+        response.stories.forEach(s => {
+            stories[s.id] = s;
+            storyIds.push(s.id);
+        });
+
+        this.setState({
+            loading: false,
+            stories: stories,
+            storyIds: storyIds
+        });
+    }
+
+    getAchievementsFailure(response) {
+        //TODO(nathan): Show error message or retry with exponential falloff
+        console.log("Retrieving stories failed");
+        console.table(response);
+    }
+
+    componentWillUnmount() {
+        if (this.getAchievementsRequest)
+            this.getAchievementsRequest.abort();
     }
 
     render() {
