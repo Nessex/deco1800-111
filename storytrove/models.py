@@ -119,7 +119,7 @@ class EmojiResponseOnComment(models.Model):
 class Achievement(models.Model):
     user = models.ManyToManyField(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length=50)
-    rank = models.IntegerField()  # bronze, silver, gold
+    rank = models.IntegerField()  # bronze=0, silver=1, gold=2
     date = models.DateTimeField()
     description = models.TextField()
     objects = AchievementManager()
