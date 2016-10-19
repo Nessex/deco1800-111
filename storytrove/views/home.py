@@ -69,6 +69,14 @@ def login(request):
     return std_page(request, 'storytrove/account/login.js')
 
 
+def prompt(request, prompt_id):
+    props = {
+        "promptId": prompt_id
+    }
+
+    return std_page(request, 'storytrove/read/prompt.js', props)
+
+
 def prompt_example(request):
     return std_page(request, 'storytrove/read/prompt.js')
 
