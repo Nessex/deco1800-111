@@ -225,8 +225,8 @@ class Write extends React.Component {
             };
         }
 
-        const draftChecked = !!this.state.is_draft ? { checked: 'checked' } : { checked: false };
-        const publicChecked = !this.state.is_private ? { checked: 'checked' } : { checked: false };
+        const draftChecked = !!this.state.isDraft ? { checked: 'checked' } : { checked: false };
+        const publicChecked = !this.state.isPrivate ? { checked: 'checked' } : { checked: false };
 
         return (
             <div className="container">
@@ -273,7 +273,7 @@ class Write extends React.Component {
                                         <div className="col-xs-6 text-xs-center">
                                             <div className="form-check-inline">
                                                 <label className="form-check-label">
-                                                    <input className="form-check-input" type="checkbox" readOnly { ...publicChecked } onClick={() => this.setState({ is_private: !this.state.is_private })} />
+                                                    <input className="form-check-input" type="checkbox" readOnly { ...publicChecked } onClick={() => this.setState({ isPrivate: !this.state.isPrivate })} />
                                                     <span>Public</span>
                                                 </label>
                                             </div>
@@ -281,13 +281,18 @@ class Write extends React.Component {
                                         <div className="col-xs-6 text-xs-center">
                                             <div className="form-check-inline">
                                                 <label className="form-check-label">
-                                                    <input className="form-check-input" type="checkbox" readOnly { ...draftChecked } onClick={() => this.setState({ is_draft: !this.state.is_draft })}/>
+                                                    <input className="form-check-input" type="checkbox" readOnly { ...draftChecked } onClick={() => this.setState({ isDraft: !this.state.isDraft })}/>
                                                     <span>Draft</span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     { this.getSaveButton() }
+
+                                    { this.state.storyId ?
+                                    <div className="text-xs-center m-t-1">
+                                        <a href={`/story/${this.state.storyId}`}>See your story <i className="fa fa-chevron-right" /></a>
+                                    </div> : null}
                                 </div>
                             </div>
                         </div>
