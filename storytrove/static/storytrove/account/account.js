@@ -47,7 +47,7 @@ class Account extends React.Component {
                             <a className="list-group-item list-group-item-action" href="/account/edit/">Edit Details</a>
                             <a className="list-group-item list-group-item-action" href="/account/achievements/">Achievements</a>
                             <a className="list-group-item list-group-item-action" href="/account/stories/">Stories</a>
-                            <a className="list-group-item list-group-item-action" href="/account/comments/">Comments</a>
+                            {/*<a className="list-group-item list-group-item-action" href="/account/comments/">Comments</a>*/}
                         </div>
                     </div>
                 </div>
