@@ -7,7 +7,7 @@ class StoryItem extends React.Component {
                     <p>{ this.props.text }</p>
                     <a href={`/story/${ this.props.id }`}>
                         <span>Continue Reading</span>
-                        <i className="fa fa-chevron-right" />
+                        <i className="fa fa-chevron-right fa-fw" />
                     </a>
                 </div>
             </div>
