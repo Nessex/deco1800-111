@@ -114,7 +114,10 @@ class Read extends React.Component {
                  * }
                  */
             },
-            filterReactions: []
+            filterReactions: [],
+            resultOffset: 0,
+            totalResults: 0,
+            resultsPerPage: 5
         };
 
         this.toggleReaction = this.toggleReaction.bind(this);
@@ -127,6 +130,9 @@ class Read extends React.Component {
         this.loadStories = this.loadStories.bind(this);
         this.loadStoriesSuccess = this.loadStoriesSuccess.bind(this);
         this.loadStoriesFailure = this.loadStoriesFailure.bind(this);
+        this.getStories = this.getStories.bind(this);
+        this.nextPage = this.nextPage.bind(this);
+        this.prevPage = this.prevPage.bind(this);
     }
 
     loadStoriesSuccess(response) {
@@ -141,7 +147,8 @@ class Read extends React.Component {
         this.setState({
             loaded: true,
             storyIds: storyIds,
-            stories: stories
+            stories: stories,
+            totalResults: response.stories.length
         });
     }
 
@@ -164,6 +171,8 @@ class Read extends React.Component {
                     this.loadStoriesFailure(response);
             })
             .fail(this.loadStoriesFailure);
+
+        this.setState({ loaded: false });
     }
 
     componentDidMount() {
@@ -263,7 +272,40 @@ class Read extends React.Component {
         this.setState(newState);
     }
 
+    getStories() {
+        let out = [];
+        let end = this.state.resultOffset + this.state.resultsPerPage;
+
+        if (end > this.state.totalResults)
+            end = this.state.totalResults;
+
+        for (let i = this.state.resultOffset; i < end; i++) {
+            out.push(this.getStoryBlock(this.state.storyIds[i]));
+        }
+
+        return out;
+    }
+
+    nextPage() {
+        let newOffset = Math.min(this.state.totalResults - this.state.resultsPerPage, this.state.resultOffset + this.state.resultsPerPage);
+
+        this.setState({
+            resultOffset: newOffset
+        });
+    }
+
+    prevPage() {
+        let newOffset = Math.max(0, this.state.resultOffset - this.state.resultsPerPage);
+
+        this.setState({
+            resultOffset: newOffset
+        });
+    }
+
     render() {
+        const previousDisabled = this.state.resultOffset === 0 ? { disabled: 'disabled' } : {};
+        const nextDisabled = this.state.totalResults - this.state.resultsPerPage <= this.state.resultOffset ? { disabled: 'disabled' } : {};
+
         return (
             <div className="container">
                 { !this.state.loaded ?
@@ -293,7 +335,7 @@ class Read extends React.Component {
 
                         <section className="row">
                             <div className="col-xs-12">
-                                { this.state.storyIds.map(id => this.getStoryBlock(id)) }
+                                { this.getStories() }
                             </div>
                         </section>
                     </div>
@@ -301,12 +343,12 @@ class Read extends React.Component {
                     <div className="col-xs-12">
                         <div className="row m-t-1">
                             <div className="col-xs-6 text-xs-center">
-                                <button type="button" className="btn btn-primary btn-block">
+                                <button type="button" className="btn btn-primary btn-block" { ...previousDisabled } onClick={this.prevPage}>
                                     Previous
                                 </button>
                             </div>
                             <div className="col-xs-6 text-xs-center">
-                                <button type="button" className="btn btn-primary btn-block">
+                                <button type="button" className="btn btn-primary btn-block" { ...nextDisabled } onClick={this.nextPage}>
                                     Next
                                 </button>
                             </div>
