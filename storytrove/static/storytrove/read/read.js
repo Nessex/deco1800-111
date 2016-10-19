@@ -308,14 +308,6 @@ class Read extends React.Component {
 
         return (
             <div className="container">
-                { !this.state.loaded ?
-                <div className="row">
-                    <div className="col-xs-12 text-xs-center">
-                        <i className="fa fa-circle-o-notch fa-spin fa-2x" />
-                    </div>
-                </div> : null }
-
-                { this.state.loaded ?
                 <div className="row">
                     <div className="col-xs-12">
                         <h2>Read</h2>
@@ -333,11 +325,30 @@ class Read extends React.Component {
                             </div>
                         </div>
 
+                        { this.state.loaded ?
                         <section className="row">
+                            { this.state.storyIds.length > 0 ?
                             <div className="col-xs-12">
                                 { this.getStories() }
+                            </div> : null }
+
+                            { this.state.storyIds.length <= 0 ?
+                            <div className="col-xs-12">
+                                <div className="alert alert-info">
+                                    <span>There are currently no stories with this reaction.</span>
+                                    <a href="/browse/" className="btn btn-primary m-l-1">
+                                        <i className="fa fa-pencil fa-fw" /> Try writing one
+                                    </a>
+                                </div>
+                            </div> : null }
+                        </section> : null }
+
+                         { !this.state.loaded ?
+                        <div className="row m-t-3 m-b-3">
+                            <div className="col-xs-12 text-xs-center">
+                                <i className="fa fa-circle-o-notch fa-spin fa-3x" />
                             </div>
-                        </section>
+                        </div> : null }
                     </div>
 
                     <div className="col-xs-12">
@@ -354,7 +365,7 @@ class Read extends React.Component {
                             </div>
                         </div>
                     </div>
-                </div> : null }
+                </div>
             </div>
         );
     }
