@@ -7,7 +7,9 @@ USER_TWO = User.objects.get(firstname="")
 
 # Create Trove Objects
 TroveObject1 = TroveObject.objects.create_trove_object('137268923', "River Red Gums (Eucalyptus Camaldulensis)")
+TroveObject1.save()
 TroveObject2 = TroveObject.objects.create_trove_object('234844423', "The Raymond Dinner Menu, March 11, 1917, Pasadena, California")
+TroveObject2.save()
 
 # Create Prompts
 Prompt1 = Prompt.objects.create_prompt([TroveObject1],"war")
@@ -47,3 +49,9 @@ Achievement1.user.add(USER_TWO)
 Achievement2.user.add(USER_ONE)
 
 # Create Reactions/Votes
+emojiResponse1 = EmojiResponseOnResponse.objects.create_emoji_on_response(USER_ONE,Response2,'+')
+emojiResponse2 = EmojiResponseOnResponse.objects.create_emoji_on_response(USER_TWO,Response1,'2')
+
+emojiComment1 = EmojiResponseOnComment.objects.create_emoji_on_comment(USER_ONE,Comment2,'1')
+emojiComment2 = EmojiResponseOnComment.objects.create_emoji_on_comment(USER_ONE,Comment2,'+')
+emojiComment3 = EmojiResponseOnComment.objects.create_emoji_on_comment(USER_TWO,Comment1,'5')
