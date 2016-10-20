@@ -6,8 +6,8 @@ USER_ONE = User.objects.get(firstname="")
 USER_TWO = User.objects.get(firstname="")
 
 # Create Trove Objects
-TroveObject1 = TroveObject.objects.create_trove_object('', "")
-TroveObject2 = TroveObject.objects.create_trove_object('', "")
+TroveObject1 = TroveObject.objects.create_trove_object('137268923', "River Red Gums (Eucalyptus Camaldulensis)")
+TroveObject2 = TroveObject.objects.create_trove_object('234844423', "The Raymond Dinner Menu, March 11, 1917, Pasadena, California")
 
 # Create Prompts
 Prompt1 = Prompt.objects.create_prompt([TroveObject1],"war")
