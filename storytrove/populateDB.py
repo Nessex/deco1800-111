@@ -25,9 +25,7 @@ Response1.save()
 Response2 = Response.objects.create_response(USER_TWO, Prompt2, ResponseTitle2, timezone.now(),ResponseText2, False, False)
 Response2.save()
 
-
 # Set up Comment texts
-
 CommentText1  = open('examples/comment1','r').read()
 CommentText2  = open('examples/comment2','r').read()
 
@@ -37,7 +35,15 @@ Comment1.save()
 Comment2 = Comment.objects.create_comment(USER_TWO, Response1, timezone.now(), CommentText2)
 Comment2.save()
 
-# Create Achievements
+# Create Achievements - this does not mean a user has achieved it
+Achievement1 = Achievement.objects.create_achievement("Sign up to StoryTrove!",0,"This achievement is just to get you started and is awarded when you create your account!")
+Achievement1.save()
+Achievement2 = Achievement.objects.create_achievement("Make your first Story",1,"This achievement is awarded when you first post a response to a Trove visual prompt.")
+Achievement2.save()
 
+# Make a user achieve achievements
+Achievement1.user.add(USER_ONE)
+Achievement1.user.add(USER_TWO)
+Achievement2.user.add(USER_ONE)
 
 # Create Reactions/Votes
