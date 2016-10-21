@@ -10,8 +10,8 @@ class TroveObjectManager(models.Manager):
 
 
 class PromptManager(models.Manager):
-    def create_prompt(self, trove_objects, tags):
-        prompt = self.create(trove_objects=trove_objects, tags=tags)
+    def create_prompt(self, tags):
+        prompt = self.create(tags=tags)
         return prompt
 
 
@@ -120,6 +120,5 @@ class Achievement(models.Model):
     user = models.ManyToManyField(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length=50)
     rank = models.IntegerField()  # bronze=0, silver=1, gold=2
-    date = models.DateTimeField()
     description = models.TextField()
     objects = AchievementManager()
