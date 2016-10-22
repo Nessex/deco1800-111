@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
 
+from django.shortcuts import redirect
 from django.shortcuts import render_to_response
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
@@ -12,6 +13,7 @@ from django.contrib.auth import login as djlogin
 from django.views.generic import FormView
 from django.template.context_processors import csrf
 from django.template.defaulttags import register
+from django.contrib.auth.hashers import check_password
 
 from storytrove.models import *
 from storytrove.views.api import *
@@ -162,16 +164,6 @@ def achievements(request):
 
     return std_page(request, 'storytrove/account/achievements.js', props)
 
-
-@login_required
-def edit(request):
-    props = {
-        "user": get_current_user(request)
-    }
-
-    return std_page(request, 'storytrove/account/edit.js', props)
-
-
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -191,3 +183,39 @@ def register(request):
     token['form'] = form
 
     return render_to_response('registration/register.html', token)
+
+@login_required
+def password_change_render(request):
+    template = loader.get_template('account/password_change.html')
+
+    context = {
+        'logged_in': request.user.is_authenticated,
+    }
+
+    if request.user.is_authenticated:
+        context['user'] = get_current_user(request)
+
+    return HttpResponse(template.render(context, request))
+
+@login_required
+def password_change(request):
+    if request.method == 'POST':
+        passwordOld = request.POST['old_password']
+        password = request.POST['new_password1']
+        passwordConfirm = request.POST['new_password2']
+        
+        current_user = request.user
+        username = current_user.username
+
+        if(check_password(passwordOld, current_user.password)):
+            current_user.set_password(password)
+            current_user.save()
+            user = authenticate(username=username, password=password)
+            djlogin(request, user)
+            return redirect('/account')
+
+    token = {}
+    token.update(csrf(request))
+    token['error'] = "Either your old password was not correct or your new passwords did not match."
+
+    return render_to_response('account/password_change.html', token)
