@@ -229,7 +229,7 @@ def stories(request):
         else:
             responses = responses.filter(user=UserAccount.objects.filter(username__exact=author))
 
-    if prompt is not None and prompt != "":
+    if prompt_id is not None and prompt_id != "":
         responses = responses.filter(prompt=Prompt.objects.get(pk=prompt_id))
 
     if responses is None:
