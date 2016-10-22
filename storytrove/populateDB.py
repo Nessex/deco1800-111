@@ -3,6 +3,9 @@ from django.contrib.auth.models import  User
 
 import datetime
 from django.utils import timezone
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Set up User references
 """ At this stage we simply create some example users in django.contrib.auth,
@@ -31,9 +34,9 @@ Prompt2.trove_objects.add(TroveObject2)
 
 # Set up Response texts
 ResponseTitle1 = "Old Dave"
-ResponseText1 = open('./examples/response1.txt','r').read()
+ResponseText1 = open(BASE_DIR + './examples/response1.txt','r').read()
 ResponseTitle2 = "Gone Mad"
-ResponseText2 = open('./examples/response2.txt','r').read()
+ResponseText2 = open(BASE_DIR + './examples/response2.txt','r').read()
 
 # Create Responses
 Response1 = Response.objects.create_response(USER_ONE, Prompt1, ResponseTitle1, timezone.now(),ResponseText1, False, False)
@@ -43,8 +46,8 @@ Response1.save()
 Response2.save()
 
 # Set up Comment texts
-CommentText1  = open('./examples/comment1.txt','r').read()
-CommentText2  = open('./examples/comment2.txt','r').read()
+CommentText1  = open(BASE_DIR + './examples/comment1.txt','r').read()
+CommentText2  = open(BASE_DIR + './examples/comment2.txt','r').read()
 
 # Create Comments
 Comment1 = Comment.objects.create_comment(USER_ONE, Response2, timezone.now(), CommentText1)
