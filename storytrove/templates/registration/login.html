@@ -40,7 +40,7 @@
     </head>
     <body>
         <header>
-            <div class=container>
+            <div class="container">
                 <div class="row m-t-1">
                     <div class="col-xs-12">
                         <a href="/">
@@ -54,33 +54,46 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12">
+						<div class="row">
                         {% if form.errors %}
-                        <p>Your username and password didn't match. Please try again.</p>
+                        <div class="bs-callout bs-callout-info">Your username and password didn't match. Please try again.</div>
                         {% endif %}
 
                         {% if next %}
                             {% if user.is_authenticated %}
-                                <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+                                <div class="bs-callout bs-callout-info">Your account doesn't have access to this page. To proceed, please login with an account that has access.</div>
                             {% else %}
-                                <p>Please login to see this page, or register if you do not already have an account.</p>
+                                <div class="bs-callout bs-callout-info">Please login to see this page, or register if you do not already have an account.</div>
                                 <a href="/account/register/" class="btn btn-primary">Register New Account</a>
                                 <hr>
                             {% endif %}
                         {% endif %}
+						</div>
                         <form method="post" action="{% url 'login' %}">
                             {% csrf_token %}
-                            <table>
-                                <tr>
-                                    <td>{{ form.username.label_tag }}</td>
-                                    <td>{{ form.username }}</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ form.password.label_tag }}</td>
-                                    <td>{{ form.password }}</td>
-                                </tr>
-                            </table>
+							
+							<div class="row form-group">
+								<label for="id_username">Username:</label>
+								<input class="form-control" autofocus="" id="id_username" maxlength="254" name="username" type="text" required="">
+							</div>
+							<div class="row form-group">
+								<label for="id_password">Password:</label>
+								<input class="form-control" id="id_password" name="password" type="password" required="">
+							</div>
+							
+							<!-- 
+							<div class="row">
+							{{ form.username.label_tag }}
+                            {{ form.username }}
+							</div>
+							<div class="row">
+							{{ form.password.label_tag }}
+                            {{ form.password }}
+							</div>
+							-->
+                                   
 
-                            <input type="submit" class="btn btn-primary" value="login" />
+                            <input type="submit" class="btn btn-primary pull-right" value="login" />
                             <input type="hidden" name="next" value="{{ next }}" />
                         </form>
                     </div>
@@ -88,7 +101,7 @@
             </div>
         </main>
         <footer>
-            <div class=container>
+            <div class="container">
                 <div class="row m-t-1">
                     <div class="col-xs-12 text-xs-center">
                         Team Excite
