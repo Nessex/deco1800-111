@@ -8,7 +8,7 @@ class Prompt extends React.Component {
 
         return (
             <div className="col-xs-6 col-sm-4 col-md-3 m-t-1 search-result">
-                <a href="/prompt/example">
+                <a href={`/prompt/${ this.props.id }`}>
                     <div className="search-result-inner" style={{backgroundImage: `url(${firstImage})`}}>
                         &nbsp;
                     </div>
