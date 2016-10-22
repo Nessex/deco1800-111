@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth.views import login
+from django.contrib.auth.views import logout
 from . import views
 
 urlpatterns = [
@@ -43,7 +44,8 @@ urlpatterns = [
     url(r'^prompt/example/?', views.home.prompt_example),
     url(r'^story/example/?', views.home.story_example),
     url(r'^story/(?P<story_id>[0-9]{1,11})/?', views.home.story),
-    url(r'^login/$', login, name='login'),
+    url(r'^login/?', login, name='login'),
+    url(r'^logout/?', logout,{'next_page': '/login'}),
     url(r'^', views.home.index),
 
 ]
