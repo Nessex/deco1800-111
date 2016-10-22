@@ -242,15 +242,10 @@ class Write extends React.Component {
 
                         <h2>Writing</h2>
                         <div className="row m-t-1">
-                            <div className="col-xs-4">
-                                <img className="img-fluid" src="/static/storytrove/images/mockup/i.jpg" />
-                            </div>
-                            <div className="col-xs-4">
-                                <img className="img-fluid" src="/static/storytrove/images/mockup/a.jpg" />
-                            </div>
-                            <div className="col-xs-4">
-                                <img className="img-fluid" src="/static/storytrove/images/mockup/g.jpg" />
-                            </div>
+                            { this.state.prompt && this.state.prompt.trove_objects && this.state.prompt.trove_objects.map( to =>
+                            <div className="col-xs-4" key={to.id}>
+                                <img className="img-fluid" src={to.image_url} />
+                            </div> )}
                         </div>
 
                         <div className="row m-t-1">

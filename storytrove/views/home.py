@@ -13,7 +13,8 @@ from django.views.generic import FormView
 from django.template.context_processors import csrf
 from django.template.defaulttags import register
 
-from storytrove.models import Achievement
+from storytrove.models import *
+from storytrove.views.api import *
 
 
 # Source: http://stackoverflow.com/a/8000091
@@ -23,6 +24,9 @@ def get_item(dictionary, key):
 
 
 def get_current_user(request):
+    if not request.user.is_authenticated:
+        return None
+
     out = {k: getattr(request.user, k) for k in ('id', 'username', 'email')}
     out["image"] = get_user_image(request.user)
     return out
@@ -79,8 +83,14 @@ def read(request):
 
 @login_required
 def write(request, prompt_id):
+    prompt = Prompt.objects.get(pk=prompt_id)
+
+    if prompt is None:
+        return index(request)
+
     props = {
-        "promptId": prompt_id
+        "promptId": prompt_id,
+        "prompt": prepare_prompt_object(prompt)
     }
 
     return std_page(request, 'storytrove/write/write.js', props)
@@ -95,8 +105,14 @@ def login(request):
 
 
 def prompt(request, prompt_id):
+    prompt = Prompt.objects.get(pk=prompt_id)
+
+    if prompt is None:
+        return index(request)
+
     props = {
-        "promptId": prompt_id
+        "promptId": prompt_id,
+        "prompt": prepare_prompt_object(prompt)
     }
 
     return std_page(request, 'storytrove/read/prompt.js', props)

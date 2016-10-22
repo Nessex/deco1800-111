@@ -76,11 +76,13 @@ class Story extends React.Component {
         let commentAuthors = response.comment_authors || [];
 
         /* Add a record for the current user to comment authors */
-        const currentUserId = 'current'; //TODO(nathan): something real?
-        commentAuthors[currentUserId] = {
-            id: currentUserId,
-            username: this.props.user.username, //TODO(nathan): Get proper information for the current user
-        };
+        if (this.props.user) {
+            const currentUserId = 'current'; //TODO(nathan): something real?
+            commentAuthors[currentUserId] = {
+                id: currentUserId,
+                username: this.props.user.username, //TODO(nathan): Get proper information for the current user
+            };
+        }
 
         const newState = {
             loaded: true,
@@ -257,15 +259,10 @@ class Story extends React.Component {
                         </div>
 
                         <div className="row">
-                            <div className="col-xs-4">
-                                <img className="img-fluid" src="/static/storytrove/images/mockup/i.jpg" />
-                            </div>
-                            <div className="col-xs-4">
-                                <img className="img-fluid" src="/static/storytrove/images/mockup/a.jpg" />
-                            </div>
-                            <div className="col-xs-4">
-                                <img className="img-fluid" src="/static/storytrove/images/mockup/g.jpg" />
-                            </div>
+                            { this.state.prompt.trove_objects && this.state.prompt.trove_objects.map( to =>
+                            <div className="col-xs-4" key={to.id}>
+                                <img className="img-fluid" src={to.image_url} />
+                            </div> )}
                         </div>
                         <article className="row m-t-1">
                             <div className="col-xs-12">

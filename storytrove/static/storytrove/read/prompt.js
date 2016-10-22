@@ -19,7 +19,7 @@ StoryItem.PropTypes = {
     title: React.PropTypes.string,
     text: React.PropTypes.string,
     url: React.PropTypes.string
-}
+};
 
 class Prompt extends React.Component {
     constructor(props) {
@@ -111,15 +111,10 @@ class Prompt extends React.Component {
 
                         <h2>Prompt <span className="text-muted">(#{ this.props.promptId })</span></h2>
                         <div className="row">
-                            <div className="col-xs-4">
-                                <img className="img-fluid" src="/static/storytrove/images/mockup/f.jpg" />
-                            </div>
-                            <div className="col-xs-4">
-                                <img className="img-fluid" src="/static/storytrove/images/mockup/d.jpg" />
-                            </div>
-                            <div className="col-xs-4">
-                                <img className="img-fluid" src="/static/storytrove/images/mockup/h.jpg" />
-                            </div>
+                            {this.props.prompt.trove_objects && this.props.prompt.trove_objects.map( to =>
+                            <div className="col-xs-4" key={to.id}>
+                                <img className="img-fluid" src={to.image_url} />
+                            </div> )}
                         </div>
                         <section className="row m-t-1">
                             <div className="col-xs-12">

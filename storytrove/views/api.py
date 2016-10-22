@@ -25,6 +25,29 @@ def standard_failure():
     })
 
 
+def query_trove_image_url(work_id):
+    params = {
+        'key': API_KEY,
+        'encoding': 'json',
+        'reclevel': 'full'
+    }
+
+    paramString = urllib.parse.urlencode(params)
+    url = "http://api.trove.nla.gov.au/work/{0}?{1}".format(work_id, paramString)
+
+    try:
+        r = urllib.request.urlopen(url).read().decode('utf8')
+
+        for i in json.loads(r)['work']['identifier']:
+            if i['linktype'] == "thumbnail" and i['type'] == "url":
+                return i['value']
+
+        return None
+
+    except urllib.error.HTTPError:
+        return None
+
+
 def prepare_story_dict_object(s, truncated=False):
     out = {k: s.get(k) for k in ('id', 'title', 'is_draft', 'is_private', 'user_id', 'prompt_id')}
 
@@ -67,6 +90,7 @@ def prepare_prompt_object(p):
 
 def prepare_trove_object(t):
     out = {k: t.get(k) for k in ('id', 'trove_id', 'description')}
+    out['image_url'] = query_trove_image_url(out['trove_id'])
     return out
 
 
