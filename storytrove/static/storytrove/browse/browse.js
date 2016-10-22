@@ -1,9 +1,15 @@
 class Prompt extends React.Component {
     render() {
+        let firstImage = "";
+
+        if (this.props.trove_objects && this.props.trove_objects.length > 0) {
+            firstImage = this.props.trove_objects[0].image_url;
+        }
+
         return (
             <div className="col-xs-6 col-sm-4 col-md-3 m-t-1 search-result">
                 <a href="/prompt/example">
-                    <div className="search-result-inner" style={{backgroundImage: `url(${this.props.thumb})`}}>
+                    <div className="search-result-inner" style={{backgroundImage: `url(${firstImage})`}}>
                         &nbsp;
                     </div>
                 </a>
@@ -21,7 +27,7 @@ class Browse extends React.Component {
             results: [],
             resultOffset: 0,
             resultCount: 8,
-            queryTags: ['world war 2'],
+            queryTags: [],
             queryReactions: []
         };
 
@@ -40,23 +46,8 @@ class Browse extends React.Component {
             if (response.failure) {
                 //Maybe do something
             } else if (response.success) {
-                let works = response.response.response.zone[0].records.work || [];
-
-                //Filter out results that don't have a thumbnail
-                let out = works.filter(l => {
-                    l.identifier.forEach(id => {
-                        if (id.linktype === "thumbnail") {
-                            //Add a simpler to access reference to the thumbnail url
-                            l.thumb = id.value;
-                            return false;
-                        }
-                    });
-
-                    return true;
-                });
-
                 let state = {
-                    results: out,
+                    results: response.response,
                     loaded: true
                 };
 

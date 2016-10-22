@@ -3,8 +3,11 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import *
+import operator
+import functools
 
 from django.db.models import Count
+from django.db.models import Q
 from django.http import HttpResponse
 from django.http import JsonResponse
 
@@ -175,7 +178,9 @@ def prompts(request):
     reactions = request.GET.get('reactions').split(',')
     offset = request.GET.get('offset')
 
-    res = search(tags, reactions, offset)
+    query = functools.reduce(operator.and_, (Q(tags__contains=t) for t in tags))
+    res = Prompt.objects.filter(query)
+    res = [prepare_prompt_object(r) for r in res]
 
     if res is None:
         return standard_failure()
