@@ -28,6 +28,15 @@ def standard_failure():
     })
 
 
+def get_username(id):
+    user = User.objects.get(pk=id)
+
+    if user is not None:
+        return user.username
+
+    return None
+
+
 def query_trove_image_url(work_id):
     params = {
         'key': API_KEY,
@@ -238,9 +247,12 @@ def stories(request):
     stories = [r for r in responses.values()]
     stories = list(map(lambda s: prepare_story_dict_object(s, True), stories))
 
+    story_authors = {s.get('user_id'): get_username(s.get('user_id')) for s in stories}
+
     return HttpResponse(json.dumps({
         'success': True,
-        'stories': stories
+        'stories': stories,
+        'story_authors': story_authors
     }), content_type='application/json')
 
 

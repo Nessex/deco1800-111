@@ -77,7 +77,6 @@ class StoryBlock extends React.Component {
                 <p>{ this.props.story.text }&hellip;</p>
                 <div className="story-block-footer">
                     <div className="btn-group button-row-controls" role="group" aria-label="story controls">
-                        <button type="button" className={btnToggleOnRead} onClick={this.toggleRead}><i className="fa fa-book" /> {this.state.read}</button>
                         <button type="button" className={btnToggleOnVote} onClick={this.toggleVote}><i className="fa fa-arrow-up" /> {this.state.votes}</button>
                         {/* Downvotes intentionally not shown */}
                         <button type="button" className="btn btn-secondary">
@@ -86,7 +85,7 @@ class StoryBlock extends React.Component {
                             <EmojiText value=":joy:" />
                             <span> 5</span>
                         </button>
-                        <button type="button" className="btn btn-secondary">User_1234</button>
+                        <button type="button" className="btn btn-secondary">{ this.props.storyAuthors[this.props.story.user_id] }</button>
                     </div>
                 </div>
             </article>
@@ -114,6 +113,7 @@ class Read extends React.Component {
                  * }
                  */
             },
+            storyAuthors: {},
             filterReactions: [],
             resultOffset: 0,
             totalResults: 0,
@@ -148,6 +148,7 @@ class Read extends React.Component {
             loaded: true,
             storyIds: storyIds,
             stories: stories,
+            storyAuthors: response.story_authors,
             totalResults: response.stories.length
         });
     }
@@ -206,6 +207,7 @@ class Read extends React.Component {
             key: storyId, //Required for react
             storyId: storyId,
             story: this.state.stories[storyId],
+            storyAuthors: this.state.storyAuthors,
             addReaction: this.addReaction,
             removeReaction: this.removeReaction,
             voteUp: this.voteUp,
