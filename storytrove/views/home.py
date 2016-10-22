@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render_to_response
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as djlogin
+from django.views.generic import FormView
 from django.template.context_processors import csrf
 from django.template.defaulttags import register
 
@@ -157,7 +160,12 @@ def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            username = request.POST['username']
+            password = request.POST['password1']
+            #authenticate user then login
+            user = authenticate(username=username, password=password)
+            djlogin(request, user)
             return std_page(request, 'storytrove/home/home.js')
 
     else:
