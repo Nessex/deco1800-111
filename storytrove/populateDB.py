@@ -34,9 +34,9 @@ Prompt2.trove_objects.add(TroveObject2)
 
 # Set up Response texts
 ResponseTitle1 = "Old Dave"
-ResponseText1 = open(BASE_DIR + './examples/response1.txt','r').read()
+ResponseText1 = open(os.path.join(BASE_DIR, 'storytrove', 'examples', 'response1.txt'),'r').read()
 ResponseTitle2 = "Gone Mad"
-ResponseText2 = open(BASE_DIR + './examples/response2.txt','r').read()
+ResponseText2 = open(os.path.join(BASE_DIR, 'storytrove', 'examples', 'response2.txt'),'r').read()
 
 # Create Responses
 Response1 = Response.objects.create_response(USER_ONE, Prompt1, ResponseTitle1, timezone.now(),ResponseText1, False, False)
@@ -46,8 +46,8 @@ Response1.save()
 Response2.save()
 
 # Set up Comment texts
-CommentText1  = open(BASE_DIR + './examples/comment1.txt','r').read()
-CommentText2  = open(BASE_DIR + './examples/comment2.txt','r').read()
+CommentText1  = open(os.path.join(BASE_DIR, 'storytrove', 'examples', 'comment1.txt'),'r').read()
+CommentText2  = open(os.path.join(BASE_DIR, 'storytrove', 'examples', 'comment2.txt'),'r').read()
 
 # Create Comments
 Comment1 = Comment.objects.create_comment(USER_ONE, Response2, timezone.now(), CommentText1)
