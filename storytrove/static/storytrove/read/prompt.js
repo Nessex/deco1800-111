@@ -80,7 +80,7 @@ class Prompt extends React.Component {
     loadStories() {
         this.setState({ loaded: false });
 
-        const data = { id: this.props.promptId };
+        const data = { prompt_id: this.props.promptId };
         this.storiesRequest = $.get('/api/stories', data)
             .done((response) => {
                 if (response.success)

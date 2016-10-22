@@ -198,6 +198,7 @@ Optional filters:
 tag
 reaction
 author
+prompt
 '''
 
 
@@ -205,6 +206,7 @@ def stories(request):
     tag = request.GET.get('tag')
     reaction = request.GET.get('reaction')
     author = request.GET.get('author')
+    prompt_id = request.GET.get('prompt_id')
 
     # start with all recent stories (past week)
     # end_date = datetime.today()
@@ -226,6 +228,9 @@ def stories(request):
             responses = responses.filter(user=request.user)
         else:
             responses = responses.filter(user=UserAccount.objects.filter(username__exact=author))
+
+    if prompt is not None and prompt != "":
+        responses = responses.filter(prompt=Prompt.objects.get(pk=prompt_id))
 
     if responses is None:
         return standard_failure()
