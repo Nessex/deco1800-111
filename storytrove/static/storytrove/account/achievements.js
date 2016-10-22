@@ -50,8 +50,6 @@ class Achievements extends React.Component {
     }
 
     componentDidMount() {
-        this.getAchievements();
-
         this.setState({
             achievementIds: Object.keys(this.props.achievements)
         })
