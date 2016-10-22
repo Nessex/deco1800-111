@@ -36,9 +36,10 @@ urlpatterns = [
     url(r'^prompt/(?P<prompt_id>[0-9]{1,11})/?', views.home.prompt),
     url(r'^account/register/?', views.home.register),
     url(r'^account/achievements/?', views.home.achievements),
-    url(r'^account/edit/?', views.home.edit),
     url(r'^account/stories/?', views.home.account_stories),
     url(r'^account/comments/?', views.home.account_comments),
+    url(r'^account/password_change/send/?', views.home.password_change),
+    url(r'^account/password_change/?', views.home.password_change_render),
     url(r'^account/?', views.home.account),
     url(r'^browse/?', views.home.browse),
     url(r'^prompt/example/?', views.home.prompt_example),
@@ -47,5 +48,4 @@ urlpatterns = [
     url(r'^login/?', login, name='login'),
     url(r'^logout/?', logout,{'next_page': '/login'}),
     url(r'^', views.home.index),
-
 ]
