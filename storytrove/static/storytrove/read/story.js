@@ -24,6 +24,7 @@ class Comment extends React.Component {
                 <div className="col-xs-12">
                     <div className="">
                         <div className="pull-xs-left">
+                            { !this.props.isCurrentUser ?
                             <div className="btn-group-vertical comment-vote-controls">
                                 <button className="btn btn-secondary">
                                     <i className="fa fa-arrow-up" />
@@ -31,10 +32,12 @@ class Comment extends React.Component {
                                 <button className="btn btn-secondary">
                                     <i className="fa fa-arrow-down" />
                                 </button>
-                            </div>
+                            </div> : null }
                         </div>
                         <div className="">
                             <span><strong>{this.props.name}</strong></span>
+                            { this.props.isCurrentUser ?
+                            <span className="text-muted"> (You)</span> : null }
                             <p>{this.props.comment}</p>
                         </div>
                     </div>
@@ -77,10 +80,10 @@ class Story extends React.Component {
 
         /* Add a record for the current user to comment authors */
         if (this.props.user) {
-            const currentUserId = 'current'; //TODO(nathan): something real?
+            const currentUserId = 'current';
             commentAuthors[currentUserId] = {
                 id: currentUserId,
-                username: this.props.user.username, //TODO(nathan): Get proper information for the current user
+                username: this.props.user.username,
             };
         }
 
@@ -168,7 +171,8 @@ class Story extends React.Component {
         const props = {
             key: c.id,
             name: ca.username,
-            comment: c.text
+            comment: c.text,
+            isCurrentUser: !!(this.props.user && ca.username === this.props.user.username)
         };
 
         return <Comment { ...props } />;
@@ -269,7 +273,6 @@ class Story extends React.Component {
                                 <h2>{ this.state.story.title }</h2>
                                 <p>{ this.state.story.text }</p>
                                 <div className="btn-group button-row-controls" role="group" aria-label="story controls">
-                                    <button type="button" className="btn btn-secondary"><i className="fa fa-book" /> 3</button>
                                     <button type="button" className="btn btn-secondary"><i className="fa fa-arrow-up" /> 12</button>
                                     <button type="button" className="btn btn-secondary"><i className="fa fa-arrow-down" /></button>
                                     <button type="button" className="btn btn-secondary">
@@ -278,7 +281,7 @@ class Story extends React.Component {
                                         <EmojiText value=":joy:" />
                                         <span> 5</span>
                                     </button>
-                                    <button type="button" className="btn btn-secondary">{ this.state.author.username }</button>
+                                    <span className="read-author">{ this.state.author.username }</span>
                                 </div>
                             </div>
                         </article>
