@@ -255,3 +255,14 @@ button[type="button"].btn.btn-secondary.btn-toggle-on
     justify-content: space-between;
     width: 75px;
 }
+
+/* line below main header */
+header > .container > .row.m-t-1:after
+{
+    content: "";
+    display: block;
+    width: 93%;
+    height: 1px;
+    margin: 0 auto;
+    background-color: #EFEFEF;
+}
