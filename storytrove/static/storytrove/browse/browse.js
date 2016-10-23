@@ -161,7 +161,7 @@ class Browse extends React.Component {
                         </div> : null }
                     </div>
 
-                    <div className="col-xs-12">
+                    {/* <div className="col-xs-12">
                         <div className="row m-t-1">
                             <div className="col-xs-6 text-xs-center">
                                 <button type="button" className="btn btn-primary btn-block" disabled={disablePrev} onClick={this.prevPage}>
@@ -174,7 +174,7 @@ class Browse extends React.Component {
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         );
