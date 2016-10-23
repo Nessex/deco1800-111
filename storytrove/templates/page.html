@@ -50,16 +50,16 @@
                                         <img src="{{ user|get_item:'image' }}" class="account-link-image">
                                     </div>
                                     <span>{{ user|get_item:'username' }}</span>
-                                    <a href="" class="btn btn-link">
-                                        <div class="menu-link-wrapper">
-                                            <i class="fa fa-bars fa-2x"></i>
-                                            <span> Menu</span>
-                                        </div>
-                                    </a>
                                 {% else %}
                                     <span>Sign In</span>
                                 {% endif %}
                             </a>
+                            <div class="btn btn-link menu-link">
+                                <div class="menu-link-wrapper">
+                                    <i class="fa fa-bars fa-2x"></i>
+                                    <span> Menu</span>
+                                </div>
+                            </div>
                         </span>
                         <a class="main-logo-link" href="/">
                             <img src="{% static "storytrove/images/icons/logo2.png" %}" class="logo"><span class="main-logo-text"> StoryTrove</span>
@@ -87,5 +87,39 @@
                 </div>
             </div>
         </footer>
+        <nav class="sidebar-navigation">
+            {% if not logged_in %}
+            <a href="/login">Log In</a>
+            <a href="/account/register">Register</a>
+            {% else %}
+            <a href="/account">Manage Account</a>
+            {% endif %}
+            <a href="/browse">Browse Prompts</a>
+            <a href="/read">Read Stories</a>
+            {% if logged_in %}
+            <a href="/account/achievements">Achievements</a>
+            <a href="/account/stories">My Stories</a>
+            <a href="/logout">Log Out</a>
+            {% endif %}
+        </nav>
+        <script>
+            $(document).click(function(event) {
+                var $sb = $('.sidebar-navigation');
+
+                if (!$(event.target).closest('.sidebar-navigation').length && !$(event.target).closest('.menu-link').length) {
+                    if ($sb.hasClass('active')) {
+                        $sb.removeClass('active');
+                    }
+                }
+            });
+
+            $('.menu-link').click(function() {
+                var $sb = $('.sidebar-navigation');
+
+                if (!$sb.hasClass('active')) {
+                    $sb.addClass('active');
+                }
+            });
+        </script>
     </body>
 </html>

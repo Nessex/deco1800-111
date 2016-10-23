@@ -226,7 +226,16 @@ button[type="button"].btn.btn-secondary.btn-toggle-on
 .account-link-container a,
 .account-link-container a:hover,
 .account-link-container a:active,
-.account-link-container a:focus
+.account-link-container a:focus,
+.btn-link.menu-link:hover,
+.btn-link.menu-link:active,
+.btn-link.menu-link:focus,
+.menu-link span:hover,
+.menu-link span:active,
+.menu-link span:focus,
+.menu-link i:hover,
+.menu-link i:active,
+.menu-link i:focus
 {
     text-decoration: none;
 }
@@ -242,10 +251,10 @@ button[type="button"].btn.btn-secondary.btn-toggle-on
     height: calc(2em - 2px);
 }
 
-.menu-link
+.menu-link:hover,
+.menu-link:active
 {
-    vertical-align: middle;
-    display: flex;
+    cursor: pointer;
 }
 
 .menu-link-wrapper
@@ -265,4 +274,44 @@ header > .container > .row.m-t-1:after
     height: 1px;
     margin: 0 auto;
     background-color: #EFEFEF;
+}
+
+.sidebar-navigation
+{
+    height: 100%;
+    width: 0px;
+    display: flex;
+    flex-direction: column;
+    overflow:hidden;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: #222;
+    color: white;
+    transition: width 0.5s;
+}
+
+.sidebar-navigation.active
+{
+    width: 300px;
+    max-width: 100vw;
+}
+
+.sidebar-navigation a
+{
+    display: block;
+    padding: 8px 8px 8px 20px;
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.sidebar-navigation a:hover,
+.sidebar-navigation a:active,
+.sidebar-navigation a:focus
+{
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    text-shadow: 0 0 1px black;
 }
