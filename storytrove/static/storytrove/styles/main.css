@@ -208,3 +208,50 @@ button[type="button"].btn.btn-secondary.btn-toggle-on
     vertical-align: middle;
     display: table-cell;
 }
+
+.main-logo-link
+{
+    font-size: 36px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+    justify-content: space-between;
+    max-width: 260px;
+}
+
+.main-logo-link:hover,
+.main-logo-link:active,
+.main-logo-link:focus,
+.account-link-container a,
+.account-link-container a:hover,
+.account-link-container a:active,
+.account-link-container a:focus
+{
+    text-decoration: none;
+}
+
+.account-link-container
+{
+    margin-top: 10px;
+}
+
+.account-link-image
+{
+    width: calc(2em - 2px);
+    height: calc(2em - 2px);
+}
+
+.menu-link
+{
+    vertical-align: middle;
+    display: flex;
+}
+
+.menu-link-wrapper
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 75px;
+}
