@@ -65,7 +65,7 @@
 
 .button-row-controls button
 {
-    font-size: 20px;
+    font-size: 21px;
 }
 
 .button-row-controls .emojione
@@ -196,4 +196,15 @@ button[type="button"].btn.btn-secondary.btn-toggle-on
 }
 .bs-callout-info h4 {
     color: #5bc0de;
+}
+
+.read-author
+{
+    display: table-cell;
+    line-height: 25px;
+    padding: 8px 16px;
+    font-size: 21px;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
 }

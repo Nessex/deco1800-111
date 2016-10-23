@@ -85,7 +85,7 @@ class StoryBlock extends React.Component {
                             <EmojiText value=":joy:" />
                             <span> 5</span>
                         </button>
-                        <button type="button" className="btn btn-secondary">{ this.props.storyAuthors[this.props.story.user_id] }</button>
+                        <span className="read-author">{ this.props.storyAuthors[this.props.story.user_id] }</span>
                     </div>
                 </div>
             </article>
