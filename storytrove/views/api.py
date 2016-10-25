@@ -28,6 +28,48 @@ def standard_failure():
     })
 
 
+def get_reactions_for_response(response_id):
+    reactions = EmojiResponseOnResponse.objects.filter(response_id=response_id)
+    out = {}
+
+    for r in reactions:
+        if out.get(r.emoji) is None:
+            out[r.emoji] = 0
+
+        out[r.emoji] += 1
+
+    return out
+
+
+def get_reactions_for_user(user_id):
+    reactions = EmojiResponseOnResponse.objects.filter(user_id=user_id)
+    out = {}
+
+    for r in reactions:
+        if out.get(r.emoji) is None:
+            out[r.emoji] = 0
+
+        if r.emoji == '-':
+            out[r.emoji] -= 1
+        else:
+            out[r.emoji] += 1
+
+    return out
+
+
+def get_votes_for_comment(comment_id):
+    vote_objects = EmojiResponseOnComment.objects.filter(comment_id=comment_id)
+    out = 0
+
+    for v in vote_objects:
+        if v.emoji == '+':
+            out += 1
+        elif v.emoji == '-':
+            out -= 1
+
+    return out
+
+
 def get_username(id):
     user = User.objects.get(pk=id)
 
@@ -68,6 +110,7 @@ def prepare_story_dict_object(s, truncated=False):
 
     # Truncate text to 300 characters
     out['text'] = s['text'][:300] if (len(s['text']) > 300 and truncated) else s['text']
+    out['reactions'] = get_reactions_for_response(out['id'])
     return out
 
 
@@ -80,11 +123,13 @@ def prepare_story_object(s, truncated=False):
 
     # Truncate text to 300 characters
     out['text'] = s.text[:300] if (len(s.text) > 300 and truncated) else s.text
+    out['reactions'] = get_reactions_for_response(out['id'])
     return out
 
 
 def prepare_user_object(u):
     out = {k: getattr(u, k) for k in ('id', 'username')}
+    out['reactions'] = get_reactions_for_user(out['id'])
     return out
 
 
@@ -108,6 +153,7 @@ def prepare_trove_object(t):
 
 def prepare_comment_object(c):
     out = {k: getattr(c, k) for k in ('id', 'text', 'user_id')}
+    out['votes'] = get_votes_for_comment(out['id'])
     return out
 
 
@@ -269,7 +315,6 @@ def prompt(request):
     try:
         id = int(id)
         prompt = Prompt.objects.get(pk=id)
-
         prompt = prepare_prompt_object(prompt)
 
         return JsonResponse({

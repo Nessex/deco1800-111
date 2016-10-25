@@ -164,6 +164,7 @@ def achievements(request):
 
     return std_page(request, 'storytrove/account/achievements.js', props)
 
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -184,6 +185,7 @@ def register(request):
 
     return render_to_response('registration/register.html', token)
 
+
 @login_required
 def password_change_render(request):
     template = loader.get_template('account/password_change.html')
@@ -196,6 +198,7 @@ def password_change_render(request):
         context['user'] = get_current_user(request)
 
     return HttpResponse(template.render(context, request))
+
 
 @login_required
 def password_change(request):
