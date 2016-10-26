@@ -49,10 +49,7 @@ def get_reactions_for_user(user_id):
         if out.get(r.emoji) is None:
             out[r.emoji] = 0
 
-        if r.emoji == '-':
-            out[r.emoji] -= 1
-        else:
-            out[r.emoji] += 1
+        out[r.emoji] += 1
 
     return out
 

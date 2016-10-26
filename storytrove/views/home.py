@@ -30,7 +30,8 @@ def get_current_user(request):
         return None
 
     out = {k: getattr(request.user, k) for k in ('id', 'username', 'email')}
-    out["image"] = get_user_image(request.user)
+    out['image'] = get_user_image(request.user)
+    out['reactions'] = get_reactions_for_user(out['id'])
     return out
 
 
