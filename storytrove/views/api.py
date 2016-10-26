@@ -543,24 +543,53 @@ def react(request):
         return standard_failure()
 
     if resourceType == "response":
-        reaction = EmojiResponseOnResponse(
-            user=request.user,
-            response=Response.objects.get(pk=resourceIdInt),
-            emoji=emojiChar)
-
-        reaction.save()
-
+        toggle_response_reaction(request.user, Response.objects.get(pk=resourceIdInt), emojiChar)
     elif resourceType == "comment":
-        reaction = EmojiResponseOnComment(
-            user=request.user,
-            comment=Comment.objects.get(pk=resourceIdInt),
-            emoji=emojiChar)
-
-        reaction.save()
+        toggle_comment_reaction(request.user, Comment.objects.get(pk=resourceIdInt), emojiChar)
 
     return JsonResponse({
         'success': True
     })
+
+
+def toggle_comment_reaction(user, comment, emoji):
+    emoji_set = ['1', '2', '3', '4', '5']
+    vote_set = ['+', '-']
+
+    # Remove all existing reactions in the corresponding set
+    if emoji in emoji_set:
+        EmojiResponseOnComment.objects.filter(user=user, comment=comment, emoji__in=emoji_set).delete()
+
+    elif emoji in vote_set:
+        EmojiResponseOnComment.objects.filter(user=user, comment=comment, emoji__in=vote_set).delete()
+
+    # Add new reaction
+    reaction = EmojiResponseOnComment(
+        user=user,
+        comment=comment,
+        emoji=emoji)
+
+    reaction.save()
+
+
+def toggle_response_reaction(user, response, emoji):
+    emoji_set = ['1', '2', '3', '4', '5']
+    vote_set = ['+', '-']
+
+    # Remove all existing reactions in the corresponding set
+    if emoji in emoji_set:
+        EmojiResponseOnResponse.objects.filter(user=user, response=response, emoji__in=emoji_set).delete()
+
+    elif emoji in vote_set:
+        EmojiResponseOnResponse.objects.filter(user=user, response=response, emoji__in=vote_set).delete()
+
+    # Add new reaction
+    reaction = EmojiResponseOnResponse(
+        user=user,
+        response=response,
+        emoji=emoji)
+
+    reaction.save()
 
 
 '''
