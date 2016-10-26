@@ -298,13 +298,19 @@ class Story extends React.Component {
             if (this.state.story.hasOwnProperty('emojiReaction'))
                 newReactions.push(this.state.story.emojiReaction);
 
-            state.story.voteReaction = reaction;
+            if (state.story.voteReaction === reaction)
+                state.story.voteReaction = null;
+            else
+                state.story.voteReaction = reaction;
         } else if (emojiSet.indexOf(reaction) >= 0) {
             /* Add in any existing voteSet reactions */
             if (this.state.story.hasOwnProperty('voteReaction'))
                 newReactions.push(this.state.story.voteReaction);
 
-            state.story.emojiReaction = reaction;
+            if (state.story.emojiReaction === reaction)
+                state.story.emojiReaction = null;
+            else
+                state.story.emojiReaction = reaction;
         }
 
         $.get({
@@ -322,7 +328,10 @@ class Story extends React.Component {
     toggleCommentReaction(commentId, reaction) {
         let state = this.state;
 
-        state.comments[commentId].voteReaction = reaction;
+        if (state.comments[commentId].voteReaction === reaction)
+            state.comments[commentId].voteReaction = null;
+        else
+            state.comments[commentId].voteReaction = reaction;
 
         $.get({
             url: '/api/react',

@@ -556,12 +556,17 @@ def toggle_comment_reaction(user, comment, emoji):
     emoji_set = ['1', '2', '3', '4', '5']
     vote_set = ['+', '-']
 
+    remove = len(EmojiResponseOnComment.objects.filter(user=user, comment=comment, emoji=emoji)) > 0
+
     # Remove all existing reactions in the corresponding set
     if emoji in emoji_set:
         EmojiResponseOnComment.objects.filter(user=user, comment=comment, emoji__in=emoji_set).delete()
 
     elif emoji in vote_set:
         EmojiResponseOnComment.objects.filter(user=user, comment=comment, emoji__in=vote_set).delete()
+
+    if remove:
+        return  # Nothing to do
 
     # Add new reaction
     reaction = EmojiResponseOnComment(
@@ -576,12 +581,17 @@ def toggle_response_reaction(user, response, emoji):
     emoji_set = ['1', '2', '3', '4', '5']
     vote_set = ['+', '-']
 
+    remove = len(EmojiResponseOnResponse.objects.filter(user=user, response=response, emoji=emoji)) > 0
+
     # Remove all existing reactions in the corresponding set
     if emoji in emoji_set:
         EmojiResponseOnResponse.objects.filter(user=user, response=response, emoji__in=emoji_set).delete()
 
     elif emoji in vote_set:
         EmojiResponseOnResponse.objects.filter(user=user, response=response, emoji__in=vote_set).delete()
+
+    if remove:
+        return  # Nothing to do
 
     # Add new reaction
     reaction = EmojiResponseOnResponse(
