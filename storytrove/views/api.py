@@ -489,34 +489,30 @@ a reaction in its char format
 
 
 def react(request):
-    userId = request.GET.get('user_id')
+    if not request.user.is_authenticated:
+        return standard_failure()
+
     resourceType = request.GET.get('resource_type')
     resourceId = request.GET.get('resource_id')
     emojiChar = request.GET.get('emoji')
 
-    # TODO add in if user id is empty to use the current user?
-
-    userIdInt = -1
-    promptIdInt = -1
-
     try:
-        userIdInt = int(userId)
         resourceIdInt = int(resourceId)
     except:
         return standard_failure()
 
     if resourceType == "response":
         reaction = EmojiResponseOnResponse(
-            user=UserAccount.objects.get(pk=userIdInt),
+            user=request.user,
             response=Response.objects.get(pk=resourceIdInt),
             emoji=emojiChar)
 
         reaction.save()
 
     elif resourceType == "comment":
-        reaction = EmojiResponseOnResponse(
-            user=UserAccount.objects.get(pk=userIdInt),
-            response=Response.objects.get(pk=resourceIdInt),
+        reaction = EmojiResponseOnComment(
+            user=request.user,
+            comment=Comment.objects.get(pk=resourceIdInt),
             emoji=emojiChar)
 
         reaction.save()

@@ -26,10 +26,10 @@ class Comment extends React.Component {
                         <div className="pull-xs-left">
                             { !this.props.isCurrentUser ?
                             <div className="btn-group-vertical comment-vote-controls">
-                                <button className="btn btn-secondary">
+                                <button className="btn btn-secondary" onClick={ () => this.props.toggleCommentReaction('+') }>
                                     <i className="fa fa-arrow-up" />
                                 </button>
-                                <button className="btn btn-secondary">
+                                <button className="btn btn-secondary" onClick={ () => this.props.toggleCommentReaction('-') }>
                                     <i className="fa fa-arrow-down" />
                                 </button>
                             </div> : null }
@@ -75,6 +75,9 @@ class Story extends React.Component {
         this.resetCommentSubmitButton = this.resetCommentSubmitButton.bind(this);
         this.getVotes = this.getVotes.bind(this);
         this.getReactionCount = this.getReactionCount.bind(this);
+
+        this.toggleReaction = this.toggleReaction.bind(this);
+        this.toggleCommentReaction = this.toggleCommentReaction.bind(this);
     }
 
     storyRequestSuccess(response) {
@@ -174,7 +177,8 @@ class Story extends React.Component {
             key: c.id,
             name: ca.username,
             comment: c.text,
-            isCurrentUser: !!(this.props.user && ca.username === this.props.user.username)
+            isCurrentUser: !!(this.props.user && ca.username === this.props.user.username),
+            toggleCommentReaction: (reaction) => this.toggleCommentReaction(c.id, reaction)
         };
 
         return <Comment { ...props } />;
@@ -276,6 +280,56 @@ class Story extends React.Component {
         return count;
     }
 
+    toggleReaction(reaction) {
+        /* One reaction allowed from each set */
+        const voteSet = ['+', '-'];
+        const emojiSet = ['1', '2', '3', '4', '5'];
+        let newReactions = [reaction];
+        let state = this.state;
+
+        if (voteSet.indexOf(reaction) >= 0) {
+            /* Add in any existing emojiSet reactions */
+            if (this.state.story.hasOwnProperty('emojiReaction'))
+                newReactions.push(this.state.story.emojiReaction);
+
+            state.story.voteReaction = reaction;
+        } else if (emojiSet.indexOf(reaction) >= 0) {
+            /* Add in any existing voteSet reactions */
+            if (this.state.story.hasOwnProperty('voteReaction'))
+                newReactions.push(this.state.story.voteReaction);
+
+            state.story.emojiReaction = reaction;
+        }
+
+        $.get({
+            url: '/api/react',
+            data: {
+                resource_id: this.props.storyId,
+                resource_type: 'response',
+                emoji: reaction
+            }
+        });
+
+        this.setState(state);
+    }
+
+    toggleCommentReaction(commentId, reaction) {
+        let state = this.state;
+
+        state.comments[commentId].voteReaction = reaction;
+
+        $.get({
+            url: '/api/react',
+            data: {
+                resource_id: commentId,
+                resource_type: 'comment',
+                emoji: reaction
+            }
+        });
+
+        this.setState(state);
+    }
+
     render() {
         return (
             <div className="container">
@@ -300,14 +354,14 @@ class Story extends React.Component {
                                 <h2>{ this.state.story.title }</h2>
                                 <p>{ this.state.story.text }</p>
                                 <div className="btn-group button-row-controls" role="group" aria-label="story controls">
-                                    <button type="button" className="btn btn-secondary"><i className="fa fa-arrow-up" /> { this.getVotes() }</button>
-                                    <button type="button" className="btn btn-secondary"><i className="fa fa-arrow-down" /></button>
-                                    <button type="button" className="btn btn-secondary">
-                                        <EmojiText value=":thumbsup:" />
-                                        <EmojiText value=":grinning:" />
-                                        <EmojiText value=":joy:" />
-                                        <span> { this.getReactionCount() }</span>
-                                    </button>
+                                    <button type="button" className="btn btn-secondary">{ this.getVotes() }</button>
+                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('+') }><i className="fa fa-arrow-up" /></button>
+                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('-') }><i className="fa fa-arrow-down" /></button>
+                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('1') }><EmojiText value=":grinning:" /></button>
+                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('2') }><EmojiText value=":cry:" /></button>
+                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('3') }><EmojiText value=":laughing:" /></button>
+                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('4') }><EmojiText value=":scream:" /></button>
+                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('5') }><EmojiText value=":thinking:" /></button>
                                     <span className="read-author">{ this.state.author.username }</span>
                                 </div>
                             </div>
