@@ -113,7 +113,7 @@ class Prompt extends React.Component {
                         <div className="row">
                             {this.props.prompt.trove_objects && this.props.prompt.trove_objects.map( to =>
                             <div className="col-xs-4" key={to.id}>
-                                <img className="img-fluid" src={to.image_url} />
+                                <div className="prompt-image-wrapper" style={{backgroundImage: `url(${to.image_url})`}} />
                             </div> )}
                         </div>
                         <section className="row m-t-1">

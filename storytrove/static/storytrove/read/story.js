@@ -265,7 +265,7 @@ class Story extends React.Component {
                         <div className="row">
                             { this.state.prompt.trove_objects && this.state.prompt.trove_objects.map( to =>
                             <div className="col-xs-4" key={to.id}>
-                                <img className="img-fluid" src={to.image_url} />
+                                <div className="prompt-image-wrapper" style={{backgroundImage: `url(${to.image_url})`}} />
                             </div> )}
                         </div>
                         <article className="row m-t-1">
