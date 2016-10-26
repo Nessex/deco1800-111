@@ -30,6 +30,7 @@ class StoryBlock extends React.Component {
 
 		this.toggleRead = this.toggleRead.bind(this);
         this.toggleVote = this.toggleVote.bind(this);
+        this.getVotes = this.getVotes.bind(this);
     }
 
 	toggleRead() {
@@ -68,22 +69,46 @@ class StoryBlock extends React.Component {
 		}
     }
 
+    getVotes() {
+        let votes = 0;
+
+        if (!this.props.story || !this.props.story.reactions)
+            return votes; //0
+
+        if (this.props.story.reactions.hasOwnProperty('+'))
+            votes += this.props.story.reactions['+'];
+
+        if (this.props.story.reactions.hasOwnProperty('-'))
+            votes -= this.props.story.reactions['-'];
+
+        return votes
+    }
+
+    getReactionCount() {
+        let count = 0;
+
+        if (!this.props.story || !this.props.story.reactions)
+            return count; //0
+
+        Object.keys(this.props.story.reactions).forEach(r => count += this.props.story.reactions[r]);
+        return count;
+    }
+
     render() {
-		const btnToggleOnRead = this.state.currentUser.read ? "btn-toggle-on btn btn-secondary" : "btn btn-secondary";
-		const btnToggleOnVote = this.state.currentUser.votes ? "btn-toggle-on btn btn-secondary" : "btn btn-secondary";
+		const btnToggleOnVote = this.state.currentUser.votes ? "btn-toggle-on btn btn-link clear-btn-link" : "btn btn-link clear-btn-link";
         return (
             <article className="story-block m-b-2">
                 <a href={`/story/${ this.props.story.id }` }><h2>{ this.props.story.title }</h2></a>
                 <p>{ this.props.story.text }&hellip;</p>
                 <div className="story-block-footer">
                     <div className="btn-group button-row-controls" role="group" aria-label="story controls">
-                        <button type="button" className={btnToggleOnVote} onClick={this.toggleVote}><i className="fa fa-arrow-up" /> {this.state.votes}</button>
+                        <button type="button" className={btnToggleOnVote} onClick={this.toggleVote}><i className="fa fa-arrow-up" /> { this.getVotes() }</button>
                         {/* Downvotes intentionally not shown */}
-                        <button type="button" className="btn btn-secondary">
+                        <button type="button" className="btn btn-link clear-btn-link">
                             <EmojiText value=":thumbsup:" />
                             <EmojiText value=":grinning:" />
                             <EmojiText value=":joy:" />
-                            <span> 5</span>
+                            <span> { this.getReactionCount() } </span>
                         </button>
                         <span className="read-author">{ this.props.storyAuthors[this.props.story.user_id] }</span>
                     </div>

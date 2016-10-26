@@ -73,6 +73,8 @@ class Story extends React.Component {
         this.submitCommentSuccess = this.submitCommentSuccess.bind(this);
         this.setUpCommentSubmitButtonReset = this.setUpCommentSubmitButtonReset.bind(this);
         this.resetCommentSubmitButton = this.resetCommentSubmitButton.bind(this);
+        this.getVotes = this.getVotes.bind(this);
+        this.getReactionCount = this.getReactionCount.bind(this);
     }
 
     storyRequestSuccess(response) {
@@ -249,6 +251,31 @@ class Story extends React.Component {
         this.setState({ commentButtonState: BUTTON_PROCESSING });
     }
 
+    getVotes() {
+        let votes = 0;
+
+        if (!this.state.story || !this.state.story.reactions)
+            return votes; //0
+
+        if (this.state.story.reactions.hasOwnProperty('+'))
+            votes += this.state.story.reactions['+'];
+
+        if (this.state.story.reactions.hasOwnProperty('-'))
+            votes -= this.state.story.reactions['-'];
+
+        return votes
+    }
+
+    getReactionCount() {
+        let count = 0;
+
+        if (!this.state.story || !this.state.story.reactions)
+            return count; //0
+
+        Object.keys(this.state.story.reactions).forEach(r => count += this.state.story.reactions[r]);
+        return count;
+    }
+
     render() {
         return (
             <div className="container">
@@ -273,13 +300,13 @@ class Story extends React.Component {
                                 <h2>{ this.state.story.title }</h2>
                                 <p>{ this.state.story.text }</p>
                                 <div className="btn-group button-row-controls" role="group" aria-label="story controls">
-                                    <button type="button" className="btn btn-secondary"><i className="fa fa-arrow-up" /> 12</button>
+                                    <button type="button" className="btn btn-secondary"><i className="fa fa-arrow-up" /> { this.getVotes() }</button>
                                     <button type="button" className="btn btn-secondary"><i className="fa fa-arrow-down" /></button>
                                     <button type="button" className="btn btn-secondary">
                                         <EmojiText value=":thumbsup:" />
                                         <EmojiText value=":grinning:" />
                                         <EmojiText value=":joy:" />
-                                        <span> 5</span>
+                                        <span> { this.getReactionCount() }</span>
                                     </button>
                                     <span className="read-author">{ this.state.author.username }</span>
                                 </div>

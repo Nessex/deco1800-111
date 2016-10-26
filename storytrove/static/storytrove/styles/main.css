@@ -326,3 +326,18 @@ header > .container > .row.m-t-1:after
     text-decoration: none;
     text-shadow: 0 0 1px black;
 }
+
+.clear-btn-link.clear-btn-link.clear-btn-link
+{
+    text-decoration: none;
+    color: #222;
+    cursor: default;
+}
+
+.clear-btn-link.clear-btn-link.clear-btn-link:focus,
+.clear-btn-link.clear-btn-link.clear-btn-link:active
+{
+    border: none;
+    outline: none;
+    outline-offset: 0px;
+}
