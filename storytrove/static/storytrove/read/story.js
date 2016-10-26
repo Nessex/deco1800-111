@@ -19,6 +19,11 @@ EmojiText.PropTypes = {
 
 class Comment extends React.Component {
     render() {
+        const activeVoteButton = "btn btn-secondary active";
+        const inactiveVoteButton = "btn btn-secondary";
+
+        const upVoteButtonClass = this.props.voteReaction === '+' ? activeVoteButton : inactiveVoteButton;
+        const downVoteButtonClass = this.props.voteReaction === '-' ? activeVoteButton : inactiveVoteButton;
         return (
             <div className="row">
                 <div className="col-xs-12">
@@ -26,10 +31,10 @@ class Comment extends React.Component {
                         <div className="pull-xs-left">
                             { !this.props.isCurrentUser ?
                             <div className="btn-group-vertical comment-vote-controls">
-                                <button className="btn btn-secondary" onClick={ () => this.props.toggleCommentReaction('+') }>
+                                <button className={upVoteButtonClass} onClick={ () => this.props.toggleCommentReaction('+') }>
                                     <i className="fa fa-arrow-up" />
                                 </button>
-                                <button className="btn btn-secondary" onClick={ () => this.props.toggleCommentReaction('-') }>
+                                <button className={downVoteButtonClass} onClick={ () => this.props.toggleCommentReaction('-') }>
                                     <i className="fa fa-arrow-down" />
                                 </button>
                             </div> : null }
@@ -178,6 +183,7 @@ class Story extends React.Component {
             name: ca.username,
             comment: c.text,
             isCurrentUser: !!(this.props.user && ca.username === this.props.user.username),
+            voteReaction: c.voteReaction,
             toggleCommentReaction: (reaction) => this.toggleCommentReaction(c.id, reaction)
         };
 
