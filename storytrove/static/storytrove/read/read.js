@@ -184,9 +184,30 @@ class Read extends React.Component {
         console.table(response);
     }
 
+    getTranslatedReaction(reaction) {
+        switch (reaction) {
+            case 'thumbsup':
+                return '+';
+            case 'thumbsdown':
+                return '-';
+            case 'grinning':
+                return '1';
+            case 'cry':
+                return '2';
+            case 'laughing':
+                return '3';
+            case 'scream':
+                return '4';
+            case 'thinking':
+                return '5';
+        }
+
+        return null;
+    }
+
     loadStories() {
         const data = {
-            reaction: this.state.filterReactions.length > 0 ? this.state.filterReactions[0] : undefined
+            reaction: this.state.filterReactions.length > 0 ? this.getTranslatedReaction(this.state.filterReactions[0]) : undefined
         };
 
         this.loadStoriesRequest = $.get('/api/stories', data)
