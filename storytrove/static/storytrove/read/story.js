@@ -80,9 +80,9 @@ class Story extends React.Component {
         this.resetCommentSubmitButton = this.resetCommentSubmitButton.bind(this);
         this.getVotes = this.getVotes.bind(this);
         this.getReactionCount = this.getReactionCount.bind(this);
-
         this.toggleReaction = this.toggleReaction.bind(this);
         this.toggleCommentReaction = this.toggleCommentReaction.bind(this);
+        this.getButtonClass = this.getButtonClass.bind(this);
     }
 
     storyRequestSuccess(response) {
@@ -336,6 +336,13 @@ class Story extends React.Component {
         this.setState(state);
     }
 
+    getButtonClass(reaction) {
+        if (this.state.story.emojiReaction === reaction || this.state.story.voteReaction === reaction)
+            return "btn btn-secondary active";
+
+        return "btn btn-secondary";
+    }
+
     render() {
         return (
             <div className="container">
@@ -361,13 +368,13 @@ class Story extends React.Component {
                                 <p>{ this.state.story.text }</p>
                                 <div className="btn-group button-row-controls" role="group" aria-label="story controls">
                                     <button type="button" className="btn btn-secondary">{ this.getVotes() }</button>
-                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('+') }><i className="fa fa-arrow-up" /></button>
-                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('-') }><i className="fa fa-arrow-down" /></button>
-                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('1') }><EmojiText value=":grinning:" /></button>
-                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('2') }><EmojiText value=":cry:" /></button>
-                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('3') }><EmojiText value=":laughing:" /></button>
-                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('4') }><EmojiText value=":scream:" /></button>
-                                    <button type="button" className="btn btn-secondary" onClick={() => this.toggleReaction('5') }><EmojiText value=":thinking:" /></button>
+                                    <button type="button" className={ this.getButtonClass('+') } onClick={() => this.toggleReaction('+') }><i className="fa fa-arrow-up" /></button>
+                                    <button type="button" className={ this.getButtonClass('-') } onClick={() => this.toggleReaction('-') }><i className="fa fa-arrow-down" /></button>
+                                    <button type="button" className={ this.getButtonClass('1') } onClick={() => this.toggleReaction('1') }><EmojiText value=":grinning:" /></button>
+                                    <button type="button" className={ this.getButtonClass('2') } onClick={() => this.toggleReaction('2') }><EmojiText value=":cry:" /></button>
+                                    <button type="button" className={ this.getButtonClass('3') } onClick={() => this.toggleReaction('3') }><EmojiText value=":laughing:" /></button>
+                                    <button type="button" className={ this.getButtonClass('4') } onClick={() => this.toggleReaction('4') }><EmojiText value=":scream:" /></button>
+                                    <button type="button" className={ this.getButtonClass('5') } onClick={() => this.toggleReaction('5') }><EmojiText value=":thinking:" /></button>
                                     <span className="read-author">{ this.state.author.username }</span>
                                 </div>
                             </div>
