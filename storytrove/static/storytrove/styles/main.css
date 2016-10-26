@@ -341,3 +341,11 @@ header > .container > .row.m-t-1:after
     outline: none;
     outline-offset: 0px;
 }
+
+.homepage-button.homepage-button
+{
+    padding: 40px;
+    background-color: rgba(2, 117, 216, 0.8);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
