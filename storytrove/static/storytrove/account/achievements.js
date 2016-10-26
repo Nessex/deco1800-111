@@ -32,7 +32,7 @@ class Achievement extends React.Component {
                     <p>{this.props.description}</p>
 
                     {this.props.earned ?
-                    <span className="text-muted">Earned: {this.props.earned}</span> : null }
+                    <span className="text-muted">Earned</span> : null }
                 </div>
             </div>
         )
