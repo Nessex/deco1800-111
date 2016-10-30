@@ -10,6 +10,11 @@ class Homepage extends React.Component {
     render() {
         return (
             <div className="container homepage">
+                <div className="row m-t-3">
+                    <div className="col-xs-12 text-xs-center">
+                        <p>Find inspiring images and rewrite their history.</p>
+                    </div>
+                </div>
                 <div className="row m-t-3 m-b-3">
                     <div className="col-xs-6 text-xs-center">
                         <p><i className="fa fa-pencil-square-o fa-5x" aria-hidden="true" /></p>
