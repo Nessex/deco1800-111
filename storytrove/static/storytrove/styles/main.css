@@ -206,7 +206,7 @@ button[type="button"].btn.btn-secondary.btn-toggle-on
     font-size: 21px;
     text-align: center;
     vertical-align: middle;
-    display: table-cell;
+    float: right;
 }
 
 .main-logo-link
