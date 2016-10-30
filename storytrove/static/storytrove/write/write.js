@@ -18,7 +18,8 @@ class Write extends React.Component {
             saving: false,
             saveButtonState: BUTTON_IDLE,
             isDraft: false,
-            isPrivate: false
+            isPrivate: false,
+            showImageInfo: false
         };
 
         this.loadPrompt = this.loadPrompt.bind(this);
@@ -34,6 +35,7 @@ class Write extends React.Component {
         this.clearSaveButtonTimeout = this.clearSaveButtonTimeout.bind(this);
         this.getSaveButton = this.getSaveButton.bind(this);
         this.updateStoryTitle = (event) => this.setState({ storyTitle: event.target.value });
+        this.toggleImageInfo = () => this.setState({ showImageInfo: !this.state.showImageInfo });
     }
 
     updateStoryText(event) {
@@ -248,13 +250,41 @@ class Write extends React.Component {
                             </div> )}
                         </div>
 
+                        { this.state.prompt && this.state.prompt.trove_objects.length >= 3 ?
                         <div className="row m-t-1">
                             <div className="col-xs-12">
-                                <button className="btn btn-default btn-block text-muted">
-                                    Show Image Information
+                                { this.state.showImageInfo ?
+                                <div className="row">
+                                    <div className="col-xs-4">
+                                        <div className="card">
+                                            <div className="card-block">
+                                                <p>{ this.state.prompt.trove_objects[0].description }</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-xs-4">
+                                        <div className="card">
+                                            <div className="card-block">
+                                                <p>{ this.state.prompt.trove_objects[1].description }</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-xs-4">
+                                        <div className="card">
+                                            <div className="card-block">
+                                                <p>{ this.state.prompt.trove_objects[2].description }</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> : null }
+
+                                <button className="btn btn-default btn-block text-muted m-t-1" onClick={this.toggleImageInfo}>
+                                    { this.state.showImageInfo ?
+                                    <span>Hide Image Information</span> :
+                                    <span>Show Image Information</span> }
                                 </button>
                             </div>
-                        </div>
+                        </div> : null }
 
                         <div className="row m-t-1">
                             <div className="col-xs-12">
