@@ -5,12 +5,23 @@
     height: 50px;
 }
 
-.search-result-inner {
+.search-result-inner,
+.prompt-image-wrapper
+{
     width: 100%;
-    height: 240px; /* Probably not fixed, instead either set in JS or precalculate */
     background-size: cover;
     border-radius: 3px;
     padding: 4px;
+}
+
+.search-result-inner
+{
+    height: 240px;
+}
+
+.prompt-image-wrapper
+{
+    height: 360px;
 }
 
 .search-result a,
@@ -314,4 +325,27 @@ header > .container > .row.m-t-1:after
     color: white;
     text-decoration: none;
     text-shadow: 0 0 1px black;
+}
+
+.clear-btn-link.clear-btn-link.clear-btn-link
+{
+    text-decoration: none;
+    color: #222;
+    cursor: default;
+}
+
+.clear-btn-link.clear-btn-link.clear-btn-link:focus,
+.clear-btn-link.clear-btn-link.clear-btn-link:active
+{
+    border: none;
+    outline: none;
+    outline-offset: 0px;
+}
+
+.homepage-button.homepage-button
+{
+    padding: 40px;
+    background-color: rgba(2, 117, 216, 0.8);
+    margin-top: 20px;
+    margin-bottom: 20px;
 }

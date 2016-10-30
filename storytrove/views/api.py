@@ -49,10 +49,7 @@ def get_reactions_for_user(user_id):
         if out.get(r.emoji) is None:
             out[r.emoji] = 0
 
-        if r.emoji == '-':
-            out[r.emoji] -= 1
-        else:
-            out[r.emoji] += 1
+        out[r.emoji] += 1
 
     return out
 
@@ -102,7 +99,43 @@ def query_trove_image_url(work_id):
         return None
 
 
-def prepare_story_dict_object(s, truncated=False):
+def get_emoji_reaction_for_response(user, response_id):
+    res = EmojiResponseOnResponse.objects.filter(response_id=response_id,user_id=user.id)
+    values = ['1', '2', '3', '4', '5']
+
+    filtered = [r.emoji for r in res if r.emoji in values]
+
+    if len(filtered):
+        return filtered[-1]
+
+    return None
+
+
+def get_vote_reaction_for_response(user, response_id):
+    res = EmojiResponseOnResponse.objects.filter(response_id=response_id, user_id=user.id)
+    values = ['+', '-']
+
+    filtered = [r.emoji for r in res if r.emoji in values]
+
+    if len(filtered):
+        return filtered[-1]
+
+    return None
+
+
+def get_vote_reaction_for_comment(user, comment_id):
+    res = EmojiResponseOnComment.objects.filter(comment_id=comment_id, user_id=user.id)
+    values = ['+', '-']
+
+    filtered = [r.emoji for r in res if r.emoji in values]
+
+    if len(filtered):
+        return filtered[-1]
+
+    return None
+
+
+def prepare_story_dict_object(s, user, truncated=False):
     out = {k: s.get(k) for k in ('id', 'title', 'is_draft', 'is_private', 'user_id', 'prompt_id')}
 
     # Add in any values that need to be transformed
@@ -111,10 +144,12 @@ def prepare_story_dict_object(s, truncated=False):
     # Truncate text to 300 characters
     out['text'] = s['text'][:300] if (len(s['text']) > 300 and truncated) else s['text']
     out['reactions'] = get_reactions_for_response(out['id'])
+    out['emojiResponse'] = get_emoji_reaction_for_response(user, out['id'])
+    out['voteResponse'] = get_vote_reaction_for_response(user, out['id'])
     return out
 
 
-def prepare_story_object(s, truncated=False):
+def prepare_story_object(s, user, truncated=False):
     # Start with values we want as-is
     out = {k: getattr(s, k) for k in ('id', 'title', 'is_draft', 'is_private', 'user_id', 'prompt_id')}
 
@@ -124,6 +159,8 @@ def prepare_story_object(s, truncated=False):
     # Truncate text to 300 characters
     out['text'] = s.text[:300] if (len(s.text) > 300 and truncated) else s.text
     out['reactions'] = get_reactions_for_response(out['id'])
+    out['emojiReaction'] = get_emoji_reaction_for_response(user, out['id'])
+    out['voteReaction'] = get_vote_reaction_for_response(user, out['id'])
     return out
 
 
@@ -151,9 +188,10 @@ def prepare_trove_object(t):
     return out
 
 
-def prepare_comment_object(c):
+def prepare_comment_object(c, user):
     out = {k: getattr(c, k) for k in ('id', 'text', 'user_id')}
     out['votes'] = get_votes_for_comment(out['id'])
+    out['voteReaction'] = get_vote_reaction_for_comment(user, out['id'])
     return out
 
 
@@ -291,7 +329,7 @@ def stories(request):
         return standard_failure()
 
     stories = [r for r in responses.values()]
-    stories = list(map(lambda s: prepare_story_dict_object(s, True), stories))
+    stories = list(map(lambda s: prepare_story_dict_object(s, request.user, True), stories))
 
     story_authors = {s.get('user_id'): get_username(s.get('user_id')) for s in stories}
 
@@ -345,11 +383,11 @@ def story(request):
         return standard_failure()
 
     if response != "":
-        story = prepare_story_object(response)
+        story = prepare_story_object(response, request.user)
         author = prepare_user_object(response.user)
         prompt = prepare_prompt_object(response.prompt)
         comments = [c for c in Comment.objects.filter(response=response)]
-        comments = list(map(prepare_comment_object, comments))
+        comments = list(map(lambda c: prepare_comment_object(c, request.user), comments))
         comment_ids = [c['id'] for c in comments]
         comment_author_ids = list(set([c['user_id'] for c in comments]))  # unique user ids
 
@@ -492,41 +530,76 @@ a reaction in its char format
 
 
 def react(request):
-    userId = request.GET.get('user_id')
+    if not request.user.is_authenticated:
+        return standard_failure()
+
     resourceType = request.GET.get('resource_type')
     resourceId = request.GET.get('resource_id')
     emojiChar = request.GET.get('emoji')
 
-    # TODO add in if user id is empty to use the current user?
-
-    userIdInt = -1
-    promptIdInt = -1
-
     try:
-        userIdInt = int(userId)
         resourceIdInt = int(resourceId)
     except:
         return standard_failure()
 
     if resourceType == "response":
-        reaction = EmojiResponseOnResponse(
-            user=UserAccount.objects.get(pk=userIdInt),
-            response=Response.objects.get(pk=resourceIdInt),
-            emoji=emojiChar)
-
-        reaction.save()
-
+        toggle_response_reaction(request.user, Response.objects.get(pk=resourceIdInt), emojiChar)
     elif resourceType == "comment":
-        reaction = EmojiResponseOnResponse(
-            user=UserAccount.objects.get(pk=userIdInt),
-            response=Response.objects.get(pk=resourceIdInt),
-            emoji=emojiChar)
-
-        reaction.save()
+        toggle_comment_reaction(request.user, Comment.objects.get(pk=resourceIdInt), emojiChar)
 
     return JsonResponse({
         'success': True
     })
+
+
+def toggle_comment_reaction(user, comment, emoji):
+    emoji_set = ['1', '2', '3', '4', '5']
+    vote_set = ['+', '-']
+
+    remove = len(EmojiResponseOnComment.objects.filter(user=user, comment=comment, emoji=emoji)) > 0
+
+    # Remove all existing reactions in the corresponding set
+    if emoji in emoji_set:
+        EmojiResponseOnComment.objects.filter(user=user, comment=comment, emoji__in=emoji_set).delete()
+
+    elif emoji in vote_set:
+        EmojiResponseOnComment.objects.filter(user=user, comment=comment, emoji__in=vote_set).delete()
+
+    if remove:
+        return  # Nothing to do
+
+    # Add new reaction
+    reaction = EmojiResponseOnComment(
+        user=user,
+        comment=comment,
+        emoji=emoji)
+
+    reaction.save()
+
+
+def toggle_response_reaction(user, response, emoji):
+    emoji_set = ['1', '2', '3', '4', '5']
+    vote_set = ['+', '-']
+
+    remove = len(EmojiResponseOnResponse.objects.filter(user=user, response=response, emoji=emoji)) > 0
+
+    # Remove all existing reactions in the corresponding set
+    if emoji in emoji_set:
+        EmojiResponseOnResponse.objects.filter(user=user, response=response, emoji__in=emoji_set).delete()
+
+    elif emoji in vote_set:
+        EmojiResponseOnResponse.objects.filter(user=user, response=response, emoji__in=vote_set).delete()
+
+    if remove:
+        return  # Nothing to do
+
+    # Add new reaction
+    reaction = EmojiResponseOnResponse(
+        user=user,
+        response=response,
+        emoji=emoji)
+
+    reaction.save()
 
 
 '''

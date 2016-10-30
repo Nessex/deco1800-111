@@ -1,6 +1,8 @@
 import json
 from hashlib import md5
 
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
@@ -30,7 +32,8 @@ def get_current_user(request):
         return None
 
     out = {k: getattr(request.user, k) for k in ('id', 'username', 'email')}
-    out["image"] = get_user_image(request.user)
+    out['image'] = get_user_image(request.user)
+    out['reactions'] = get_reactions_for_user(out['id'])
     return out
 
 
@@ -172,10 +175,20 @@ def register(request):
             user = form.save()
             username = request.POST['username']
             password = request.POST['password1']
+            email = request.POST['email']
             #authenticate user then login
             user = authenticate(username=username, password=password)
             djlogin(request, user)
-            return std_page(request, 'storytrove/home/home.js')
+
+            try:
+                validate_email(email)
+            except ValidationError:
+                return index(request)
+
+            user.email = email
+            user.save()
+
+            return index(request)
 
     else:
         form = UserCreationForm()

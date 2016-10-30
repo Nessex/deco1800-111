@@ -19,6 +19,42 @@ class Account extends React.Component {
         this.state = {
 
         };
+
+        this.getUserDisplay = this.getUserDisplay.bind(this);
+    }
+
+    getUserDisplay() {
+        let totalVotes = 0;
+        let emojis = {
+            '+': ':thumbsup:',
+            '-': ':thumbsdown:',
+            '1': ':grinning:',
+            '2': ':cry:',
+            '3': ':laughing:',
+            '4': ':scream:',
+            '5': ':thinking:'
+        };
+
+        if (!this.props.user.reactions)
+            return null;
+
+        if (this.props.user.reactions.hasOwnProperty('+'))
+            totalVotes += this.props.user.reactions['+'];
+
+        if (this.props.user.reactions.hasOwnProperty('-'))
+            totalVotes -= this.props.user.reactions['-'];
+
+        let emojiCounters = Object.keys(this.props.user.reactions).map(r => {
+            return (<span><EmojiText value={emojis[r]} /> {this.props.user.reactions[r]}</span>);
+        });
+
+        return (
+            <div>
+                <h3>{ this.props.user.username }</h3>
+                Total Votes: { totalVotes }<br />
+                { emojiCounters }
+            </div>
+        );
     }
 
     render() {
@@ -34,13 +70,7 @@ class Account extends React.Component {
                                 <div className="pull-xs-left">
                                     <img src={userImage} className="edit-account-profile-picture" />
                                 </div>
-                                <div>
-                                    <h3>{ this.props.user.username }</h3>
-                                    Total Votes: 234<br />
-                                    <span><EmojiText value=":thumbsup:" /> 9 </span>
-                                    <span><EmojiText value=":joy:" /> 8 </span>
-                                    <span><EmojiText value=":cry:" /> 7 </span>
-                                </div>
+                                { this.getUserDisplay() }
                             </section>
                         </div>
                         <div className="list-group m-t-1">
