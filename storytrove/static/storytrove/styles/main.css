@@ -348,4 +348,5 @@ header > .container > .row.m-t-1:after
     background-color: rgba(2, 117, 216, 0.8);
     margin-top: 20px;
     margin-bottom: 20px;
+    border-radius: 10px;
 }
